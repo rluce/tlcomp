@@ -146,3 +146,22 @@ function test_generator6(testCase)
 [~,~,T] = random_toeplitz(8,8);
 testCase.assertError( @() compute_generator(T,10), 'funmd:InconsistentInput');
 end
+
+
+function test_tleye(testCase)
+
+E = tleye(0);
+testCase.assertEqual(class(E), 'TLMatStein');
+testCase.assertTrue(isempty(full(E)));
+
+E = tleye(1);
+testCase.assertEqual(class(E), 'TLMatStein');
+testCase.assertEqual(full(E),1);
+
+E = tleye(9);
+testCase.assertEqual(class(E), 'TLMatStein');
+testCase.assertEqual(full(E),eye(9));
+testCase.assertEqual(drank(E), 1);
+
+
+end
