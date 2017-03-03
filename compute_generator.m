@@ -10,7 +10,7 @@ n = size(A, 1);
 
 if nargin >= 2 && ~isempty(r)
     if r > n
-        error('expmt:InconsistentInput', ...
+        error('funmd:InconsistentInput', ...
             'Requested rank exceeds matrix dimension');
     end
 end
