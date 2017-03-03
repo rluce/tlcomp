@@ -119,3 +119,23 @@ TL = TLMatStein([1,2,5], [1,2,5]);
 testCase.assertEqual(size(TL), [3,3]);
 
 end
+
+
+function test_drank(testCase)
+
+TL = TLMatStein([]);
+testCase.assertEqual(TL.drank, 0);
+
+TL = TLMatStein(eye(11));
+testCase.assertEqual(TL.drank, 1);
+
+[c,r] = random_toeplitz(9,9);
+TL = TLMatStein(c,r);
+testCase.assertEqual(TL.drank, 2);
+
+TL = TLMatStein(rand(9));
+testCase.assertEqual(TL.drank, 9);
+
+
+
+end

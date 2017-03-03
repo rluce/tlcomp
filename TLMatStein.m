@@ -71,5 +71,10 @@ classdef TLMatStein
                 m = [m,n];
             end
         end
+        
+        function d = drank(TL)
+            d = size(TL.G, 2);
+        end
+        
     end % of methods section
 end
