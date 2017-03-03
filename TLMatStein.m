@@ -5,10 +5,63 @@ classdef TLMatStein
     end
     
     methods
-        function TL = TLMatStein(G,B)
-            % TL = TLMatStein(A)   % Approximate A with TL matrix
-            % TL = TLMatStein(c,r) % Generate TL form Toeplitz matrix
-            % TL = TLMatStein(G,B) % Generators are directly given
-        end
-    end
+        function TL = TLMatStein(c, r, flag)
+            % TL = TLMatStein(c ,r)
+            %   Generate a TL matrix from the first col/row of a Toeplitz
+            %   matrix.
+            %
+            % TL = TLMatStein(G, B)
+            %   Generate a TL matrix with prescribed generators of size
+            %   n-by-r.
+            %
+            % TL = TLMatStein(G, B, 'GB')
+            %   Force intepretation as generators (only useful if r=1).
+            %
+            % TL = TLMatStein(A)
+            %   Approximate a given matrix A with a Toeplitz matrix.
+            %   (EXPENSIVE, for debug only).
+            
+            if nargin > 2 && strcmp(flag, 'GB')
+                force_gb = true;
+            else
+                force_gb = false;
+            end
+            
+            if nargin == 1
+                [G, B] = compute_generator(c);
+            else
+                % Two argument instantiation
+                sc = size(c);
+                sr = size(r);
+                
+                if min(sc) == 1 && min(sr) == 1
+                    % Input was two vectors
+                    if force_gb
+                        % But we read it as generators
+                        if any(sc ~= sr)
+                            error('funmd:InconsistentInput', ...
+                                'Generator matrices must be of equal size');
+                        end
+                        G = c;
+                        B = r;
+                    else
+                        % We assume it to be first row/col
+                        [G, B] = stein_generator(c,r);
+                    end
+                else
+                    % Two inputs, and at least one is not a vector,
+                    % so the input is a generator.
+                    if any(sc ~= sr)
+                        error('funmd:InconsistentInput', ...
+                            'Generator matrices must be of equal size');
+                    end
+                    G = c;
+                    B = r;
+                end
+            end
+            TL.G = G;
+            TL.B = B;
+        end % of constructor
+        
+    end % of methods section
 end
