@@ -59,6 +59,7 @@ classdef TLMatStein
                     B = r;
                 end
             end
+            [G, B] = gencompress(G, B);
             TL.G = G;
             TL.B = B;
         end % of constructor
