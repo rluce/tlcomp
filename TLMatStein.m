@@ -76,5 +76,10 @@ classdef TLMatStein
             d = size(TL.G, 2);
         end
         
+        function T = full(TL)
+            T = stein_reconstruction(TL.G, TL.B);
+        end
+        
+        
     end % of methods section
 end

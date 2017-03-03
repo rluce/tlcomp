@@ -136,6 +136,16 @@ testCase.assertEqual(TL.drank, 2);
 TL = TLMatStein(rand(9));
 testCase.assertEqual(TL.drank, 9);
 
+end
 
+function test_full(testCase)
+
+E = eye(13);
+TL = TLMatStein(E(:,1), E(:,1));
+testCase.assertEqual(full(TL), E);
+
+[c, r, T] = random_toeplitz(5,5);
+TL = TLMatStein(c,r);
+testCase.assertEqual(full(TL), T, 'RelTol', 10 * eps);
 
 end
