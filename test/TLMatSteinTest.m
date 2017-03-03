@@ -105,3 +105,17 @@ testCase.assertError( @() TLMatStein(rand(4,2), rand(4,3)), ...
     'funmd:InconsistentInput');
 
 end
+
+
+function test_size(testCase)
+
+TL = TLMatStein([]);
+testCase.assertEqual(size(TL), [0,0]);
+
+TL = TLMatStein(1);
+testCase.assertEqual(size(TL), [1,1]);
+
+TL = TLMatStein([1,2,5], [1,2,5]);
+testCase.assertEqual(size(TL), [3,3]);
+
+end

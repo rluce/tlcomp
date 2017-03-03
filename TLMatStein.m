@@ -38,9 +38,9 @@ classdef TLMatStein
                     % Input was two vectors
                     if force_gb
                         % But we read it as generators
-                        if any(sc ~= sr)
+                        if sc(2) ~= sr(2)
                             error('funmd:InconsistentInput', ...
-                                'Generator matrices must be of equal size');
+                                'Generator matrices must have equal length');
                         end
                         G = c;
                         B = r;
@@ -51,7 +51,7 @@ classdef TLMatStein
                 else
                     % Two inputs, and at least one is not a vector,
                     % so the input is a generator.
-                    if any(sc ~= sr)
+                    if sc(2) ~= sr(2)
                         error('funmd:InconsistentInput', ...
                             'Generator matrices must be of equal size');
                     end
@@ -63,5 +63,12 @@ classdef TLMatStein
             TL.B = B;
         end % of constructor
         
+        function [m,n] = size(TL)
+            m = size(TL.G, 1);
+            n = size(TL.B, 1);
+            if nargout == 1
+                m = [m,n];
+            end
+        end
     end % of methods section
 end
