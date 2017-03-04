@@ -59,9 +59,9 @@ classdef TLMatStein
                     B = r;
                 end
             end
-            [G, B] = gencompress(G, B);
             TL.G = G;
             TL.B = B;
+            TL = TL.compress();
         end % of constructor
         
         function [m,n] = size(TL)
@@ -80,6 +80,77 @@ classdef TLMatStein
             T = stein_reconstruction(TL.G, TL.B);
         end
         
+        function S = minus(op1, op2)
+            S = op1 + (-op2);
+        end
+        
+        function S = plus(op1, op2)
+            % Homogenize
+            if ~isa(op1, 'TLMatStein')
+                tmp = op2;
+                op2 = op1;
+                op1 = tmp;
+            end
+            
+            % Dispatch
+            switch class(op2)
+                case 'TLMatStein'
+                    S = op1.add_tlmat(op2);
+                case 'double'
+                    S = op1.add_double(op2);
+                otherwise
+                    error('funmd:NotImplemented', ...
+                        'Addition not implemented for this operand');
+            end
+        end
+        
+        function S = add_double(TL, A)
+            assert(isa(A, 'double'));
+            [m,n] = size(A);
+            if m==1 && n==1
+                if A==0
+                    S = TL;
+                    return;
+                end
+                % Interpret as entrywise addition
+                augvec = A * ones(size(TL.B, 1), 1);
+                A = TLMatStein(augvec, augvec);
+                S = TL.add_tlmat(A);
+                return;
+            end
+                
+            % A is not scalar.
+            [mm, nn] = size(TL);
+            if mm~=m || nn~=n
+                error('funmd:InconsistentInput', ...
+                    'Matrix dimensions must agree.');
+            end
+            
+            % Structured + unstructured = unstructured, in the absence
+            % of further information.  Resort to full matrices.
+            S = full(TL) + A;
+        end
+        
+        function S = add_tlmat(T1, T2)
+            assert(isa(T1, 'TLMatStein') && isa(T2, 'TLMatStein'));
+
+            T1.G = [T1.G, T2.G];
+            T1.B = [T1.B, T2.B];
+
+            S = T1;
+            S = S.compress;
+        end
+
+        function S = uminus(TL)
+            TL.B = -TL.B;
+            S = TL;
+        end
+        
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function TL = compress(TL)
+            [TL.G, TL.B] = gencompress(TL.G, TL.B);
+        end
         
     end % of methods section
 end

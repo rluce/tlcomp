@@ -146,6 +146,105 @@ testCase.assertEqual(full(TL), E);
 
 [c, r, T] = random_toeplitz(5,5);
 TL = TLMatStein(c,r);
-testCase.assertEqual(full(TL), T, 'RelTol', 10 * eps);
+testCase.assertEqual(full(TL), T, 'RelTol', 100 * eps);
+
+end
+
+
+function test_plus_scalar(testCase)
+
+TL = TLMatStein([0,0], [0,0]);
+TLp1 = TL + 1;
+testCase.assertEqual(full(TLp1), ones(2), 'AbsTol', 5 * eps);
+
+[c, r] = random_toeplitz(7,7);
+TL = TLMatStein(c,r);
+
+TLp0 = 0 + TL + 0;
+testCase.assertEqual(full(TLp0), full(TL));
+
+TLp1 = TL + 1;
+testCase.assertEqual(full(TLp1), full(TL) + 1, 'RelTol', 100*eps);
+
+TLmpi = TL - pi;
+testCase.assertEqual(full(TLmpi), full(TL) - pi, 'RelTol', 10*eps);
+
+n = 9;
+e = ones(n,1);
+TL = TLMatStein(e,e);
+TL = TL + 1;
+testCase.assertEqual(full(TL), 2*ones(n), 'RelTol', 10*eps);
+TL = -2 + TL;
+testCase.assertEqual(full(TL), zeros(n), 'AbsTol', 10*eps);
+
+end
+
+
+function test_plus_dense_matrix(testCase)
+
+TL = TLMatStein([]);
+A = [];
+
+% Could be represented as TL, but for consistency we want dense
+B = A + TL;
+testCase.assertEqual(class(B), 'double');
+testCase.assertTrue(isempty(B));
+
+TL = tleye(1);
+A = eye(1);
+B = TL + A;
+testCase.assertEqual(class(B), 'TLMatStein');
+testCase.assertEqual(full(B), 2);
+
+TL = tleye(2);
+E2 = eye(2);
+S = E2 - TL;
+testCase.assertEqual(full(S), zeros(2));
+
+n=7;
+[c,r] = random_toeplitz(n,n);
+TL = TLMatStein(c,r);
+A = randn(n,n);
+B = TL + A;
+testCase.assertEqual(B, full(TL) + A);
+
+end
+
+
+function test_plus_tlmatrix(testCase)
+TL1 = TLMatStein([]);
+TL2 = TLMatStein([]);
+testCase.assertTrue(isempty(full(TL1 + TL2)));
+
+TL1 = TLMatStein(1,1);
+TL2 = TLMatStein(-2,-2);
+TL = TL1 + TL2;
+testCase.assertEqual(drank(TL), 1);
+testCase.assertEqual(size(TL), [1,1]);
+testCase.assertEqual(full(TL), -1);
+
+
+[c1, r1] = random_toeplitz(11,11);
+[c2, r2] = random_toeplitz(11,11);
+TL1 = TLMatStein(c1, r1);
+TL2 = TLMatStein(c2, r2);
+TL = TL1 + TL2;
+testCase.assertEqual(drank(TL), 2);
+testCase.assertEqual(full(TL), toeplitz(c1,r1) + toeplitz(c2,r2), ...
+    'RelTol', 100*eps);
+
+end
+
+function test_unary_minus(testCase)
+
+TL = TLMatStein([]);
+testCase.assertTrue(isempty(full(TL - TL)));
+
+TL = tleye(1);
+testCase.assertEqual(full(-TL), -1);
+
+TL = TLMatStein(randn(9,3), randn(9,3) + 1i*randn(9,3));
+testCase.assertEqual(full(-TL), -full(TL));
+
 
 end
