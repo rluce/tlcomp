@@ -39,7 +39,7 @@ classdef TLMatStein
                     if force_gb
                         % But we read it as generators
                         if sc(2) ~= sr(2)
-                            error('funmd:InconsistentInput', ...
+                            error('tlzstein:InconsistentInput', ...
                                 'Generator matrices must have equal length');
                         end
                         G = c;
@@ -52,7 +52,7 @@ classdef TLMatStein
                     % Two inputs, and at least one is not a vector,
                     % so the input is a generator.
                     if sc(2) ~= sr(2)
-                        error('funmd:InconsistentInput', ...
+                        error('tlzstein:InconsistentInput', ...
                             'Generator matrices must be of equal size');
                     end
                     G = c;
@@ -99,7 +99,7 @@ classdef TLMatStein
                 case 'double'
                     S = op1.add_double(op2);
                 otherwise
-                    error('funmd:NotImplemented', ...
+                    error('tlzstein:NotImplemented', ...
                         'Addition not implemented for this operand');
             end
         end
@@ -122,7 +122,7 @@ classdef TLMatStein
             % A is not scalar.
             [mm, nn] = size(TL);
             if mm~=m || nn~=n
-                error('funmd:InconsistentInput', ...
+                error('tlzstein:InconsistentInput', ...
                     'Matrix dimensions must agree.');
             end
             

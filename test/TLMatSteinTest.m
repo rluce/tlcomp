@@ -43,7 +43,7 @@ testCase.assertEqual(TL.G * TL.B', A);
 
 c = 6;
 r = 1;
-testCase.assertError( @() TLMatStein(c,r), 'funmd:InconsistentInput');
+testCase.assertError( @() TLMatStein(c,r), 'tlzstein:InconsistentInput');
 
 
 end
@@ -102,7 +102,7 @@ end
 function test_construct_badinput(testCase)
 
 testCase.assertError( @() TLMatStein(rand(4,2), rand(4,3)), ...
-    'funmd:InconsistentInput');
+    'tlzstein:InconsistentInput');
 
 end
 

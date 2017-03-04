@@ -9,9 +9,8 @@ classdef ToepMatStein
             % T = ToepMatStein(c,r)
             %   T is Toeplitz matrix with prescribed first col/row
             
-            
             if min(size(c)) > 1 || min(size(r)) > 1
-                error('funmd:InconsistentInput', 'c, r must be vectors');
+                error('tlzstein:InconsistentInput', 'c, r must be vectors');
             end
             
             % Homogenize
@@ -19,13 +18,13 @@ classdef ToepMatStein
             r = r(:);
             
             if length(c) ~= length(r)
-                error('funmd:InconsistentInput', 'c, r must have same length');
+                error('tlzstein:InconsistentInput', 'c, r must have same length');
             end
             
             n = length(r);
             
             if n>0 && c(1) ~= r(1)
-                error('funmd:InconsistentInput', 'c(1),r(1) must be equal');
+                error('tlzstein:InconsistentInput', 'c(1),r(1) must be equal');
             end
             
             T.c = c;

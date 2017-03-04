@@ -23,22 +23,22 @@ testCase.assertEqual(T.r, r(:));
 
 c = 6;
 r = 1;
-testCase.assertError( @() ToepMatStein(c,r), 'funmd:InconsistentInput');
+testCase.assertError( @() ToepMatStein(c,r), 'tlzstein:InconsistentInput');
 
 c = rand(9,1);
 r = c;
 r(1) = r(1) + 1e-8;
-testCase.assertError( @() ToepMatStein(c,r), 'funmd:InconsistentInput');
+testCase.assertError( @() ToepMatStein(c,r), 'tlzstein:InconsistentInput');
 
 % For the moment, we only support square matrices
 c = ones(4,1);
 r = ones(3,1);
-testCase.assertError( @() ToepMatStein(c,r), 'funmd:InconsistentInput');
+testCase.assertError( @() ToepMatStein(c,r), 'tlzstein:InconsistentInput');
 
 % Only vectors allowed
 c = ones(4,2);
 r = ones(4,2);
-testCase.assertError( @() ToepMatStein(c,r), 'funmd:InconsistentInput');
+testCase.assertError( @() ToepMatStein(c,r), 'tlzstein:InconsistentInput');
 
 end
 

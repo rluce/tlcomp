@@ -5,7 +5,7 @@ function [G,B] = stein_generator(c, r)
 % displacement.
 
 if c(1) ~= r(1)
-    error('funmd:InconsistentInput', ...
+    error('tlzstein:InconsistentInput', ...
         'first elements of c and r must be the same');
 end
 

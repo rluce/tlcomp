@@ -30,7 +30,7 @@ function test_stein_generator2(testCase)
 % Fail hard on inconsistent data
 c = [1;2;3];
 r = [4,5,6];
-testCase.assertError( @() stein_generator(c,r), 'funmd:InconsistentInput');
+testCase.assertError( @() stein_generator(c,r), 'tlzstein:InconsistentInput');
 end
 
 function test_stein_generator3(testCase)
@@ -144,7 +144,7 @@ end
 function test_generator6(testCase)
 % Fail hard on inconsistent data
 [~,~,T] = random_toeplitz(8,8);
-testCase.assertError( @() compute_generator(T,10), 'funmd:InconsistentInput');
+testCase.assertError( @() compute_generator(T,10), 'tlzstein:InconsistentInput');
 end
 
 
