@@ -7,5 +7,5 @@ if n > 0
     e1(1) = 1;
 end
 
-E = TLMatStein(e1,e1);
+E = TLMat(e1,e1);
 end

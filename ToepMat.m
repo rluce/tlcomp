@@ -1,12 +1,12 @@
-classdef ToepMatStein
+classdef ToepMat
     properties
         c % First column
         r % First row
     end
     
     methods
-        function T = ToepMatStein(c, r)
-            % T = ToepMatStein(c,r)
+        function T = ToepMat(c, r)
+            % T = ToepMat(c,r)
             %   T is Toeplitz matrix with prescribed first col/row
             
             if min(size(c)) > 1 || min(size(r)) > 1

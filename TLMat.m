@@ -1,23 +1,23 @@
-classdef TLMatStein
+classdef TLMat
     properties
         G
         B
     end
     
     methods
-        function TL = TLMatStein(c, r, flag)
-            % TL = TLMatStein(c ,r)
+        function TL = TLMat(c, r, flag)
+            % TL = TLMat(c ,r)
             %   Generate a TL matrix from the first col/row of a Toeplitz
             %   matrix.
             %
-            % TL = TLMatStein(G, B)
+            % TL = TLMat(G, B)
             %   Generate a TL matrix with prescribed generators of size
             %   n-by-r.
             %
-            % TL = TLMatStein(G, B, 'GB')
+            % TL = TLMat(G, B, 'GB')
             %   Force intepretation as generators (only useful if r=1).
             %
-            % TL = TLMatStein(A)
+            % TL = TLMat(A)
             %   Approximate a given matrix A with a Toeplitz matrix.
             %   (EXPENSIVE, for debug only).
             
@@ -86,7 +86,7 @@ classdef TLMatStein
         
         function S = plus(op1, op2)
             % Homogenize
-            if ~isa(op1, 'TLMatStein')
+            if ~isa(op1, 'TLMat')
                 tmp = op2;
                 op2 = op1;
                 op1 = tmp;
@@ -94,7 +94,7 @@ classdef TLMatStein
             
             % Dispatch
             switch class(op2)
-                case 'TLMatStein'
+                case 'TLMat'
                     S = op1.add_tlmat(op2);
                 case 'double'
                     S = op1.add_double(op2);
@@ -114,7 +114,7 @@ classdef TLMatStein
                 end
                 % Interpret as entrywise addition
                 augvec = A * ones(size(TL.B, 1), 1);
-                A = TLMatStein(augvec, augvec);
+                A = TLMat(augvec, augvec);
                 S = TL.add_tlmat(A);
                 return;
             end
@@ -132,7 +132,7 @@ classdef TLMatStein
         end
         
         function S = add_tlmat(T1, T2)
-            assert(isa(T1, 'TLMatStein') && isa(T2, 'TLMatStein'));
+            assert(isa(T1, 'TLMat') && isa(T2, 'TLMat'));
 
             T1.G = [T1.G, T2.G];
             T1.B = [T1.B, T2.B];
