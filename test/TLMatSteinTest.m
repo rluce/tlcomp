@@ -245,6 +245,5 @@ testCase.assertEqual(full(-TL), -1);
 
 TL = TLMatStein(randn(9,3), randn(9,3) + 1i*randn(9,3));
 testCase.assertEqual(full(-TL), -full(TL));
-
-
 end
+
