@@ -83,3 +83,184 @@ TM = ToepMat(c,r);
 testCase.assertEqual(full(TM), T);
 end
 
+function test_add_scalar(testCase)
+
+T = ToepMat([],[]);
+testCase.assertError( @() T+exp(1), 'tlzstein:InconsistentInput');
+testCase.assertError( @() exp(1)+T, 'tlzstein:InconsistentInput');
+testCase.assertError( @() exp(1)-T, 'tlzstein:InconsistentInput');
+
+T = ToepMat(2,2);
+T = T - 1;
+testCase.assertEqual(T.c, 1);
+testCase.assertEqual(T.r, 1);
+
+T = T + 0;
+testCase.assertEqual(T.c, 1);
+testCase.assertEqual(T.r, 1);
+
+[c, r, T] = random_toeplitz(5,5);
+TM = ToepMat(c,r);
+testCase.assertEqual(full(TM + pi), T + pi);
+testCase.assertEqual(full(TM - pi), T - pi);
+testCase.assertEqual(full(pi + TM), pi + T);
+testCase.assertEqual(full(pi - TM), pi - T);
+
+s = randn(1,1);
+TM = s + TM;
+TM = TM - s;
+testCase.assertEqual(full(TM), T);
+
+end
+
+function test_uminus(testCase)
+T = ToepMat([],[]);
+testCase.assertTrue(isempty(full(-T)));
+
+T = ToepMat([0,0,0,0], [0,0,0,0]);
+testCase.assertEqual(full(-T), zeros(4));
+
+T = Toepmat(4,4);
+testCase.assertEqual(full(-T), -4);
+
+[c,r,T] = random_toeplitz(7,7);
+TM = ToepMat(c,r);
+testCase.assertEqual(full(-TM), -T);
+end
+
+function test_uplus(testCase)
+% Unary + does not alter the data in any way
+[c,r, T] = random_toeplitz(5);
+TM = ToepMat(c,r);
+testCase.assertEqual(full(+TM), T);
+
+PTM = +T;
+testCase.assertEqual(PTM.c, TM.c);
+testCase.assertEqual(PTM.r, TM.r);
+
+end
+
+function test_add_dense(testCase)
+
+% Addition of non-scalar always makes result dense
+T = ToepMat([],[]);
+B = [] + T;
+testCase.assertEqual(class(B), 'double');
+testCase.assertTrue(isempty(B));
+
+T = toepeye(3);
+testCase.assertError( @() T + rand(2), 'tlzstein:InconsistentInput');
+testCase.assertError( @() rand(2) - T, 'tlzstein:InconsistentInput');
+
+[c,r,T] = random_toeplitz(9,9);
+TM = ToepMat(c,r);
+A = randn(9);
+testCase.assertEqual(class(TM + A), 'double');
+testCase.assertEqual(class(TM - A), 'double');
+testCase.assertEqual(class(A + TM), 'double');
+testCase.assertEqual(class(A - TM), 'double');
+testCase.assertEqual(A + TM, A + T);
+testCase.assertEqual(A - TM, A - T);
+testCase.assertEqual(TM + A, T + A);
+testCase.assertEqual(TM - A, T - A);
+
+end
+
+function test_add_dense_toeplitz(testCase)
+% Magic op, where the other op is dense toeplitz.  We notice and convert to
+% Toeplitz.
+T = toepeye(3);
+T = ones(3) - T; % Result is Toeplitz
+testCase.assertEqual(class(T), 'ToepMat');
+testCase.assertEqual(full(T), toeplitz([0,1,1]));
+
+[c,r,T] = random_toeplitz(7,7);
+TM = ToepMat(c,r);
+Z = zeros(7);
+testCase.assertEqual(class(TM + Z), 'ToepMat');
+testCase.assertEqual(full(TM + Z), T);
+testCase.assertEqual(class(TM - Z), 'ToepMat');
+testCase.assertEqual(full(TM - Z), T);
+testCase.assertEqual(class(Z + TM), 'ToepMat');
+testCase.assertEqual(full(Z + TM), T);
+testCase.assertEqual(class(Z - TM), 'ToepMat');
+testCase.assertEqual(full(Z - TM), -T);
+
+[c,r,T] = random_toeplitz(7,7);
+TM = ToepMat(c,r);
+E = -3*eye(7);
+testCase.assertEqual(class(TM + E), 'ToepMat');
+testCase.assertEqual(full(TM + E), T + E);
+testCase.assertEqual(class(TM - E), 'ToepMat');
+testCase.assertEqual(full(TM - E), T - E);
+testCase.assertEqual(class(E + TM), 'ToepMat');
+testCase.assertEqual(full(E + TM), E + T);
+testCase.assertEqual(class(E - TM), 'ToepMat');
+testCase.assertEqual(full(E - TM), E - T);
+
+[c,r,T] = random_toeplitz(7,7);
+TM = ToepMat(c,r);
+A = toeplitz(rand(7,1), rand(7,1));
+testCase.assertEqual(class(TM + A), 'ToepMat');
+testCase.assertEqual(full(TM + A), T + A);
+testCase.assertEqual(class(TM - A), 'ToepMat');
+testCase.assertEqual(full(TM - A), T - A);
+testCase.assertEqual(class(A + TM), 'ToepMat');
+testCase.assertEqual(full(A + TM), A + T);
+testCase.assertEqual(class(A - TM), 'ToepMat');
+testCase.assertEqual(full(A - TM), A - T);
+
+end
+
+function test_add_toepmat(testCase)
+T = ToepMat([], []) + ToepMat([], []);
+testCase.assertEqual(class(T), 'ToepMat');
+testCase.assertTrue(isempty(T));
+
+T1 = ToepMat(3,3);
+T2 = ToepMat(-3,-3);
+testCase.assertEqual(class(T1+T2), 'ToepMat');
+testCase.assertEqual(class(T1-T2), 'ToepMat');
+testCase.assertEqual(class(T2+T1), 'ToepMat');
+testCase.assertEqual(class(T2-T1), 'ToepMat');
+testCase.assertEqual(full(T1 + T2), 0);
+testCase.assertEqual(full(T1 - T2), 6);
+testCase.assertEqual(full(T2 + T1), 0);
+testCase.assertEqual(full(T2 - T1), -6);
+
+[c1,r1,T1] = random_toeplitz(6,6);
+[c2,r2,T2] = random_toeplitz(6,6);
+TM1 = ToepMat(c1,r1);
+TM2 = ToepMat(c2,r2);
+testCase.assertEqual(class(TM1+TM2), 'ToepMat');
+testCase.assertEqual(class(TM1-TM2), 'ToepMat');
+testCase.assertEqual(class(TM2+TM1), 'ToepMat');
+testCase.assertEqual(class(TM2-TM1), 'ToepMat');
+
+testCase.assertEqual(full(TM1 + TM2), T1+T2);
+testCase.assertEqual(full(TM1 - TM2), T1-T2);
+testCase.assertEqual(full(TM2 + TM1), T2+T1);
+testCase.assertEqual(full(TM2 - TM1), T2-T1);
+
+end
+
+function test_add_tlmat(testCase)
+end
+
+
+function test_mtimes_scalar(testCase)
+
+end
+
+function test_mtimes_tritoep(testCase)
+% Magic case where both operands are triangular, product stays in Toeplitz
+% space.
+end
+
+function test_mtimes_toep(testCase)
+% Both operands are ToepMat
+end
+
+function test_mtimes_tl(testCase)
+% One op is a TLMat
+end

@@ -190,6 +190,7 @@ B = A + TL;
 testCase.assertEqual(class(B), 'double');
 testCase.assertTrue(isempty(B));
 
+% This is in fact scalar addition
 TL = tleye(1);
 A = eye(1);
 B = TL + A;
@@ -208,6 +209,10 @@ A = randn(n,n);
 B = TL + A;
 testCase.assertEqual(B, full(TL) + A);
 
+end
+
+function test_plus_dense_toeplitz(testCase)
+% Magic function:  Detect wether other operand is a dense toeplitz matrix
 end
 
 
@@ -232,6 +237,49 @@ TL = TL1 + TL2;
 testCase.assertEqual(drank(TL), 2);
 testCase.assertEqual(full(TL), toeplitz(c1,r1) + toeplitz(c2,r2), ...
     'RelTol', 100*eps);
+
+end
+
+function test_plus_toepmat(testCase)
+% Other operand is a ToepMat
+TL = TLMat([], []);
+TM = ToepMat([], []);
+testCase.assertEqual(class(TL + TM), 'TLMat');
+testCase.assertEqual(class(TL - TM), 'TLMat');
+testCase.assertEqual(class(TM + TL), 'TLMat');
+testCase.assertEqual(class(TM - TL), 'TLMat');
+
+% Important use case: shifts
+n = 9;
+r = 3;
+TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
+sigma = rand + 1i * rand;
+TL_true = full(TL) + diag(sigma * ones(n,1));
+TL = TL + sigma * teye(n);
+testCase.assertEqual(class(TL), 'TLMat');
+testCase.assertEqual(full(TL), TL_true);
+testCase.assertEqual(drank(TL), r + 1); % Fails with prob. 0
+
+% Sum of random matrices
+n = 11;
+r = 3;
+TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
+[c,r, T] = random_toeplitz(n,n);
+TM = ToepMat(c,r);
+testCase.assertEqual(class(TL + TM), 'TLMat');
+testCase.assertEqual(class(TL - TM), 'TLMat');
+testCase.assertEqual(class(TM + TL), 'TLMat');
+testCase.assertEqual(class(TM - TL), 'TLMat');
+testCase.assertEqual(full(TL + TM), full(TL) + T);
+testCase.assertEqual(full(TL - TM), full(TL) - T);
+testCase.assertEqual(full(TM + TL), T + full(TL));
+testCase.assertEqual(full(TM - TL), T - full(TL));
+
+% These four tests fail with probability 0
+testCase.assertEqual(drank(TL + TM), r+2);
+testCase.assertEqual(drank(TL - TM), r+2);
+testCase.assertEqual(drank(TM + TL), r+2);
+testCase.assertEqual(drank(TM - TL), r+2);
 
 end
 
