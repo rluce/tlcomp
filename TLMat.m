@@ -126,9 +126,15 @@ classdef TLMat
                     'Matrix dimensions must agree.');
             end
             
-            % Structured + unstructured = unstructured, in the absence
-            % of further information.  Resort to full matrices.
-            S = full(TL) + A;
+            if is_exact_toeplitz(A)
+                % Magic: If A is a dense toeplitz matrix, we retain TL
+                % structure
+                S = TL.add_tlmat(TLMat(A(:,1), A(1,:)));
+            else
+                % Structured + unstructured = unstructured, in the absence
+                % of further information.  Resort to full matrices.
+                S = full(TL) + A;
+            end
         end
         
         function S = add_tlmat(T1, T2)

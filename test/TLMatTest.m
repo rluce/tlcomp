@@ -167,7 +167,7 @@ TLp1 = TL + 1;
 testCase.assertEqual(full(TLp1), full(TL) + 1, 'RelTol', 100*eps);
 
 TLmpi = TL - pi;
-testCase.assertEqual(full(TLmpi), full(TL) - pi, 'RelTol', 10*eps);
+testCase.assertEqual(full(TLmpi), full(TL) - pi, 'RelTol', 100*eps);
 
 n = 9;
 e = ones(n,1);
@@ -221,13 +221,13 @@ TL = TLMat(1i * rand(n,3) + rand(n,3), rand(n,3));
 B = TL + zeros(n);
 testCase.assertEqual(class(B), 'TLMat');
 testCase.assertEqual(drank(B), 3);
-testCase.assertEqual(full(B), full(TL));
+testCase.assertEqual(full(B), full(TL), 'RelTol', 10*eps);
 
 sigma = rand(1,1) + 1i * rand(1,1);
 B = TL + sigma * eye(n);
 testCase.assertEqual(class(B), 'TLMat');
 testCase.assertEqual(drank(B), 4); % fails with prob 0
-testCase.assertEqual(full(B), full(TL) + sigma * eye(n));
+testCase.assertEqual(full(B), full(TL) + sigma * eye(n), 'RelTol', 10*eps);
 
 [~, ~, T] = random_toeplitz(n,n);
 testCase.assertEqual(class(TL + T), 'TLMat');
@@ -240,10 +240,10 @@ testCase.assertEqual(drank(TL - T), 5); % fails with prob 0
 testCase.assertEqual(drank(T + TL), 5); % fails with prob 0
 testCase.assertEqual(drank(T - TL), 5); % fails with prob 0
 
-testCase.assertEqual(full(TL + T), full(TL) + T);
-testCase.assertEqual(full(TL - T), full(TL) - T);
-testCase.assertEqual(full(T + TL), T + full(TL));
-testCase.assertEqual(full(T - TL), T - full(TL));
+testCase.assertEqual(full(TL + T), full(TL) + T, 'RelTol', 100*eps);
+testCase.assertEqual(full(TL - T), full(TL) - T, 'RelTol', 100*eps);
+testCase.assertEqual(full(T + TL), T + full(TL), 'RelTol', 100*eps);
+testCase.assertEqual(full(T - TL), T - full(TL), 'RelTol', 100*eps);
 
 end
 
