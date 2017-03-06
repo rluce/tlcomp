@@ -52,5 +52,10 @@ classdef ToepMat
             % Do nothing
         end
         
+        function T = uminus(T)
+            T.c = -T.c;
+            T.r = -T.r;
+        end
+        
     end
 end

@@ -120,7 +120,7 @@ testCase.assertTrue(isempty(full(-T)));
 T = ToepMat([0,0,0,0], [0,0,0,0]);
 testCase.assertEqual(full(-T), zeros(4));
 
-T = Toepmat(4,4);
+T = ToepMat(4,4);
 testCase.assertEqual(full(-T), -4);
 
 [c,r,T] = random_toeplitz(7,7);
