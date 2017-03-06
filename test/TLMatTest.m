@@ -202,17 +202,49 @@ E2 = eye(2);
 S = E2 - TL;
 testCase.assertEqual(full(S), zeros(2));
 
-n=7;
+n = 7;
 [c,r] = random_toeplitz(n,n);
 TL = TLMat(c,r);
 A = randn(n,n);
 B = TL + A;
 testCase.assertEqual(B, full(TL) + A);
+testCase.assertEqual(class(B), 'double');
 
 end
 
 function test_plus_dense_toeplitz(testCase)
 % Magic function:  Detect wether other operand is a dense toeplitz matrix
+
+n = 13;
+TL = TLMat(1i * rand(n,3) + rand(n,3), rand(n,3));
+
+B = TL + zeros(n);
+testCase.assertEqual(class(B), 'TLMat');
+testCase.assertEqual(drank(B), 3);
+testCase.assertEqual(full(B), full(TL));
+
+sigma = rand(1,1) + 1i * rand(1,1);
+B = TL + sigma * eye(n);
+testCase.assertEqual(class(B), 'TLMat');
+testCase.assertEqual(drank(B), 4); % fails with prob 0
+testCase.assertEqual(full(B), full(TL) + sigma * eye(n));
+
+[~, ~, T] = random_toeplitz(n,n);
+testCase.assertEqual(class(TL + T), 'TLMat');
+testCase.assertEqual(class(TL - T), 'TLMat');
+testCase.assertEqual(class(T + TL), 'TLMat');
+testCase.assertEqual(class(T - TL), 'TLMat');
+
+testCase.assertEqual(drank(TL + T), 5); % fails with prob 0
+testCase.assertEqual(drank(TL - T), 5); % fails with prob 0
+testCase.assertEqual(drank(T + TL), 5); % fails with prob 0
+testCase.assertEqual(drank(T - TL), 5); % fails with prob 0
+
+testCase.assertEqual(full(TL + T), full(TL) + T);
+testCase.assertEqual(full(TL - T), full(TL) - T);
+testCase.assertEqual(full(T + TL), T + full(TL));
+testCase.assertEqual(full(T - TL), T - full(TL));
+
 end
 
 

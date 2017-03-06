@@ -245,6 +245,29 @@ testCase.assertEqual(full(TM2 - TM1), T2-T1);
 end
 
 function test_add_tlmat(testCase)
+% Result is always TLMat.
+
+n = 11;
+[c,r,T] = random_toeplitz(n,n);
+TM = ToepMat(c,r);
+TL = TLMat(rand(n,3), rand(n,3));
+
+testCase.assertEqual(class(TM + TL), 'TLMat');
+testCase.assertEqual(class(TM - TL), 'TLMat');
+testCase.assertEqual(class(TL + TM), 'TLMat');
+testCase.assertEqual(class(TL - TM), 'TLMat');
+
+% May fail with prob 0
+testCase.assertEqual(drank(TM + TL), 5);
+testCase.assertEqual(drank(TM - TL), 5);
+testCase.assertEqual(drank(TL + TM), 5);
+testCase.assertEqual(drank(TL - TM), 5);
+
+testCase.assertEqual(full(TM + TL), full(TM) + T);
+testCase.assertEqual(full(TM - TL), full(TM) - T);
+testCase.assertEqual(full(TL + TM), T + full(TM));
+testCase.assertEqual(full(TL - TM), T - full(TM));
+
 end
 
 
