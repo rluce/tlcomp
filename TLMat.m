@@ -98,6 +98,8 @@ classdef TLMat
                     S = op1.add_tlmat(op2);
                 case 'double'
                     S = op1.add_double(op2);
+                case 'ToepMat'
+                    S = op1.add_toepmat(op2);
                 otherwise
                     error('tlzstein:NotImplemented', ...
                         'Addition not implemented for this operand');
@@ -145,6 +147,10 @@ classdef TLMat
 
             S = T1;
             S = S.compress;
+        end
+        
+        function S = add_toepmat(TL, TM)
+            S = TL.add_tlmat(TLMat(TM.c, TM.r));
         end
 
         function S = uminus(TL)

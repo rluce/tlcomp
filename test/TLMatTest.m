@@ -281,13 +281,21 @@ testCase.assertEqual(class(TL - TM), 'TLMat');
 testCase.assertEqual(class(TM + TL), 'TLMat');
 testCase.assertEqual(class(TM - TL), 'TLMat');
 
+
 % Important use case: shifts
 n = 9;
 r = 3;
 TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
+TL_true = full(TL) + diag(ones(n,1));
+TL = TL + toepeye(n);
+testCase.assertEqual(class(TL), 'TLMat');
+testCase.assertEqual(full(TL), TL_true, 'RelTol', 10*eps);
+testCase.assertEqual(drank(TL), r + 1); % Fails with prob. 0
+
+TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
 sigma = rand + 1i * rand;
 TL_true = full(TL) + diag(sigma * ones(n,1));
-TL = TL + sigma * teye(n);
+TL = TL + sigma * toepeye(n);
 testCase.assertEqual(class(TL), 'TLMat');
 testCase.assertEqual(full(TL), TL_true);
 testCase.assertEqual(drank(TL), r + 1); % Fails with prob. 0

@@ -57,5 +57,29 @@ classdef ToepMat
             T.r = -T.r;
         end
         
+        function S = minus(op1, op2)
+            S = op1 + (-op2);
+        end
+        
+        function S = plus(op1, op2)
+            if ~isa(op1, 'ToepMat')
+                % Plus is commutative, make ToepMat first operand
+                tmp = op1;
+                op1 = op2;
+                op2 = tmp;
+            end
+            
+            assert(isa(op1, 'ToepMat'));
+            % Dispatch
+            switch class(op2)
+                case 'TLMat'
+                    % Promote op1 to TLMat, and add
+                    S = TLMat(op1.c, op1.r) + op2;
+                otherwise
+                    error('tlzstein:NotImplemented', ...
+                        'Addition not implemented for this operand');
+            end
+        end
+        
     end
 end
