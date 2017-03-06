@@ -183,6 +183,7 @@ testCase.assertEqual(full(E),eye(9));
 end
 
 function test_is_exact_toeplitz(testCase)
+testCase.assertTrue(is_exact_toeplitz([]));
 testCase.assertTrue(is_exact_toeplitz(0));
 testCase.assertTrue(is_exact_toeplitz(1));
 testCase.assertTrue(is_exact_toeplitz(1i));
