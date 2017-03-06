@@ -48,5 +48,9 @@ classdef ToepMat
             TF = toeplitz(T.c, T.r);
         end
         
+        function T = uplus(T)
+            % Do nothing
+        end
+        
     end
 end

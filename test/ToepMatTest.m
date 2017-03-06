@@ -130,14 +130,9 @@ end
 
 function test_uplus(testCase)
 % Unary + does not alter the data in any way
-[c,r, T] = random_toeplitz(5);
+[c,r, T] = random_toeplitz(5, 5);
 TM = ToepMat(c,r);
 testCase.assertEqual(full(+TM), T);
-
-PTM = +T;
-testCase.assertEqual(PTM.c, TM.c);
-testCase.assertEqual(PTM.r, TM.r);
-
 end
 
 function test_add_dense(testCase)
