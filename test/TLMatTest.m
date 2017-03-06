@@ -185,10 +185,10 @@ function test_plus_dense_matrix(testCase)
 TL = TLMat([]);
 A = [];
 
-% Could be represented as TL, but for consistency we want dense
+% Adding empty matrix to empty TL matrix stays empty TL matrix
 B = A + TL;
-testCase.assertEqual(class(B), 'double');
-testCase.assertTrue(isempty(B));
+testCase.assertEqual(class(B), 'TLMat');
+testCase.assertTrue(isempty(full(B)));
 
 % This is in fact scalar addition
 TL = tleye(1);

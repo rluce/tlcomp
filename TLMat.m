@@ -128,6 +128,14 @@ classdef TLMat
                     'Matrix dimensions must agree.');
             end
             
+            if n==0 && m ==0
+                % Empty matrix
+                S = TL;
+                return;
+            end
+            
+            % At this point A is a non-scalar, non-empty matrix
+            
             if is_exact_toeplitz(A)
                 % Magic: If A is a dense toeplitz matrix, we retain TL
                 % structure
