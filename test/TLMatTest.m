@@ -310,10 +310,10 @@ testCase.assertEqual(class(TL + TM), 'TLMat');
 testCase.assertEqual(class(TL - TM), 'TLMat');
 testCase.assertEqual(class(TM + TL), 'TLMat');
 testCase.assertEqual(class(TM - TL), 'TLMat');
-testCase.assertEqual(full(TL + TM), full(TL) + T, 'RelTol', 100*eps);
-testCase.assertEqual(full(TL - TM), full(TL) - T, 'RelTol', 100*eps);
-testCase.assertEqual(full(TM + TL), T + full(TL), 'RelTol', 100*eps);
-testCase.assertEqual(full(TM - TL), T - full(TL), 'RelTol', 100*eps);
+testCase.assertEqual(full(TL + TM), full(TL) + T, 'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TL - TM), full(TL) - T, 'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TM + TL), T + full(TL), 'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TM - TL), T - full(TL), 'RelTol', 100*eps, 'AbsTol', 100*eps);
 
 % These four tests fail with probability 0
 testCase.assertEqual(drank(TL + TM), dr+2);
