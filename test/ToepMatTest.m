@@ -140,11 +140,11 @@ end
 
 function test_add_dense(testCase)
 
-% Addition of non-scalar always makes result dense
+% [] is a Toeplitz matrix, so we stay in this class
 T = ToepMat([],[]);
 B = [] + T;
-testCase.assertEqual(class(B), 'double');
-testCase.assertTrue(isempty(B));
+testCase.assertEqual(class(B), 'ToepMat');
+testCase.assertTrue(isempty(full(B)));
 
 T = toepeye(3);
 testCase.assertError( @() T + rand(2), 'tlzstein:InconsistentInput');
@@ -198,7 +198,10 @@ testCase.assertEqual(full(E - TM), E - T);
 
 [c,r,T] = random_toeplitz(7,7);
 TM = ToepMat(c,r);
-A = toeplitz(rand(7,1), rand(7,1));
+cc = rand(7,1);
+rr = rand(7,1);
+cc(1) = rr(1);
+A = toeplitz(cc,rr);
 testCase.assertEqual(class(TM + A), 'ToepMat');
 testCase.assertEqual(full(TM + A), T + A);
 testCase.assertEqual(class(TM - A), 'ToepMat');

@@ -80,8 +80,11 @@ classdef ToepMat
                     if m==1 && n==1
                         % Add a scalar to all entries
                         S = op1.add_scalar(op2);
+                    elseif is_exact_toeplitz(op2)
+                        % It's a dense toeplitz matrix
+                        S = op1.add_dense_toeplitz_matrix(op2);
                     else
-                        % It's a matrix
+                        % It's some dense matrix
                         S = op1.add_dense_matrix(op2);
                     end
                 otherwise
@@ -93,6 +96,25 @@ classdef ToepMat
         function S = add_scalar(TM, alpha)
             TM.r = TM.r + alpha;
             TM.c = TM.c + alpha;
+            S = TM;
+        end
+        
+        function S = add_dense_toeplitz_matrix(TM, T)
+            if any(size(TM) ~= size(T))
+                error('tlzstein:InconsistentInput', ...
+                'Matrix dimensions must agree');
+            end
+
+            if isempty(T)
+                S = TM;
+                return;
+            end
+                
+            cc = T(:,1);
+            rr = T(1,:);
+
+            TM.c = TM.c + cc(:);
+            TM.r = TM.r + rr(:);
             S = TM;
         end
         
