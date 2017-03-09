@@ -418,7 +418,6 @@ testCase.assertEqual(class(s * TL), 'TLMat');
 testCase.assertEqual(class(TL * s), 'TLMat');
 testCase.assertEqual(full(s * TL), s * full(TL));
 testCase.assertEqual(full(TL * s), s * full(TL));
-
 end
 
 function test_mtimes_toepmat(testCase)
@@ -458,13 +457,86 @@ testCase.assertEqual(class(TM * TL), 'TLMat');
 testCase.assertEqual(full(TL * TM), full(TL) * T);
 testCase.assertEqual(full(TM * TL), T * full(TL));
 testCase.assertEqual(drank(TM * TL), 5);
-
 end
 
 function test_mtimes_tlmat(testCase)
+
+TL1 = tleye(8);
+TL2 = TLMat([1,2,3], [1, -2, -1]);
+testCase.assertError( @() TL1 * TL2, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TL2 * TL1, 'tlzstein:InconsistentInput');
+
+TL1 = tleye(1);
+TL2 = TLMat(3i);
+testCase.assertEqual(class(TL1 * TL2), 'TLMat');
+testCase.assertEqual(class(TL2 * TL1), 'TLMat');
+testCase.assertEqual(full(TL1 * TL2), 3i);
+testCase.assertEqual(full(TL2 * TL1), 3i);
+
+TL1 = TLMat(rand(8,2), 1i*rand(8,2));
+TL2 = tleye(8);
+testCase.assertEqual(class(TL1 * TL2), 'TLMat');
+testCase.assertEqual(class(TL2 * TL1), 'TLMat');
+testCase.assertEqual(full(TL1 * TL2), full(TL1));
+testCase.assertEqual(full(TL2 * TL1), full(TL1));
+
+TL1 = TLMat(rand(8,3), 1i*rand(8,3));
+TL2 = TLMat(ones(8,1), ones(8,1));
+testCase.assertEqual(class(TL1 * TL2), 'TLMat');
+testCase.assertEqual(class(TL2 * TL1), 'TLMat');
+testCase.assertEqual(full(TL1 * TL2), full(TL1) * ones(8));
+testCase.assertEqual(full(TL2 * TL1), ones(8) * full(TL1));
+
+TL1 = TLMat(rand(9,1), 1i*rand(9,1));
+TL2 = TLMat(1i*randn(9,1), randn(9,1));
+testCase.assertEqual(class(TL1 * TL2), 'TLMat');
+testCase.assertEqual(class(TL2 * TL1), 'TLMat');
+testCase.assertEqual(full(TL1 * TL2), full(TL1) * full(TL2));
+testCase.assertEqual(full(TL2 * TL1), full(TL2) * full(TL1));
+
+TL1 = TLMat(rand(9,3), rand(9,3));
+TL2 = TLMat(1i*randn(9,3), randn(9,3));
+testCase.assertEqual(class(TL1 * TL2), 'TLMat');
+testCase.assertEqual(class(TL2 * TL1), 'TLMat');
+testCase.assertEqual(full(TL1 * TL2), full(TL1) * full(TL2));
+testCase.assertEqual(full(TL2 * TL1), full(TL2) * full(TL1));
+
 end
 
 function test_mtimes_double_matrix(testCase)
+
+TL = tleye(8);
+A = rand(7);
+testCase.assertError( @() TL * A, 'tlzstein:InconsistentInput');
+testCase.assertError( @() A * TL, 'tlzstein:InconsistentInput');
+
+TL = TLMat([]);
+A = [];
+testCase.assertEqual(class(TL * A), 'TLMat');
+testCase.assertEqual(class(A * TL), 'TLMat');
+testCase.assertEqual(full(TL * A), []);
+testCase.assertEqual(full(A * TL), []);
+
+TL = tleye(3);
+A = eye(3);
+testCase.assertEqual(class(TL * A), 'TLMat');
+testCase.assertEqual(class(A * TL), 'TLMat');
+testCase.assertEqual(full(TL * A), eye(3));
+testCase.assertEqual(full(A * TL), eye(3));
+
+TL = TLMat(rand(3), rand(3));
+A = rand(3);
+testCase.assertEqual(class(TL * A), 'TLMat');
+testCase.assertEqual(class(A * TL), 'TLMat');
+testCase.assertEqual(full(TL * A), full(TL) * A);
+testCase.assertEqual(full(A * TL), A * full(TL));
+
+TL = TLMat(randn(12,3) + 1i * randn(12,3), randn(12,3));
+A = 1i * randn(12);
+testCase.assertEqual(class(TL * A), 'TLMat');
+testCase.assertEqual(class(A * TL), 'TLMat');
+testCase.assertEqual(full(TL * A), full(TL) * A);
+testCase.assertEqual(full(A * TL), A * full(TL));
 
 end
 
