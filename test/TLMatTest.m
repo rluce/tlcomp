@@ -289,7 +289,7 @@ TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
 TL_true = full(TL) + diag(ones(n,1));
 TL = TL + toepeye(n);
 testCase.assertEqual(class(TL), 'TLMat');
-testCase.assertEqual(full(TL), TL_true, 'RelTol', 10*eps);
+testCase.assertEqual(full(TL), TL_true, 'RelTol', 50*eps);
 testCase.assertEqual(drank(TL), r + 1); % Fails with prob. 0
 
 TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
@@ -297,29 +297,29 @@ sigma = rand + 1i * rand;
 TL_true = full(TL) + diag(sigma * ones(n,1));
 TL = TL + sigma * toepeye(n);
 testCase.assertEqual(class(TL), 'TLMat');
-testCase.assertEqual(full(TL), TL_true);
+testCase.assertEqual(full(TL), TL_true, 'RelTol', 100*eps);
 testCase.assertEqual(drank(TL), r + 1); % Fails with prob. 0
 
 % Sum of random matrices
 n = 11;
-r = 3;
-TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
+dr = 3;
+TL = TLMat(rand(n,dr), rand(n,dr) + 1i * rand(n,dr));
 [c,r, T] = random_toeplitz(n,n);
 TM = ToepMat(c,r);
 testCase.assertEqual(class(TL + TM), 'TLMat');
 testCase.assertEqual(class(TL - TM), 'TLMat');
 testCase.assertEqual(class(TM + TL), 'TLMat');
 testCase.assertEqual(class(TM - TL), 'TLMat');
-testCase.assertEqual(full(TL + TM), full(TL) + T);
-testCase.assertEqual(full(TL - TM), full(TL) - T);
-testCase.assertEqual(full(TM + TL), T + full(TL));
-testCase.assertEqual(full(TM - TL), T - full(TL));
+testCase.assertEqual(full(TL + TM), full(TL) + T, 'RelTol', 100*eps);
+testCase.assertEqual(full(TL - TM), full(TL) - T, 'RelTol', 100*eps);
+testCase.assertEqual(full(TM + TL), T + full(TL), 'RelTol', 100*eps);
+testCase.assertEqual(full(TM - TL), T - full(TL), 'RelTol', 100*eps);
 
 % These four tests fail with probability 0
-testCase.assertEqual(drank(TL + TM), r+2);
-testCase.assertEqual(drank(TL - TM), r+2);
-testCase.assertEqual(drank(TM + TL), r+2);
-testCase.assertEqual(drank(TM - TL), r+2);
+testCase.assertEqual(drank(TL + TM), dr+2);
+testCase.assertEqual(drank(TL - TM), dr+2);
+testCase.assertEqual(drank(TM + TL), dr+2);
+testCase.assertEqual(drank(TM - TL), dr+2);
 
 end
 
