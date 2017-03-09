@@ -383,6 +383,56 @@ TL = tleye(randn(9,4), 1i * rand(9.4));
 testCase.assertEqual(class(TL'), 'TLMat');
 testCase.assertEqual(full(TL'), full(TL)');
 testCase.assertEqual(full((TL')'), full(TL));
+end
+
+function test_mtimes_scalar(testCase)
+TL = TLMat([]);
+s = 8;
+testCase.assertTrue(isempty(full(s * TL)));
+
+TL = TLMat(1i);
+s = 1i;
+testCase.assertEqual(class(s * TL), 'TLMat');
+testCase.assertEqual(class(TL * s), 'TLMat');
+testCase.assertEqual(full(s * TL), -1);
+testCase.assertEqual(full(TL * s), -1);
+
+TL = tleye(5);
+s = -2;
+testCase.assertEqual(class(s * TL), 'TLMat');
+testCase.assertEqual(class(TL * s), 'TLMat');
+testCase.assertEqual(full(s * TL), -2 * eye(5));
+testCase.assertEqual(full(TL * s), -2 * eye(5));
+
+[c,r,T] = random_toeplitz(7,7);
+TL = TLMat(c,r);
+s = 1i * pi;
+testCase.assertEqual(class(s * TL), 'TLMat');
+testCase.assertEqual(class(TL * s), 'TLMat');
+testCase.assertEqual(full(s * TL), s * T);
+testCase.assertEqual(full(TL * s), s * T);
+
+TL = TLMat(rand(12,4), rand(12,4));
+s = -2 + 4i;
+testCase.assertEqual(class(s * TL), 'TLMat');
+testCase.assertEqual(class(TL * s), 'TLMat');
+testCase.assertEqual(full(s * TL), s * full(TL));
+testCase.assertEqual(full(TL * s), s * full(TL));
+
+end
+
+function test_mtimes_toepmat(testCase)
+
+end
+
+function test_mtimes_tlmat(testCase)
+end
+
+function test_mtimes_double_matrix(testCase)
+
+end
+
+function test_mtimes_double_vector(testCase)
 
 end
 
