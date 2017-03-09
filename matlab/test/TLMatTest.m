@@ -537,10 +537,17 @@ testCase.assertEqual(class(TL * A), 'TLMat');
 testCase.assertEqual(class(A * TL), 'TLMat');
 testCase.assertEqual(full(TL * A), full(TL) * A);
 testCase.assertEqual(full(A * TL), A * full(TL));
-
 end
 
 function test_mtimes_double_vector(testCase)
+
+TL = tleye(9);
+x = ones(9,1);
+testCase.assertEqual(TL * x, x);
+
+TL = TLMat(randn(9,3), randn(9,3));
+x = randn(9,1);
+testCase.assertEqual(TL * x, full(TL) * x);
 
 end
 
