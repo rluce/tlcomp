@@ -87,6 +87,8 @@ classdef ToepMat
                         % It's some dense matrix
                         S = op1.add_dense_matrix(op2);
                     end
+                case 'ToepMat'
+                    S = op1.add_toepmat(op2);
                 otherwise
                     error('tlzstein:NotImplemented', ...
                         'Addition not implemented for this operand');
@@ -97,6 +99,16 @@ classdef ToepMat
             TM.r = TM.r + alpha;
             TM.c = TM.c + alpha;
             S = TM;
+        end
+        
+        function S = add_toepmat(TM1, TM2)
+            if any(size(TM1) ~= size(TM2))
+                error('tlzstein:InconsistentInput', ...
+                    'Matrix dimensions must agree');
+            end
+            TM1.r = TM1.r + TM2.r;
+            TM1.c = TM1.c + TM2.c;
+            S = TM1;
         end
         
         function S = add_dense_toeplitz_matrix(TM, T)

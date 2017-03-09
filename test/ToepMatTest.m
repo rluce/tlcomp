@@ -216,7 +216,7 @@ end
 function test_add_toepmat(testCase)
 T = ToepMat([], []) + ToepMat([], []);
 testCase.assertEqual(class(T), 'ToepMat');
-testCase.assertTrue(isempty(T));
+testCase.assertTrue(isempty(full(T)));
 
 T1 = ToepMat(3,3);
 T2 = ToepMat(-3,-3);
@@ -242,6 +242,11 @@ testCase.assertEqual(full(TM1 + TM2), T1+T2);
 testCase.assertEqual(full(TM1 - TM2), T1-T2);
 testCase.assertEqual(full(TM2 + TM1), T2+T1);
 testCase.assertEqual(full(TM2 - TM1), T2-T1);
+
+TM1 = ToepMat([1,2,3], [1,5,6]);
+TM2 = ToepMat([6,5], [6,0]);
+testCase.assertError( @() TM1 + TM2, 'tlzstein:InconsistentInput');
+
 
 end
 
