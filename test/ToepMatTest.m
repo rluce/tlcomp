@@ -268,6 +268,47 @@ end
 
 function test_mtimes_scalar(testCase)
 
+TM = ToepMat([], []);
+s = 0;
+testCase.assertEqual(class(TM * s), 'ToepMat');
+testCase.assertEqual(class(s * TM), 'ToepMat');
+testCase.assertTrue(isempty(full(TM * s)));
+testCase.assertTrue(isempty(full(s * TM)));
+
+s = 4 - 2i;
+testCase.assertEqual(class(TM * s), 'ToepMat');
+testCase.assertEqual(class(s * TM), 'ToepMat');
+testCase.assertTrue(isempty(full(TM * s)));
+testCase.assertTrue(isempty(full(s * TM)));
+
+t = -1 + sqrt(2)*1i;
+TM = ToepMat(t,t);
+s = 0;
+testCase.assertEqual(class(TM * s), 'ToepMat');
+testCase.assertEqual(class(s * TM), 'ToepMat');
+testCase.assertEqual(full(TM * s), 0);
+testCase.assertEqual(full(s * TM), 0);
+
+s = 4 - 2i;
+testCase.assertEqual(class(TM * s), 'ToepMat');
+testCase.assertEqual(class(s * TM), 'ToepMat');
+testCase.assertEqual(full(TM * s), t*s);
+testCase.assertEqual(full(s * TM), s*t);
+
+TM = toepeye(8);
+testCase.assertEqual(class(TM * s), 'ToepMat');
+testCase.assertEqual(class(s * TM), 'ToepMat');
+testCase.assertEqual(full(TM * s), s*eye(8));
+testCase.assertEqual(full(s * TM), s*eye(8));
+
+[c,r,T] = random_toeplitz(12,12);
+TM = ToepMat(c,r);
+s = exp(12/5 * pi * 1i);
+testCase.assertEqual(class(TM * s), 'ToepMat');
+testCase.assertEqual(class(s * TM), 'ToepMat');
+testCase.assertEqual(full(TM * s), T*s);
+testCase.assertEqual(full(s * TM), s*T);
+
 end
 
 function test_mtimes_tritoep(testCase)

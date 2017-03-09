@@ -81,5 +81,61 @@ classdef ToepMat
             end
         end
         
+        function P = mtimes(op1, op2)
+            if isa(op1, 'ToepMat')
+                % Dispatch on first operand
+                switch class(op2)
+                    case 'double'
+                        P = dispatch_tm_mtimes_double(op1, op2);
+                    otherwise
+                        error('tlzstein:NotImplemented', ...
+                            'Multiplication not implemented for this operand');
+                end
+            elseif isa(op2, 'ToepMat')
+                % Dispatch on second operand
+                switch class(op1)
+                    case 'double'
+                        P = dispatch_double_mtimes_tm(op1, op2);
+                    otherwise
+                        error('tlzstein:NotImplemented', ...
+                            'Multiplication not implemented for this operand');
+
+                end
+            else
+                % Impossible
+                assert(false);
+            end
+        end
+        
+        function P = dispatch_tm_mtimes_double(TM, A)
+            assert(isa(TM, 'ToepMat'));
+            assert(isa(A, 'double'));
+            
+            [mm,nn] = size(A);
+            if mm == 1 && nn == 1
+                % Scalar multiplication, which is commutative
+                P = TM.mtimes_scalar(A);
+                return;
+            end
+        end
+
+        function P = dispatch_double_mtimes_tm(A, TM)
+            assert(isa(TM, 'ToepMat'));
+            assert(isa(A, 'double'));
+            
+            [mm,nn] = size(A);
+            if mm == 1 && nn == 1
+                % Scalar multiplication, which is commutative
+                P = TM.mtimes_scalar(A);
+                return;
+            end
+        end
+
+        
+        function P = mtimes_scalar(TM, s)
+            TM.c = s * TM.c;
+            TM.r = s * TM.r;
+            P = TM;
+        end
     end
 end
