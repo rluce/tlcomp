@@ -412,7 +412,7 @@ testCase.assertEqual(class(TL * s), 'TLMat');
 testCase.assertEqual(full(s * TL), s * T);
 testCase.assertEqual(full(TL * s), s * T);
 
-TL = TLMat(rand(12,4), rand(12,4));
+TL = TLMat(1i * rand(12,4), rand(12,4));
 s = -2 + 4i;
 testCase.assertEqual(class(s * TL), 'TLMat');
 testCase.assertEqual(class(TL * s), 'TLMat');
@@ -422,6 +422,42 @@ testCase.assertEqual(full(TL * s), s * full(TL));
 end
 
 function test_mtimes_toepmat(testCase)
+
+TL = tleye(5);
+TM = toepeye(4);
+testCase.assertError( @() TL * TM, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TM * TL, 'tlzstein:InconsistentInput');
+
+TL = TLMat([]);
+TM = ToepMat([]);
+testCase.assertEqual(class(TL * TM), 'TLMat');
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertTrue(isempty(full(TL*TM)));
+testCase.assertTrue(isempty(full(TM*TL)));
+
+TL = TLMat(1i);
+TM = ToepMat(1i,1i);
+testCase.assertEqual(class(TL * TM), 'TLMat');
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertEqual(full(TL * TM), -1);
+testCase.assertEqual(full(TM * TL), -1);
+
+TL = tleye(6);
+TM = toepeye(6);
+testCase.assertEqual(class(TL * TM), 'TLMat');
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertEqual(full(TL * TM), eye(6));
+testCase.assertEqual(full(TM * TL), eye(6));
+testCase.assertEqual(drank(TM * TL), 1);
+
+TL = TLMat(rand(12,3), rand(12,3) + 1i * rand(12,3));
+[c,r,T] = random_toeplitz(12,12);
+TM = ToepMat(c,r);
+testCase.assertEqual(class(TL * TM), 'TLMat');
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertEqual(full(TL * TM), full(TL) * T);
+testCase.assertEqual(full(TM * TL), T * full(TL));
+testCase.assertEqual(drank(TM * TL), 5);
 
 end
 
