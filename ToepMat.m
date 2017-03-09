@@ -96,6 +96,15 @@ classdef ToepMat
             S = TM;
         end
         
+        function S = add_dense_matrix(TM, A)
+            if any(size(TM) ~= size(A))
+                error('tlzstein:InconsistentInput', ...
+                'Matrix dimensions must agree');
+            end
+            S = full(TM) + A;
+        end
+        
+        
         function P = mtimes(op1, op2)
             if isa(op1, 'ToepMat')
                 % Dispatch on first operand
