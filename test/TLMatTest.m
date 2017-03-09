@@ -340,3 +340,50 @@ TL = TLMat(randn(9,3), randn(9,3) + 1i*randn(9,3));
 testCase.assertEqual(full(-TL), -full(TL));
 end
 
+function test_transpose(testCase)
+
+TL = TLMat([]);
+testCase.assertEqual(class(TL.'), 'TLMat');
+testCase.assertTrue(isempty(TL.'));
+
+TL = TLMat(-1i);
+testCase.assertEqual(class(TL.'), 'TLMat');
+testCase.assertEqual(full(TL.'), full(TL).');
+testCase.assertEqual(full((TL.').'), full(TL));
+
+TL = tleye(6);
+testCase.assertEqual(class(TL.'), 'TLMat');
+testCase.assertEqual(full(TL.'), full(TL).');
+testCase.assertEqual(full((TL.').'), full(TL));
+
+TL = tleye(randn(9,4), 1i * rand(9.4));
+testCase.assertEqual(class(TL.'), 'TLMat');
+testCase.assertEqual(full(TL.'), full(TL).');
+testCase.assertEqual(full((TL.').'), full(TL));
+
+end
+
+function test_ctranspose(testCase)
+
+TL = TLMat([]);
+testCase.assertEqual(class(TL'), 'TLMat');
+testCase.assertTrue(isempty(TL'));
+
+TL = TLMat(-1i);
+testCase.assertEqual(class(TL'), 'TLMat');
+testCase.assertEqual(full(TL'), full(TL)');
+testCase.assertEqual(full((TL')'), full(TL));
+
+TL = tleye(6);
+testCase.assertEqual(class(TL'), 'TLMat');
+testCase.assertEqual(full(TL'), full(TL)');
+testCase.assertEqual(full((TL')'), full(TL));
+
+TL = tleye(randn(9,4), 1i * rand(9.4));
+testCase.assertEqual(class(TL'), 'TLMat');
+testCase.assertEqual(full(TL'), full(TL)');
+testCase.assertEqual(full((TL')'), full(TL));
+
+end
+
+
