@@ -75,10 +75,25 @@ classdef ToepMat
                 case 'TLMat'
                     % Promote op1 to TLMat, and add
                     S = TLMat(op1.c, op1.r) + op2;
+                case 'double'
+                    [m,n] = size(op2);
+                    if m==1 && n==1
+                        % Add a scalar to all entries
+                        S = op1.add_scalar(op2);
+                    else
+                        % It's a matrix
+                        S = op1.add_dense_matrix(op2);
+                    end
                 otherwise
                     error('tlzstein:NotImplemented', ...
                         'Addition not implemented for this operand');
             end
+        end
+        
+        function S = add_scalar(TM, alpha)
+            TM.r = TM.r + alpha;
+            TM.c = TM.c + alpha;
+            S = TM;
         end
         
         function P = mtimes(op1, op2)

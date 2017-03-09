@@ -86,9 +86,12 @@ end
 function test_add_scalar(testCase)
 
 T = ToepMat([],[]);
-testCase.assertError( @() T+exp(1), 'tlzstein:InconsistentInput');
-testCase.assertError( @() exp(1)+T, 'tlzstein:InconsistentInput');
-testCase.assertError( @() exp(1)-T, 'tlzstein:InconsistentInput');
+testCase.assertEqual(class(T + exp(1)), 'ToepMat');
+testCase.assertTrue(isempty(full(T+exp(1))));
+testCase.assertEqual(class(exp(1) + T), 'ToepMat');
+testCase.assertTrue(isempty(full(exp(1) + T)));
+testCase.assertEqual(class(exp(1) - T), 'ToepMat');
+testCase.assertTrue(isempty(full(exp(1) - T)));
 
 T = ToepMat(2,2);
 T = T - 1;
@@ -109,7 +112,7 @@ testCase.assertEqual(full(pi - TM), pi - T);
 s = randn(1,1);
 TM = s + TM;
 TM = TM - s;
-testCase.assertEqual(full(TM), T);
+testCase.assertEqual(full(TM), T, 'AbsTol', 10*eps, 'RelTol', 10*eps);
 
 end
 
