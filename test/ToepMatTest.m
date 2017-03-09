@@ -326,15 +326,242 @@ testCase.assertEqual(full(s * TM), s*T);
 
 end
 
-function test_mtimes_tritoep(testCase)
-% Magic case where both operands are triangular, product stays in Toeplitz
-% space.
-end
-
 function test_mtimes_toep(testCase)
-% Both operands are ToepMat
+% Both operands are ToepMat, the result is TLMat
+% TODO This could be done a bit better:  if both a triangular, the result
+% is Toeplitz again, for example.  For now, the result will always be TL.
+
+TM1 = ToepMat([1,1], [1,2]);
+TM2 = ToepMat([1,1,1], [1,2,2]);
+testCase.assertError( @() TM1 * TM2, 'tlzstein:InconsistentInput');
+
+
+TM1 = ToepMat([], []);
+TM2 = TM1;
+testCase.assertEqual(class(TM1 * TM2), 'TLMat');
+testCase.assertTrue(isempty(full(TM1 *TM2)));
+
+TM1 = ToepMat(4,4);
+TM2 = ToepMat(.5, .5);
+testCase.assertEqual(class(TM1 * TM2), 'TLMat');
+testCase.assertEqual(full(TM1 * TM2), 2);
+testCase.assertEqual(class(TM2 * TM1), 'TLMat');
+testCase.assertEqual(full(TM2 * TM1), 2);
+
+[c, r, T] = random_toeplitz(8,8);
+TM1 = ToepMat(c,r);
+TM2 = toepeye(8);
+testCase.assertEqual(class(TM1 * TM2), 'TLMat');
+testCase.assertEqual(full(TM1 * TM2), T);
+testCase.assertEqual(class(TM2 * TM1), 'TLMat');
+testCase.assertEqual(full(TM2 * TM1), T);
+testCase.assertEqual(drank(TM1*TM2), 2);
+testCase.assertEqual(drank(TM2*TM1), 2);
+
+[c, r, T] = random_toeplitz(8,8);
+TM1 = ToepMat(c,r);
+TM2 = ToepMat(ones(8,1), ones(8,1));
+testCase.assertEqual(class(TM1 * TM2), 'TLMat');
+testCase.assertEqual(full(TM1 * TM2), T * ones(8));
+testCase.assertEqual(class(TM2 * TM1), 'TLMat');
+testCase.assertEqual(full(TM2 * TM1), ones(8) * T);
+testCase.assertEqual(drank(TM1*TM2), 2);
+testCase.assertEqual(drank(TM2*TM1), 2);
+
+[c1, r1, T1] = random_toeplitz(9,9);
+TM1 = ToepMat(c1,r1);
+[c2, r2, T2] = random_toeplitz(9,9);
+TM2 = ToepMat(c2,r2);
+testCase.assertEqual(class(TM1 * TM2), 'TLMat');
+testCase.assertEqual(full(TM1 * TM2), T1 * T2);
+testCase.assertEqual(class(TM2 * TM1), 'TLMat');
+testCase.assertEqual(full(TM2 * TM1), T2 * T1);
+testCase.assertEqual(drank(TM1*TM2), 4);
+testCase.assertEqual(drank(TM2*TM1), 4);
+
+
+
 end
 
 function test_mtimes_tl(testCase)
 % One op is a TLMat
+
+TM = ToepMat([1,1], [1,2]);
+TL = TLMat([1,1,1], [1,2,2]);
+testCase.assertError( @() TM * TL, 'tlzstein:InconsistentInput');
+
+TM = ToepMat([], []);
+TL = TLMat([]);
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertTrue(isempty(full(TM *TL)));
+
+TM = ToepMat(4,4);
+TL = TLMat(.5, .5);
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertEqual(full(TM * TL), 2);
+testCase.assertEqual(class(TL * TM), 'TLMat');
+testCase.assertEqual(full(TL * TM), 2);
+
+[c, r, T] = random_toeplitz(8,8);
+TM = ToepMat(c,r);
+TL = tleye(8);
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertEqual(full(TM * TL), T);
+testCase.assertEqual(class(TL * TM), 'TLMat');
+testCase.assertEqual(full(TL * TM), T);
+testCase.assertEqual(drank(TM*TL), 2);
+testCase.assertEqual(drank(TL*TM), 2);
+
+[c, r, T] = random_toeplitz(8,8);
+TM = ToepMat(c,r);
+TL = TLMat(ones(8,1), ones(8,1));
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertEqual(full(TM * TL), T * ones(8));
+testCase.assertEqual(class(TL * TM), 'TLMat');
+testCase.assertEqual(full(TL * TM), ones(8) * T);
+testCase.assertEqual(drank(TM*TL), 2);
+testCase.assertEqual(drank(TL*TM), 2);
+
+[c1, r1, T1] = random_toeplitz(9,9);
+TM = ToepMat(c1,r1);
+[c2, r2, T2] = random_toeplitz(9,9);
+TL = TLMat(c2,r2);
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertEqual(full(TM * TL), T1 * T2);
+testCase.assertEqual(class(TL * TM), 'TLMat');
+testCase.assertEqual(full(TL * TM), T2 * T1);
+testCase.assertEqual(drank(TM*TL), 4);
+testCase.assertEqual(drank(TL*TM), 4);
+
+[c, r, T] = random_toeplitz(12,12);
+TM = ToepMat(c,r);
+TL = TLMat(rand(12,4),rand(12,4));
+testCase.assertEqual(class(TM * TL), 'TLMat');
+testCase.assertEqual(full(TM * TL), T * full(TL));
+testCase.assertEqual(class(TL * TM), 'TLMat');
+testCase.assertEqual(full(TL * TM), full(TL) * T);
+testCase.assertEqual(drank(TM*TL), 6);
+testCase.assertEqual(drank(TL*TM), 6);
+
+
+end
+
+function test_mtimes_double_matrix(testCase)
+% One operand is a dense matrix, result is dense
+% TODO one could do better and detect Toeplitz structure.  For now just
+% return dense.
+
+TM = ToepMat([1,1], [1,2]);
+A = randn(3);
+testCase.assertError( @() TM * A, 'tlzstein:InconsistentInput');
+testCase.assertError( @() A * TM, 'tlzstein:InconsistentInput');
+
+TM = ToepMat([],[]);
+A = [];
+testCase.assertEqual(class(TM * A), 'double');
+testCase.assertEqual(TM * A, []);
+testCase.assertEqual(class(A * TM), 'double');
+testCase.assertEqual(A * TM, []);
+
+TM = ToepMat(1,1);
+A = 1i;
+testCase.assertEqual(class(TM * A), 'double');
+testCase.assertEqual(TM * A, 1i);
+testCase.assertEqual(class(A * TM), 'double');
+testCase.assertEqual(A * TM, 1i);
+
+[c,r,T] = random_toeplitz(7,7);
+TM = ToepMat(c,r);
+A = eye(7);
+testCase.assertEqual(class(TM * A), 'double');
+testCase.assertEqual(TM * A, T);
+testCase.assertEqual(class(A * TM), 'double');
+testCase.assertEqual(A * TM, T);
+
+[c,r,T] = random_toeplitz(8,8);
+TM = ToepMat(c,r);
+A = ones(8);
+testCase.assertEqual(class(TM * A), 'double');
+testCase.assertEqual(TM * A, sum(T,2) * ones(1,8));
+testCase.assertEqual(class(A * TM), 'double');
+testCase.assertEqual(A * TM, ones(8,1) * sum(T,1));
+
+[c,r,T] = random_toeplitz(8,8);
+TM = ToepMat(c,r);
+A = rand(8);
+testCase.assertEqual(class(TM * A), 'double');
+testCase.assertEqual(TM * A, T * A);
+testCase.assertEqual(class(A * TM), 'double');
+testCase.assertEqual(A * TM, A * T);
+end
+
+function test_mtimes_double_vector(testCase)
+% Important special case: Toeplitz times vector
+
+[c,r,T] = random_toeplitz(8,8);
+TM = ToepMat(c,r);
+x = zeros(8,1);
+x(3) = 1;
+testCase.assertEqual(class(TM * x), 'double');
+testCase.assertEqual(TM * x, T(:,3));
+testCase.assertEqual(class(x * TM), 'double');
+testCase.assertEqual(x' * TM, T(3,:));
+
+[c,r,T] = random_toeplitz(8,8);
+TM = ToepMat(c,r);
+x = ones(8,1);
+testCase.assertEqual(class(TM * x), 'double');
+testCase.assertEqual(TM * x, sum(T,2));
+testCase.assertEqual(class(x * TM), 'double');
+testCase.assertEqual(x' * TM, sum(T,1));
+
+[c,r,T] = random_toeplitz(12,12);
+TM = ToepMat(c,r);
+x = rand(12,1);
+testCase.assertEqual(class(TM * x), 'double');
+testCase.assertEqual(TM * x, T*x);
+testCase.assertEqual(class(x * TM), 'double');
+testCase.assertEqual(x' * TM, x'*T);
+end
+
+function test_transpose(testCase)
+
+TM = ToepMat([], []);
+testCase.assertEqual(class(TM.'), 'ToepMat');
+testCase.assertEqual(full(TM.'), []);
+
+TM = ToepMat(2,2);
+testCase.assertEqual(class(TM.'), 'ToepMat');
+testCase.assertEqual(full(TM.'), 2);
+
+TM = ToepMat(2i,2i);
+testCase.assertEqual(class(TM.'), 'ToepMat');
+testCase.assertEqual(full(TM.'), 2i);
+
+[c,r,T] = random_toeplitz(9,9);
+TM = ToepMat(c,r);
+testCase.assertEqual(class(TM.'), 'ToepMat');
+testCase.assertEqual(full(TM.'), T.');
+testCase.assertEqual(full((TM.').'), T);
+end
+
+function test_ctranspose(testCase)
+
+TM = ToepMat([], []);
+testCase.assertEqual(class(TM'), 'ToepMat');
+testCase.assertEqual(full(TM'), []);
+
+TM = ToepMat(2,2);
+testCase.assertEqual(class(TM'), 'ToepMat');
+testCase.assertEqual(full(TM'), 2);
+
+TM = ToepMat(2i,2i);
+testCase.assertEqual(class(TM'), 'ToepMat');
+testCase.assertEqual(full(TM'), 2i);
+
+[c,r,T] = random_toeplitz(9,9);
+TM = ToepMat(c,r);
+testCase.assertEqual(class(TM'), 'ToepMat');
+testCase.assertEqual(full(TM'), T');
+testCase.assertEqual(full((TM')'), T);
 end
