@@ -261,10 +261,14 @@ testCase.assertEqual(drank(TM - TL), 5);
 testCase.assertEqual(drank(TL + TM), 5);
 testCase.assertEqual(drank(TL - TM), 5);
 
-testCase.assertEqual(full(TM + TL), full(TM) + T);
-testCase.assertEqual(full(TM - TL), full(TM) - T);
-testCase.assertEqual(full(TL + TM), T + full(TM));
-testCase.assertEqual(full(TL - TM), T - full(TM));
+testCase.assertEqual(full(TM + TL), T + full(TL), ...
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TM - TL), T - full(TL), ...
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TL + TM), full(TL) + T, ...
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TL - TM), full(TL) - T, ...
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
 
 end
 
