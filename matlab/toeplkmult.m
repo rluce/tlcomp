@@ -4,7 +4,7 @@ function y = toeplkmult(G, B, x, alg)
 % Multiplication of a Toeplitz-like matrix with a vector.
 
 if nargin < 4 || isempty(alg)
-    alg = 'new';
+    alg = 'full';
 end
 
 %y = tlmult_full(G, B, x);
