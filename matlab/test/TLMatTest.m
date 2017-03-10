@@ -484,33 +484,46 @@ TL1 = TLMat(rand(8,2), 1i*rand(8,2));
 TL2 = tleye(8);
 testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
-testCase.assertEqual(full(TL1 * TL2), full(TL1));
-testCase.assertEqual(full(TL2 * TL1), full(TL1));
+testCase.assertEqual(full(TL1 * TL2), full(TL1), ...
+    'AbsTol', 100*eps, 'RelTol', 100*eps);
+testCase.assertEqual(full(TL2 * TL1), full(TL1), ...
+    'AbsTol', 50*eps, 'RelTol', 50*eps);
+
 testCase.assertEqual(drank(TL1 * TL2), 2);
 
 TL1 = TLMat(rand(8,3), 1i*rand(8,3));
 TL2 = TLMat(ones(8,1), ones(8,1));
 testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
-testCase.assertEqual(full(TL1 * TL2), full(TL1) * ones(8));
-testCase.assertEqual(full(TL2 * TL1), ones(8) * full(TL1));
-testCase.assertEqual(drank(TL1 * TL2), 4);
+testCase.assertEqual(full(TL1 * TL2), full(TL1) * ones(8), ...
+    'AbsTol', 100*eps, 'RelTol', 100*eps);
+testCase.assertEqual(full(TL2 * TL1), ones(8) * full(TL1), ...
+    'AbsTol', 100*eps, 'RelTol', 100*eps);
 
-TL1 = TLMat(rand(9,1), 1i*rand(9,1));
-TL2 = TLMat(1i*randn(9,1), randn(9,1));
+testCase.assertEqual(drank(TL1 * TL2), 2);
+
+TL1 = TLMat(rand(9,1), 1i*rand(9,1), 'GB');
+TL2 = TLMat(1i*randn(9,1), randn(9,1), 'GB');
 testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
-testCase.assertEqual(full(TL1 * TL2), full(TL1) * full(TL2));
-testCase.assertEqual(full(TL2 * TL1), full(TL2) * full(TL1));
-testCase.assertEqual(drank(TL1 * TL2), 2);
+testCase.assertEqual(full(TL1 * TL2), full(TL1) * full(TL2), ...
+    'AbsTol', 500*eps, 'RelTol', 500*eps);
+testCase.assertEqual(full(TL2 * TL1), full(TL2) * full(TL1), ...
+    'AbsTol', 500*eps, 'RelTol', 500*eps);
+testCase.assertEqual(drank(TL1 * TL2), 3);
+
+
 
 TL1 = TLMat(rand(9,3), rand(9,3));
 TL2 = TLMat(1i*randn(9,3), randn(9,3));
 testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
-testCase.assertEqual(full(TL1 * TL2), full(TL1) * full(TL2));
-testCase.assertEqual(full(TL2 * TL1), full(TL2) * full(TL1));
-testCase.assertEqual(drank(TL1 * TL2), 6);
+testCase.assertEqual(full(TL1 * TL2), full(TL1) * full(TL2), ...
+    'AbsTol', 1e4*eps, 'RelTol', 1e4*eps);
+testCase.assertEqual(full(TL2 * TL1), full(TL2) * full(TL1), ...
+    'AbsTol', 1e4*eps, 'RelTol', 1e4*eps);
+
+testCase.assertEqual(drank(TL1 * TL2), 7);
 
 end
 

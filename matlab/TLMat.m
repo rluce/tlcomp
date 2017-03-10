@@ -240,7 +240,12 @@ classdef TLMat
         end
         
         function P = mtimes_tlmat(TL1, TL2)
-            P = [];
+            if any(size(TL1) ~= size(TL2))
+                error('tlzstein:InconsistentInput', ...
+                    'Matrix dimensions must agree');
+            end
+            [Gp, Bp] = toeplkprod(TL1.G, TL1.B, TL2.G, TL2.B);
+            P = TLMat(Gp, Bp, 'GB');
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function TL = compress(TL)
