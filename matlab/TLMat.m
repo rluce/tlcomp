@@ -179,6 +179,40 @@ classdef TLMat
             S = TL;
         end
         
+        function P = mtimes(op1, op2)
+            if isa(op1, 'TLMat')
+                switch class(op2)
+                    case 'double'
+                        [m,n] = size(op2);
+                        if m==1 && n == 1
+                            P = scalar_mult(op1, op2);
+                        else
+                            P = mtimes_double(op1, op2);
+                        end
+                    otherwise
+                        error('Not implemented');
+                end
+            elseif isa(op2, 'TLMat')
+                switch class(op1)
+                    case 'double'
+                        [m,n] = size(op1);
+                        if m==1 && n == 1
+                            P = scalar_mult(op2, op1);
+                        else
+                            P = mtimes_double(op2', op1')';
+                        end
+
+                    otherwise
+                        error('Not implemented');
+                end
+            else
+                assert(false);
+            end
+        end
+        
+        function TL = scalar_mult(TL, s)
+            TL.B = conj(s) * TL.B;
+        end
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function TL = compress(TL)

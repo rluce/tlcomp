@@ -409,15 +409,18 @@ TL = TLMat(c,r);
 s = 1i * pi;
 testCase.assertEqual(class(s * TL), 'TLMat');
 testCase.assertEqual(class(TL * s), 'TLMat');
-testCase.assertEqual(full(s * TL), s * T);
-testCase.assertEqual(full(TL * s), s * T);
+testCase.assertEqual(full(s * TL), s * T, 'AbsTol', 30*eps, 'RelTol', 30*eps);
+testCase.assertEqual(full(TL * s), s * T, 'AbsTol', 30*eps, 'RelTol', 30*eps);
 
 TL = TLMat(1i * rand(12,4), rand(12,4));
 s = -2 + 4i;
 testCase.assertEqual(class(s * TL), 'TLMat');
 testCase.assertEqual(class(TL * s), 'TLMat');
-testCase.assertEqual(full(s * TL), s * full(TL));
-testCase.assertEqual(full(TL * s), s * full(TL));
+testCase.assertEqual(full(s * TL), s * full(TL), ...
+    'AbsTol', 30*eps, 'RelTol', 30*eps);
+testCase.assertEqual(full(TL * s), s * full(TL), ...
+    'AbsTol', 30*eps, 'RelTol', 30*eps);
+
 end
 
 function test_mtimes_toepmat(testCase)
