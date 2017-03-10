@@ -557,7 +557,7 @@ testCase.assertEqual(full(TM'), 2);
 
 TM = ToepMat(2i,2i);
 testCase.assertEqual(class(TM'), 'ToepMat');
-testCase.assertEqual(full(TM'), 2i);
+testCase.assertEqual(full(TM'), -2i);
 
 [c,r,T] = random_toeplitz(9,9);
 TM = ToepMat(c,r);

@@ -48,6 +48,18 @@ classdef ToepMat
             TF = toeplitz(T.c, T.r);
         end
         
+        function T = transpose(T)
+            tmp = T.c;
+            T.c = T.r;
+            T.r = tmp;
+        end
+        
+        function T = ctranspose(T)
+            tmp = T.c;
+            T.c = conj(T.r);
+            T.r = conj(tmp);
+        end
+        
         function T = uplus(T)
             % Do nothing
         end
@@ -189,7 +201,6 @@ classdef ToepMat
             end
         end
 
-        
         function P = mtimes_scalar(TM, s)
             TM.c = s * TM.c;
             TM.r = s * TM.r;
