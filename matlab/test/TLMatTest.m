@@ -472,6 +472,7 @@ testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
 testCase.assertEqual(full(TL1 * TL2), 3i);
 testCase.assertEqual(full(TL2 * TL1), 3i);
+testCase.assertEqual(drank(TL1 * TL2), 1);
 
 TL1 = TLMat(rand(8,2), 1i*rand(8,2));
 TL2 = tleye(8);
@@ -479,6 +480,7 @@ testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
 testCase.assertEqual(full(TL1 * TL2), full(TL1));
 testCase.assertEqual(full(TL2 * TL1), full(TL1));
+testCase.assertEqual(drank(TL1 * TL2), 2);
 
 TL1 = TLMat(rand(8,3), 1i*rand(8,3));
 TL2 = TLMat(ones(8,1), ones(8,1));
@@ -486,6 +488,7 @@ testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
 testCase.assertEqual(full(TL1 * TL2), full(TL1) * ones(8));
 testCase.assertEqual(full(TL2 * TL1), ones(8) * full(TL1));
+testCase.assertEqual(drank(TL1 * TL2), 4);
 
 TL1 = TLMat(rand(9,1), 1i*rand(9,1));
 TL2 = TLMat(1i*randn(9,1), randn(9,1));
@@ -493,6 +496,7 @@ testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
 testCase.assertEqual(full(TL1 * TL2), full(TL1) * full(TL2));
 testCase.assertEqual(full(TL2 * TL1), full(TL2) * full(TL1));
+testCase.assertEqual(drank(TL1 * TL2), 2);
 
 TL1 = TLMat(rand(9,3), rand(9,3));
 TL2 = TLMat(1i*randn(9,3), randn(9,3));
@@ -500,6 +504,7 @@ testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
 testCase.assertEqual(full(TL1 * TL2), full(TL1) * full(TL2));
 testCase.assertEqual(full(TL2 * TL1), full(TL2) * full(TL1));
+testCase.assertEqual(drank(TL1 * TL2), 6);
 
 end
 
@@ -548,7 +553,5 @@ testCase.assertEqual(TL * x, x);
 TL = TLMat(randn(9,3), randn(9,3));
 x = randn(9,1);
 testCase.assertEqual(TL * x, full(TL) * x);
-
 end
-
 
