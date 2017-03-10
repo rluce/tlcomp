@@ -64,12 +64,26 @@ classdef TLMat
             TL = TL.compress();
         end % of constructor
         
-        function [m,n] = size(TL)
-            m = size(TL.G, 1);
-            n = size(TL.B, 1);
-            if nargout == 1
-                m = [m,n];
+        function [m,n] = size(TL, dim)
+            if nargin == 1
+                m = size(TL.G, 1);
+                n = size(TL.B, 1);
+            
+                if nargout == 1
+                    m = [m,n];
+                end
+                return;
+            elseif nargin == 2
+                if dim == 1
+                    m = size(TL.G, 1);
+                elseif dim == 2
+                    m = size(TL.B, 1);
+                else
+                    assert(false); % Should raise an error....
+                end
+                return;
             end
+            
         end
         
         function d = drank(TL)
@@ -214,6 +228,14 @@ classdef TLMat
             TL.B = conj(s) * TL.B;
         end
         
+        function B = mtimes_double(TL, A)
+            if size(TL,2) ~= size(A,1)
+                error('tlzstein:InconsistentInput', ...
+                    'Matrix dimensions must agree');
+            end
+            
+            B = toeplkmult(TL.G, TL.b, A);
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function TL = compress(TL)
             [TL.G, TL.B] = gencompress(TL.G, TL.B);

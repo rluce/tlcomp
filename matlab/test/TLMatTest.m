@@ -118,6 +118,9 @@ testCase.assertEqual(size(TL), [1,1]);
 TL = TLMat([1,2,5], [1,2,5]);
 testCase.assertEqual(size(TL), [3,3]);
 
+testCase.assertEqual(size(TL, 1), 3);
+testCase.assertEqual(size(TL, 2), 3);
+
 end
 
 
