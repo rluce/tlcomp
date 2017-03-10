@@ -523,31 +523,31 @@ testCase.assertError( @() A * TL, 'tlzstein:InconsistentInput');
 
 TL = TLMat([]);
 A = [];
-testCase.assertEqual(class(TL * A), 'TLMat');
-testCase.assertEqual(class(A * TL), 'TLMat');
-testCase.assertEqual(full(TL * A), []);
-testCase.assertEqual(full(A * TL), []);
+testCase.assertEqual(class(TL * A), 'double');
+testCase.assertEqual(class(A * TL), 'double');
+testCase.assertEqual(TL * A, []);
+testCase.assertEqual(A * TL, []);
 
 TL = tleye(3);
 A = eye(3);
-testCase.assertEqual(class(TL * A), 'TLMat');
-testCase.assertEqual(class(A * TL), 'TLMat');
-testCase.assertEqual(full(TL * A), eye(3));
-testCase.assertEqual(full(A * TL), eye(3));
+testCase.assertEqual(class(TL * A), 'double');
+testCase.assertEqual(class(A * TL), 'double');
+testCase.assertEqual(TL * A, eye(3));
+testCase.assertEqual(A * TL, eye(3));
 
 TL = TLMat(rand(3), rand(3));
 A = rand(3);
-testCase.assertEqual(class(TL * A), 'TLMat');
-testCase.assertEqual(class(A * TL), 'TLMat');
-testCase.assertEqual(full(TL * A), full(TL) * A);
-testCase.assertEqual(full(A * TL), A * full(TL));
+testCase.assertEqual(class(TL * A), 'double');
+testCase.assertEqual(class(A * TL), 'double');
+testCase.assertEqual(TL * A, full(TL) * A);
+testCase.assertEqual(A * TL, A * full(TL), 'AbsTol', 10*eps, 'RelTol', 10*eps);
 
 TL = TLMat(randn(12,3) + 1i * randn(12,3), randn(12,3));
 A = 1i * randn(12);
-testCase.assertEqual(class(TL * A), 'TLMat');
-testCase.assertEqual(class(A * TL), 'TLMat');
-testCase.assertEqual(full(TL * A), full(TL) * A);
-testCase.assertEqual(full(A * TL), A * full(TL));
+testCase.assertEqual(class(TL * A), 'double');
+testCase.assertEqual(class(A * TL), 'double');
+testCase.assertEqual(TL * A, full(TL) * A);
+testCase.assertEqual(A * TL, A * full(TL), 'AbsTol', 10*eps, 'RelTol', 10*eps);
 end
 
 function test_mtimes_double_vector(testCase)

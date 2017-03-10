@@ -234,7 +234,7 @@ classdef TLMat
                     'Matrix dimensions must agree');
             end
             
-            B = toeplkmult(TL.G, TL.b, A);
+            B = toeplkmult(TL.G, TL.B, A);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function TL = compress(TL)
