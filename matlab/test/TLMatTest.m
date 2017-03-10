@@ -358,7 +358,7 @@ testCase.assertEqual(full((TL.').'), full(TL));
 
 TL = TLMat(randn(9,4), 1i * rand(9,4));
 testCase.assertEqual(class(TL.'), 'TLMat');
-testCase.assertEqual(full(TL.'), full(TL).', 'Abstol', eps);
+testCase.assertEqual(full(TL.'), full(TL).', 'Abstol', 2*eps, 'RelTol', 2*eps);
 testCase.assertEqual(full((TL.').'), full(TL));
 
 end
