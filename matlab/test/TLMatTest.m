@@ -344,7 +344,7 @@ function test_transpose(testCase)
 
 TL = TLMat([]);
 testCase.assertEqual(class(TL.'), 'TLMat');
-testCase.assertTrue(isempty(TL.'));
+testCase.assertTrue(isempty(full(TL.')));
 
 TL = TLMat(-1i);
 testCase.assertEqual(class(TL.'), 'TLMat');
@@ -356,9 +356,9 @@ testCase.assertEqual(class(TL.'), 'TLMat');
 testCase.assertEqual(full(TL.'), full(TL).');
 testCase.assertEqual(full((TL.').'), full(TL));
 
-TL = tleye(randn(9,4), 1i * rand(9.4));
+TL = TLMat(randn(9,4), 1i * rand(9,4));
 testCase.assertEqual(class(TL.'), 'TLMat');
-testCase.assertEqual(full(TL.'), full(TL).');
+testCase.assertEqual(full(TL.'), full(TL).', 'Abstol', eps);
 testCase.assertEqual(full((TL.').'), full(TL));
 
 end

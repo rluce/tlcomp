@@ -80,6 +80,12 @@ classdef TLMat
             T = stein_reconstruction(TL.G, TL.B);
         end
         
+        function TL = transpose(TL)
+            tmp = TL.G;
+            TL.G = conj(TL.B);
+            TL.B = conj(tmp);
+        end
+        
         function S = minus(op1, op2)
             S = op1 + (-op2);
         end
