@@ -203,6 +203,8 @@ classdef TLMat
                         else
                             P = mtimes_double(op1, op2);
                         end
+                    case 'TLMat'
+                        P = op1.mtimes_tlmat(op2);
                     otherwise
                         error('Not implemented');
                 end
@@ -235,6 +237,10 @@ classdef TLMat
             end
             
             B = toeplkmult(TL.G, TL.B, A);
+        end
+        
+        function P = mtimes_tlmat(TL1, TL2)
+            P = [];
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function TL = compress(TL)
