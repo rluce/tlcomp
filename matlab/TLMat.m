@@ -85,6 +85,13 @@ classdef TLMat
             TL.G = conj(TL.B);
             TL.B = conj(tmp);
         end
+
+        function TL = ctranspose(TL)
+            tmp = TL.G;
+            TL.G = TL.B;
+            TL.B = tmp;
+        end
+
         
         function S = minus(op1, op2)
             S = op1 + (-op2);
