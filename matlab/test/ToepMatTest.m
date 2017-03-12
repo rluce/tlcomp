@@ -410,9 +410,9 @@ testCase.assertEqual(full(TL * TM), 2);
 TM = ToepMat(c,r);
 TL = tleye(8);
 testCase.assertEqual(class(TM * TL), 'TLMat');
-testCase.assertEqual(full(TM * TL), T);
+testCase.assertEqual(full(TM * TL), T, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 testCase.assertEqual(class(TL * TM), 'TLMat');
-testCase.assertEqual(full(TL * TM), T);
+testCase.assertEqual(full(TL * TM), T, 'AbsTol', 50*eps, 'RelTol', 50*eps);
 testCase.assertEqual(drank(TM*TL), 2);
 testCase.assertEqual(drank(TL*TM), 2);
 
@@ -420,9 +420,11 @@ testCase.assertEqual(drank(TL*TM), 2);
 TM = ToepMat(c,r);
 TL = TLMat(ones(8,1), ones(8,1));
 testCase.assertEqual(class(TM * TL), 'TLMat');
-testCase.assertEqual(full(TM * TL), T * ones(8));
+testCase.assertEqual(full(TM * TL), T * ones(8), ...
+    'AbsTol', 500*eps, 'RelTol', 500*eps);
 testCase.assertEqual(class(TL * TM), 'TLMat');
-testCase.assertEqual(full(TL * TM), ones(8) * T);
+testCase.assertEqual(full(TL * TM), ones(8) * T, ...
+    'AbsTol', 500*eps, 'RelTol', 500*eps);
 testCase.assertEqual(drank(TM*TL), 2);
 testCase.assertEqual(drank(TL*TM), 2);
 
@@ -431,9 +433,9 @@ TM = ToepMat(c1,r1);
 [c2, r2, T2] = random_toeplitz(9,9);
 TL = TLMat(c2,r2);
 testCase.assertEqual(class(TM * TL), 'TLMat');
-testCase.assertEqual(full(TM * TL), T1 * T2);
+testCase.assertEqual(full(TM * TL), T1 * T2, 'AbsTol', 500*eps, 'RelTol', 500*eps);
 testCase.assertEqual(class(TL * TM), 'TLMat');
-testCase.assertEqual(full(TL * TM), T2 * T1);
+testCase.assertEqual(full(TL * TM), T2 * T1, 'AbsTol', 500*eps, 'RelTol', 500*eps);
 testCase.assertEqual(drank(TM*TL), 4);
 testCase.assertEqual(drank(TL*TM), 4);
 
@@ -441,9 +443,11 @@ testCase.assertEqual(drank(TL*TM), 4);
 TM = ToepMat(c,r);
 TL = TLMat(rand(12,4),rand(12,4));
 testCase.assertEqual(class(TM * TL), 'TLMat');
-testCase.assertEqual(full(TM * TL), T * full(TL));
+testCase.assertEqual(full(TM * TL), T * full(TL), ...
+    'AbsTol', 500*eps, 'RelTol', 500*eps);
 testCase.assertEqual(class(TL * TM), 'TLMat');
-testCase.assertEqual(full(TL * TM), full(TL) * T);
+testCase.assertEqual(full(TL * TM), full(TL) * T, ...
+    'AbsTol', 500*eps, 'RelTol', 500*eps);
 testCase.assertEqual(drank(TM*TL), 6);
 testCase.assertEqual(drank(TL*TM), 6);
 
