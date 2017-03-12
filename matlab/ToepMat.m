@@ -157,6 +157,10 @@ classdef ToepMat
                 switch class(op2)
                     case 'double'
                         P = dispatch_tm_mtimes_double(op1, op2);
+                    case 'TLMat'
+                        % Promote op1, resort to TL matmul
+                        TL = TLMat(op1.c, op1.r);
+                        P = TL * op2;
                     otherwise
                         error('tlzstein:NotImplemented', ...
                             'Multiplication not implemented for this operand');

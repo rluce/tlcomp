@@ -434,7 +434,7 @@ testCase.assertError( @() TL * TM, 'tlzstein:InconsistentInput');
 testCase.assertError( @() TM * TL, 'tlzstein:InconsistentInput');
 
 TL = TLMat([]);
-TM = ToepMat([]);
+TM = ToepMat([], []);
 testCase.assertEqual(class(TL * TM), 'TLMat');
 testCase.assertEqual(class(TM * TL), 'TLMat');
 testCase.assertTrue(isempty(full(TL*TM)));
@@ -460,8 +460,10 @@ TL = TLMat(rand(12,3), rand(12,3) + 1i * rand(12,3));
 TM = ToepMat(c,r);
 testCase.assertEqual(class(TL * TM), 'TLMat');
 testCase.assertEqual(class(TM * TL), 'TLMat');
-testCase.assertEqual(full(TL * TM), full(TL) * T);
-testCase.assertEqual(full(TM * TL), T * full(TL));
+testCase.assertEqual(full(TL * TM), full(TL) * T, ...
+    'AbsTol', 500*eps, 'RelTol', 500*eps);
+testCase.assertEqual(full(TM * TL), T * full(TL), ...
+    'AbsTol', 500*eps, 'RelTol', 500*eps);
 testCase.assertEqual(drank(TM * TL), 5);
 end
 

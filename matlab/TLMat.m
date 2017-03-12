@@ -205,6 +205,9 @@ classdef TLMat
                         end
                     case 'TLMat'
                         P = op1.mtimes_tlmat(op2);
+                    case 'ToepMat'
+                        TL = TLMat(op2.c, op2.r);
+                        P = op1.mtimes_tlmat(TL);
                     otherwise
                         error('Not implemented');
                 end
