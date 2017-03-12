@@ -276,7 +276,7 @@ TL2 = TLMat(c2, r2);
 TL = TL1 + TL2;
 testCase.assertEqual(drank(TL), 2);
 testCase.assertEqual(full(TL), toeplitz(c1,r1) + toeplitz(c2,r2), ...
-    'RelTol', 100*eps);
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
 
 end
 
@@ -297,7 +297,7 @@ TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
 TL_true = full(TL) + diag(ones(n,1));
 TL = TL + toepeye(n);
 testCase.assertEqual(class(TL), 'TLMat');
-testCase.assertEqual(full(TL), TL_true, 'RelTol', 50*eps);
+testCase.assertEqual(full(TL), TL_true, 'RelTol', 100*eps);
 testCase.assertEqual(drank(TL), r + 1); % Fails with prob. 0
 
 TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
@@ -562,7 +562,7 @@ A = 1i * randn(12);
 testCase.assertEqual(class(TL * A), 'double');
 testCase.assertEqual(class(A * TL), 'double');
 testCase.assertEqual(TL * A, full(TL) * A);
-testCase.assertEqual(A * TL, A * full(TL), 'AbsTol', 10*eps, 'RelTol', 10*eps);
+testCase.assertEqual(A * TL, A * full(TL), 'AbsTol', 100*eps, 'RelTol', 100*eps);
 end
 
 function test_mtimes_double_vector(testCase)

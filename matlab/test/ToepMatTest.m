@@ -363,10 +363,10 @@ TM1 = ToepMat(c,r);
 TM2 = ToepMat(ones(8,1), ones(8,1));
 testCase.assertEqual(class(TM1 * TM2), 'TLMat');
 testCase.assertEqual(full(TM1 * TM2), T * ones(8), ...
-    'RelTol', 100*eps, 'AbsTol', 100*eps);
+    'RelTol', 500*eps, 'AbsTol', 500*eps);
 testCase.assertEqual(class(TM2 * TM1), 'TLMat');
 testCase.assertEqual(full(TM2 * TM1), ones(8) * T, ...
-    'RelTol', 100*eps, 'AbsTol', 100*eps);
+    'RelTol', 500*eps, 'AbsTol', 500*eps);
 testCase.assertEqual(drank(TM1*TM2), 2);
 testCase.assertEqual(drank(TM2*TM1), 2);
 
@@ -376,10 +376,10 @@ TM1 = ToepMat(c1,r1);
 TM2 = ToepMat(c2,r2);
 testCase.assertEqual(class(TM1 * TM2), 'TLMat');
 testCase.assertEqual(full(TM1 * TM2), T1 * T2, ...
-    'RelTol', 100*eps, 'AbsTol', 100*eps);
+    'RelTol', 500*eps, 'AbsTol', 500*eps);
 testCase.assertEqual(class(TM2 * TM1), 'TLMat');
 testCase.assertEqual(full(TM2 * TM1), T2 * T1, ...
-    'RelTol', 100*eps, 'AbsTol', 100*eps);
+    'RelTol', 500*eps, 'AbsTol', 500*eps);
 testCase.assertEqual(drank(TM1*TM2), 4);
 testCase.assertEqual(drank(TM2*TM1), 4);
 

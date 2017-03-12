@@ -61,7 +61,7 @@ B = B(:,randperm(6));
 [Gred, Bred, res_sv] = gencompress(G,B,3);
 testCase.assertEqual(size(Gred), [n,3]);
 testCase.assertEqual(size(Bred), [n,3]);
-testCase.assertEqual(Gred * Bred', G * B', 'AbsTol', 4*n*eps);
+testCase.assertEqual(Gred * Bred', G * B', 'AbsTol', 8*n*eps);
 testCase.assertLessThan(res_sv, 16*eps);
 
 end
