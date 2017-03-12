@@ -2,7 +2,7 @@ function [G,B] = stein_generator(c, r)
 % function [G,B] = stein_generator(c, r)
 %
 % Return the canonical generator of a Toeplitz matrix w.r.t Stein
-% displacement.
+% Z-displacement.
 
 if c(1) ~= r(1)
     error('tlzstein:InconsistentInput', ...
