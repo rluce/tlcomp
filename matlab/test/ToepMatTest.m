@@ -471,36 +471,39 @@ testCase.assertEqual(TM * A, []);
 testCase.assertEqual(class(A * TM), 'double');
 testCase.assertEqual(A * TM, []);
 
+% This should resolve through scalar multiplication
 TM = ToepMat(1,1);
 A = 1i;
-testCase.assertEqual(class(TM * A), 'double');
-testCase.assertEqual(TM * A, 1i);
-testCase.assertEqual(class(A * TM), 'double');
-testCase.assertEqual(A * TM, 1i);
+testCase.assertEqual(class(TM * A), 'ToepMat');
+testCase.assertEqual(full(TM * A), 1i);
+testCase.assertEqual(class(A * TM), 'ToepMat');
+testCase.assertEqual(full(A * TM), 1i);
 
 [c,r,T] = random_toeplitz(7,7);
 TM = ToepMat(c,r);
 A = eye(7);
 testCase.assertEqual(class(TM * A), 'double');
-testCase.assertEqual(TM * A, T);
-testCase.assertEqual(class(A * TM), 'double');
-testCase.assertEqual(A * TM, T);
+testCase.assertEqual(TM * A, T, 'AbsTol', 10*eps, 'RelTol', 10*eps);
+testCase.assertEqual(class(A * TM), 'double', 'AbsTol', 10*eps, 'RelTol', 10*eps);
+testCase.assertEqual(A * TM, T, 'AbsTol', 10*eps, 'RelTol', 10*eps);
 
 [c,r,T] = random_toeplitz(8,8);
 TM = ToepMat(c,r);
 A = ones(8);
 testCase.assertEqual(class(TM * A), 'double');
-testCase.assertEqual(TM * A, sum(T,2) * ones(1,8));
+testCase.assertEqual(TM * A, sum(T,2) * ones(1,8), ...
+    'AbsTol', 10*eps, 'RelTol', 10*eps);
 testCase.assertEqual(class(A * TM), 'double');
-testCase.assertEqual(A * TM, ones(8,1) * sum(T,1));
+testCase.assertEqual(A * TM, ones(8,1) * sum(T,1), ...
+    'AbsTol', 10*eps, 'RelTol', 10*eps);
 
 [c,r,T] = random_toeplitz(8,8);
 TM = ToepMat(c,r);
 A = rand(8);
 testCase.assertEqual(class(TM * A), 'double');
-testCase.assertEqual(TM * A, T * A);
+testCase.assertEqual(TM * A, T * A, 'RelTol', 100*eps, 'RelTol', 100*eps);
 testCase.assertEqual(class(A * TM), 'double');
-testCase.assertEqual(A * TM, A * T);
+testCase.assertEqual(A * TM, A * T, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 end
 
 function test_mtimes_double_vector(testCase)
@@ -511,25 +514,25 @@ TM = ToepMat(c,r);
 x = zeros(8,1);
 x(3) = 1;
 testCase.assertEqual(class(TM * x), 'double');
-testCase.assertEqual(TM * x, T(:,3));
-testCase.assertEqual(class(x * TM), 'double');
-testCase.assertEqual(x' * TM, T(3,:));
+testCase.assertEqual(TM * x, T(:,3), 'AbsTol', 10*eps, 'RelTol', 10*eps);
+testCase.assertEqual(class(x' * TM), 'double');
+testCase.assertEqual(x' * TM, T(3,:), 'AbsTol', 10*eps, 'RelTol', 10*eps);
 
 [c,r,T] = random_toeplitz(8,8);
 TM = ToepMat(c,r);
 x = ones(8,1);
 testCase.assertEqual(class(TM * x), 'double');
-testCase.assertEqual(TM * x, sum(T,2));
-testCase.assertEqual(class(x * TM), 'double');
-testCase.assertEqual(x' * TM, sum(T,1));
+testCase.assertEqual(TM * x, sum(T,2), 'RelTol', 10*eps, 'AbsTol', 10*eps);
+testCase.assertEqual(class(x' * TM), 'double');
+testCase.assertEqual(x' * TM, sum(T,1), 'AbsTol', 10*eps, 'RelTol', 10*eps);
 
 [c,r,T] = random_toeplitz(12,12);
 TM = ToepMat(c,r);
 x = rand(12,1);
 testCase.assertEqual(class(TM * x), 'double');
-testCase.assertEqual(TM * x, T*x);
-testCase.assertEqual(class(x * TM), 'double');
-testCase.assertEqual(x' * TM, x'*T);
+testCase.assertEqual(TM * x, T*x, 'AbsTol', 10*eps, 'RelTol', 10*eps);
+testCase.assertEqual(class(x' * TM), 'double');
+testCase.assertEqual(x' * TM, x'*T, 'AbsTol', 10*eps, 'RelTol', 10*eps);
 end
 
 function test_transpose(testCase)

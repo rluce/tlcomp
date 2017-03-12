@@ -195,6 +195,21 @@ classdef ToepMat
                 P = TM.mtimes_scalar(A);
                 return;
             end
+            
+            [m, n] = size(TM);
+            if n~= mm
+                error('tlzstein:InconsistentInput', ...
+                    'Matrix dimensions must agree');
+            end
+            
+            if isempty(A)
+                P = zeros(m, nn);
+                return;
+            end
+            
+            % A is at least 2x2
+            P = toepmult(TM.c, TM.r, A);
+
         end
 
         function P = dispatch_double_mtimes_tm(A, TM)
@@ -207,6 +222,22 @@ classdef ToepMat
                 P = TM.mtimes_scalar(A);
                 return;
             end
+            
+            [m, n] = size(TM);
+            if m~= nn
+                error('tlzstein:InconsistentInput', ...
+                    'Matrix dimensions must agree');
+            end
+            
+            if isempty(A)
+                P = zeros(mm, n);
+                return;
+            end
+            
+            % A is at least 2x2
+            TM = TM';
+            P = toepmult(TM.c, TM.r, A')';
+
         end
 
         function P = mtimes_scalar(TM, s)
