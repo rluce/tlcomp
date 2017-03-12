@@ -245,5 +245,10 @@ classdef ToepMat
             TM.r = s * TM.r;
             P = TM;
         end
+        
+        function P = polyvalm(p, TM)
+            [GP, BP] = toeppolyvalm(TM.c, TM.r, p);
+            P = TLMat(GP, BP, 'GB');
+        end
     end
 end

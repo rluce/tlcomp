@@ -576,3 +576,24 @@ testCase.assertEqual(class(TM'), 'ToepMat');
 testCase.assertEqual(full(TM'), T');
 testCase.assertEqual(full((TM')'), T);
 end
+
+function test_polyvalm(testCase)
+
+p = [1, 1, 1];
+TM = 1i * toepeye(9);
+T = 1i * eye(9);
+
+P = polyvalm(p, TM);
+P_true = polyvalm(p, T);
+testCase.assertEqual(class(P), 'TLMat');
+testCase.assertEqual(full(P), P_true);
+
+p = randn(1, 2) + 1i * randn(1,2);
+[c,r,T] = random_toeplitz(12,12);
+TM = ToepMat(c,r);
+P = polyvalm(p, TM);
+P_true = polyvalm(p, T);
+testCase.assertEqual(class(P), 'TLMat');
+testCase.assertEqual(full(P), P_true, 'AbsTol', 100*eps, 'RelTol', 100*eps);
+
+end
