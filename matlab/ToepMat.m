@@ -161,6 +161,10 @@ classdef ToepMat
                         % Promote op1, resort to TL matmul
                         TL = TLMat(op1.c, op1.r);
                         P = TL * op2;
+                    case 'ToepMat'
+                        % Promote op1, resort to TL matmul
+                        TL = TLMat(op1.c, op1.r);
+                        P = TL * op2;                        
                     otherwise
                         error('tlzstein:NotImplemented', ...
                             'Multiplication not implemented for this operand');
