@@ -250,5 +250,9 @@ classdef ToepMat
             [GP, BP] = toeppolyvalm(TM.c, TM.r, p);
             P = TLMat(GP, BP, 'GB');
         end
+        
+        function X = mldivide(TM, B)
+            X = toepsolve(TM.c, TM.r, B);
+        end
     end
 end

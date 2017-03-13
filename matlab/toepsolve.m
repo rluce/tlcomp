@@ -20,9 +20,8 @@ end
 
 % Pass through to drsolve Toeplitz solver.
 x = tsolve(c,r,b,1);
-%return;
 
-% This does one step of iterative refinement, could be made the default
+% One step of iterative refinement.
 for ii=1:1
 res = toepmult(c,r,x) - b;
 xx = tsolve(c,r,res,1);
