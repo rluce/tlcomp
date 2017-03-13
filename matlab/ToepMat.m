@@ -251,8 +251,19 @@ classdef ToepMat
             P = TLMat(GP, BP, 'GB');
         end
         
+        function TMinv = inv(TM)
+            [Ginv, Binv] = toepinv_generators(TM.c, TM.r);
+            TMinv = TLMat(Ginv, Binv, 'GB');
+        end
+        
         function X = mldivide(TM, B)
-            X = toepsolve(TM.c, TM.r, B);
+            switch class(B)
+                case 'double'
+                    X = toepsolve(TM.c, TM.r, B);
+                otherwise
+                    error('tlzstein:NotImplemented', ...
+                        'Operation not implemented yet, fixme');
+            end
         end
     end
 end

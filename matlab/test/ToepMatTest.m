@@ -598,7 +598,9 @@ testCase.assertEqual(full(P), P_true, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 
 end
 
-function test_mldivide(testCase)
+function test_mldivide_double(testCase)
+% Toeplitz \ (double matrix/vector)
+
 TM = 1i * toepeye(1);
 testCase.assertEqual(TM\0, 0);
 testCase.assertEqual(TM\1, -1i);
@@ -628,6 +630,17 @@ b = T*x;
 TM = ToepMat(c,r);
 testCase.assertTrue(isreal(TM\b));
 testCase.assertEqual(TM\b, x, 'AbsTol', 100*eps, 'RelTol', 100*eps);
+end
 
+function test_inv(testCase)
+
+TM = toepeye(3);
+TMinv = inv(TM);
+testCase.assertEqual(class(TMinv), 'TLMat');
+testCase.assertEqual(full(TMinv), eye(3), 'AbsTol', 10*eps, 'RelTol', 10*eps);
+
+[c,r,T] = random_toeplitz(9,9);
+TM = ToepMat(c,r);
+testCase.assertEqual(full(inv(TM)), inv(T), 'AbsTol', 500*eps, 'RelTol', 500*eps);
 
 end
