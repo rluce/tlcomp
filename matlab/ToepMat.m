@@ -256,6 +256,11 @@ classdef ToepMat
             TMinv = TLMat(Ginv, Binv, 'GB');
         end
         
+        function R = ratevalm(TM, p, q)
+            [Gr, Br] = toepratvalm(TM.c,TM.r,p,q);
+            R = TLMat(Gr, Br, 'GB');
+        end
+        
         function X = mldivide(TM, B)
             switch class(B)
                 case 'double'

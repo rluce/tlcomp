@@ -632,6 +632,43 @@ testCase.assertTrue(isreal(TM\b));
 testCase.assertEqual(TM\b, x, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 end
 
+function test_mldivide_toepmat(testCase)
+
+end
+
+function test_ratvalm(testCase)
+
+% A fancy way to write the identity mapping
+p = [1, 0];
+q = 1;
+[c, r, T] = random_toeplitz(13,13);
+TM = ToepMat(c,r);
+rT = TM.ratevalm(p,q);
+testCase.assertTrue(isa(rT, 'TLMat'));
+testCase.assertEqual(full(rT), T, 'AbsTol', 50*eps, 'RelTol', 50*eps);
+
+% Cayley transform
+e2 = zeros(16,1);
+e2(2) = 1;
+TM = ToepMat(-e2, e2); % Skew-symm
+T = full(TM);
+p = [1, 1];
+q = [1, -1];
+rT = TM.ratevalm(p, q);
+testCase.assertEqual(full(rT), (T - eye(16)) \ (T + eye(16)), ...
+    'AbsTol', 50*eps, 'RelTol', 50*eps);
+
+% Random rational function
+p = randn(1,4) + 1i * randn(1,4);
+q = randn(1,4) + 1i * randn(1,4);
+[c,r,T] = random_toeplitz(9,9);
+TM = ToepMat(c,r);
+rT = TM.ratevalm(p,q);
+testCase.assertEqual(full(rT), polyvalm(q, T) \ polyvalm(p, T), ...
+    'AbsTol', 5e4*eps, 'RelTol', 5e4*eps);
+end
+
+
 function test_inv(testCase)
 
 TM = toepeye(3);
