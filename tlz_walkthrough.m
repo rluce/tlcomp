@@ -70,7 +70,6 @@ tic; xx = T\b; toc
 disp(norm(x - xx)/norm(xx));
 
 % Rational function evaluation, here: Cayley transform
-% Cayley transform
 e2 = zeros(16,1);
 e2(2) = 1;
 TM = ToepMat(-e2, e2); % Skew-symm
