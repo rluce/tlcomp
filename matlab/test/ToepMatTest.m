@@ -621,7 +621,7 @@ testCase.assertEqual(TM\b, complex(x), 'AbsTol', 50*eps, 'RelTol', 50*eps);
 x = rand(12,5) + 1i * rand(12,5);
 b = T*x;
 TM = ToepMat(c,r);
-testCase.assertEqual(TM\b, x, 'AbsTol', 50*eps, 'RelTol', 50*eps);
+testCase.assertEqual(TM\b, x, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 
 [c,r,T] = random_toeplitz(12,12);
 c = real(c); r = real(r); T = real(T);

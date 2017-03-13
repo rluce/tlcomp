@@ -167,7 +167,8 @@ TLp0 = 0 + TL + 0;
 testCase.assertEqual(full(TLp0), full(TL));
 
 TLp1 = TL + 1;
-testCase.assertEqual(full(TLp1), full(TL) + 1, 'RelTol', 100*eps);
+testCase.assertEqual(full(TLp1), full(TL) + 1, ...
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
 
 TLmpi = TL - pi;
 testCase.assertEqual(full(TLmpi), full(TL) - pi, 'RelTol', 100*eps);
