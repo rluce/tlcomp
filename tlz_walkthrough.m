@@ -69,6 +69,14 @@ tic; x = TMbig \ b; toc
 tic; xx = T\b; toc
 disp(norm(x - xx)/norm(xx));
 
+% Rational function evaluation, here: Cayley transform
+% Cayley transform
+e2 = zeros(16,1);
+e2(2) = 1;
+TM = ToepMat(-e2, e2); % Skew-symm
+rT = TM.ratevalm([1,1], [1,-1]);
+disp(norm(full(rT) - ( (full(TM) - eye(16)) \ (full(TM) + eye(16) ) )));
+
 
 
 
