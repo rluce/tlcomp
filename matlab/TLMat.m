@@ -250,7 +250,34 @@ classdef TLMat
             [Gp, Bp] = toeplkprod(TL1.G, TL1.B, TL2.G, TL2.B);
             P = TLMat(Gp, Bp, 'GB');
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+        function D = mldivide(TL, op)
+            % Should only be called with first operand TL?
+            % If this ever triggers, the dispatch must be extended.
+            assert(isa(TL, 'TLMat'));
+           
+            m = size(TL, 1);
+            mm = size(op,1);
+            if mm ~= m
+                error('tlzstein:InconsistentInput', ...
+                    'Matrix dimensions must agree');
+            end
+            
+            switch class(op)
+                case 'double'
+                    D = toeplksolve(TL.G, TL.B, op);
+                case 'TLMat'
+                    D = TL.mldivide_tlmat(op);
+                otherwise
+                    error('tlzstein:NotImplemented', ...
+                        'No mldivide for this operand type, fixme');
+            end
+        end
+        
+        function D = mldivide_tlmat(TL, TL_rhs)
+            D = [];
+        end
+        
         function TL = compress(TL)
             [TL.G, TL.B] = gencompress(TL.G, TL.B);
         end
