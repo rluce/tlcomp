@@ -13,16 +13,16 @@ end
 
 switch alg
     case 'full'
-        [Gp, Bp] = tlsquare_full(G1,B1,G2,B2);
+        [Gp, Bp] = tlprod_full(G1,B1,G2,B2);
     case 'fft'
-        [Gp, Bp] = tlsquare_fft(G1,B1,G2,B2);
+        [Gp, Bp] = tlprod_fft(G1,B1,G2,B2);
     otherwise
         error('Invalid choice for alg parameter');
 end
 
 end
 
-function [Gp, Bp] = tlsquare_fft(G1, B1, G2, B2)
+function [Gp, Bp] = tlprod_fft(G1, B1, G2, B2)
 
 
 
@@ -49,7 +49,7 @@ Bp_part2 = vapply(Bp_part2);
 Bp = [B2, Bp_part1, Bp_part2];
 end
 
-function [Gp, Bp] = tlsquare_full(G1, B1, G2, B2)
+function [Gp, Bp] = tlprod_full(G1, B1, G2, B2)
 T1 = stein_reconstruction(G1,B1);
 T2 = stein_reconstruction(G2,B2);
 
