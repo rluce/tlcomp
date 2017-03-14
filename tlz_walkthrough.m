@@ -73,7 +73,11 @@ disp(norm(x - xx)/norm(xx));
 e2 = zeros(16,1);
 e2(2) = 1;
 TM = ToepMat(-e2, e2); % Skew-symm
-rT = TM.ratevalm([1,1], [1,-1]);
+rT = TM.ratevalm([1,1], [1,-1]); % This is a |TLMat|
+disp(norm(full(rT) - ( (full(TM) - eye(16)) \ (full(TM) + eye(16) ) )));
+
+% Can also be computed with \
+rT = (TM - toepeye(16)) \ (TM + toepeye(16)); % Again a |TLMat|
 disp(norm(full(rT) - ( (full(TM) - eye(16)) \ (full(TM) + eye(16) ) )));
 
 
