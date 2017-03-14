@@ -268,6 +268,9 @@ classdef TLMat
                     D = toeplksolve(TL.G, TL.B, op);
                 case 'TLMat'
                     D = TL.mldivide_tlmat(op);
+                case 'ToepMat'
+                    op = TLMat(op.c, op.r);
+                    D = TL.mldivide(op);
                 otherwise
                     error('tlzstein:NotImplemented', ...
                         'No mldivide for this operand type, fixme');
@@ -275,7 +278,8 @@ classdef TLMat
         end
         
         function D = mldivide_tlmat(TL, TL_rhs)
-            D = [];
+            [Gs, Bs] = toeplksolvetoeplk(TL.G, TL.B, TL_rhs.G, TL_rhs.B);
+            D = TLMat(Gs, Bs, 'GB');
         end
         
         function TL = compress(TL)

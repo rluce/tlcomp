@@ -596,11 +596,12 @@ testCase.assertEqual(class(TL1 \ TL2), 'TLMat');
 testCase.assertEqual(drank(TL1 \ TL2), 1);
 testCase.assertEqual(full(TL1 \ TL2), eye(5));
 
-TL1 = TLMat(randn(12,3), 1i * randn(12,3));
+TL1 = TLMat(randn(12,3), 1i * randn(12,3)) + tleye(12);
 TL2 = TLMat(1i * randn(12,2), randn(12,2));
 D = TL1 \ TL2;
 testCase.assertEqual(drank(D), 6);
-testCase.assertEqual(full(D), full(TL1) \ full(TL2));
+testCase.assertEqual(full(D), full(TL1) \ full(TL2), ...
+    'AbsTol', 1e4*eps, 'RelTol', 1e4*eps);
 end
 
 function test_mldivide_toepmat(testCase)
@@ -609,13 +610,14 @@ TL = tleye(9);
 [c,r,T] = random_toeplitz(9,9);
 TM = ToepMat(c,r);
 D = TL\TM;
-testCase.assertEqual(isa(D, 'TLMat'));
-testCase.assertEqual(full(D), T);
+testCase.assertTrue(isa(D, 'TLMat'));
+testCase.assertEqual(full(D), T, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 testCase.assertEqual(drank(D), 2);
 
 TL = TLMat(randn(9,4) + 1i*randn(9,4), randn(9,4) + 1i * randn(9,4));
 D = TL \ TM;
-testCase.assertEqual(full(D), full(TL) \ T);
+testCase.assertEqual(full(D), full(TL) \ T, ...
+    'AbsTol', 1e4*eps, 'RelTol', 1e4*eps);
 testCase.assertEqual(drank(D), 7);
 
 end

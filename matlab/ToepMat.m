@@ -277,9 +277,19 @@ classdef ToepMat
         end
         
         function X = mldivide(TM, B)
+            assert(isa(TM, 'ToepMat'));
+            
             switch class(B)
                 case 'double'
                     X = toepsolve(TM.c, TM.r, B);
+                case 'ToepMat'
+                    % Promote to TLMat, handle solve there
+                    TL = TLMat(TM.c, TM.r);
+                    X = TL \ B;
+                case 'TLMat'
+                    % Promote to TLMat, handle solve there
+                    TL = TLMat(TM.c, TM.r);
+                    X = TL \ B;
                 otherwise
                     error('tlzstein:NotImplemented', ...
                         'Operation not implemented yet, fixme');
