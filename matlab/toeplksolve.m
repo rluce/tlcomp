@@ -22,7 +22,7 @@ if size(G,1) == 1
     return;
 end
 
-% Use Gu pivoting
+% Use Gu pivoting w/ generator reorthogonalization
 piv = 4;
 
 % Transform to Z(1) / Z(-1) Sylvester displacement equation
