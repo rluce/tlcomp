@@ -32,7 +32,7 @@ disp(TM1 + TM2)
 disp(TM1 - TM2)
 disp(2i*pi * TM1)
 
-% Mixed |ToepMat| / double array prducts
+% Mixed |ToepMat| / double array products
 disp(TM1 * ones(8,1));
 disp(TM1 * ones(8,8));
 
