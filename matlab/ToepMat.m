@@ -31,12 +31,27 @@ classdef ToepMat
             T.r = r;
         end
        
-        function [s1, s2] = size(T)
-            s1 = length(T.c);
-            s2 = length(T.r);
-            if nargout < 2
-                s1 = [s1, s2];
+        function [s1, s2] = size(T, dim)
+            if nargin == 1
+                s1 = length(T.c);
+                s2 = length(T.r);
+                if nargout < 2
+                    s1 = [s1, s2];
+                end
+            elseif nargin == 2
+                if dim == 1
+                    s1 = length(T.c);
+                elseif dim == 2
+                    s1 = length(T.r);
+                else
+                    error('tlzstein:InconsistentInput', ...
+                        'No such dimension');
+                end
+            else
+                % Cannot happen unless code broken
+                assert(false);
             end
+            
         end
         
         function TF = full(T)

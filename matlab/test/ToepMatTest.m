@@ -64,6 +64,8 @@ testCase.assertEqual(s, [3,3]);
 [s1, s2] = size(T);
 testCase.assertEqual(s1, 3);
 testCase.assertEqual(s2, 3);
+testCase.assertEqual(size(T, 1), 3);
+testCase.assertEqual(size(T, 2), 3);
 
 
 end
@@ -634,6 +636,32 @@ end
 
 function test_mldivide_toepmat(testCase)
 
+TM1 = toepeye(9);
+TM2 = toepeye(9);
+
+TM = TM1 \ TM2;
+% We could do better and detect truely Toeplitz matrices, but for now we
+% always promote to TLMat
+testCase.assertTrue(isa(TM, 'TLMat'));
+testCase.assertEqual(full(TM), eye(9));
+
+% Cayley transform
+e2 = zeros(16,1);
+e2(2) = 1;
+TM = ToepMat(-e2, e2); % Skew-symm
+T = full(TM);
+R = (TM - toepeye(16)) \ (TM + toepeye(16));
+testCase.assertEqual(full(R), (T - eye(16)) \ (T + eye(16)), ...
+    'AbsTol', 50*eps, 'RelTol', 50*eps);
+
+[c1, r1, T1] = random_toeplitz(7,7);
+[c2, r2, T2] = random_toeplitz(7,7);
+TM1 = ToepMat(c1, r1);
+TM2 = ToepMat(c2, r2);
+TM = TM1 \ TM2;
+testCase.assertTrue(isa(TM, 'TLMat'));
+testCase.assertEqual(full(TM), T1 \T2);
+
 end
 
 function test_ratvalm(testCase)
@@ -678,6 +706,7 @@ testCase.assertEqual(full(TMinv), eye(3), 'AbsTol', 10*eps, 'RelTol', 10*eps);
 
 [c,r,T] = random_toeplitz(9,9);
 TM = ToepMat(c,r);
-testCase.assertEqual(full(inv(TM)), inv(T), 'AbsTol', 500*eps, 'RelTol', 500*eps);
+testCase.assertEqual(full(inv(TM)), inv(T), 'AbsTol', ...
+    1e4*eps, 'RelTol', 1e4*eps);
 
 end
