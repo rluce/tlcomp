@@ -319,10 +319,14 @@ testCase.assertEqual(class(TL + TM), 'TLMat');
 testCase.assertEqual(class(TL - TM), 'TLMat');
 testCase.assertEqual(class(TM + TL), 'TLMat');
 testCase.assertEqual(class(TM - TL), 'TLMat');
-testCase.assertEqual(full(TL + TM), full(TL) + T, 'RelTol', 100*eps, 'AbsTol', 100*eps);
-testCase.assertEqual(full(TL - TM), full(TL) - T, 'RelTol', 100*eps, 'AbsTol', 100*eps);
-testCase.assertEqual(full(TM + TL), T + full(TL), 'RelTol', 100*eps, 'AbsTol', 100*eps);
-testCase.assertEqual(full(TM - TL), T - full(TL), 'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TL + TM), full(TL) + T, ...
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TL - TM), full(TL) - T, ...
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TM + TL), T + full(TL), ...
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
+testCase.assertEqual(full(TM - TL), T - full(TL), ...
+    'RelTol', 100*eps, 'AbsTol', 100*eps);
 
 % These four tests fail with probability 0
 testCase.assertEqual(drank(TL + TM), dr+2);
@@ -563,7 +567,8 @@ A = 1i * randn(12);
 testCase.assertEqual(class(TL * A), 'double');
 testCase.assertEqual(class(A * TL), 'double');
 testCase.assertEqual(TL * A, full(TL) * A);
-testCase.assertEqual(A * TL, A * full(TL), 'AbsTol', 100*eps, 'RelTol', 100*eps);
+testCase.assertEqual(A * TL, A * full(TL), ...
+    'AbsTol', 100*eps, 'RelTol', 100*eps);
 end
 
 function test_mtimes_double_vector(testCase)
