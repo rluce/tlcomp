@@ -1,7 +1,7 @@
 function sol = toeplksolve(G, B, rhs)
 % sol = toeplksolve(G, B, rhs)
 %
-% Solve a Toeplitz-like system of equations.
+% Solve a Toeplitz-like system of equations with dense RHS.
 %
 % Input:
 %   G, B   -- the Stein-Z generator of the system matrix
@@ -9,8 +9,6 @@ function sol = toeplksolve(G, B, rhs)
 %
 % Output:
 %   sol    -- solution to the system
-
-% Use partial pivoting by default
 
 if size(G,1) == 1
     % Special code path for 1x1 matrices
@@ -24,13 +22,18 @@ if size(G,1) == 1
     return;
 end
 
-
+% Use Gu pivoting
 piv = 4;
-[GG, BB] = stein2sylv(G, B);
 
-% FIXME is this really necessary?
+% Transform to Z(1) / Z(-1) Sylvester displacement equation
+[GG, BB] = stein2sylv(G, B);
+% FIXME is this compression really necessary?
 [GG, BB] = gencompress(GG, BB);
+
+% Solve sytem
 sol = tlsolve(GG, BB, rhs, piv);
+
+% One step of refinement
 res = toeplkmult(G, B, sol) - rhs;
 cor = tlsolve(GG, BB, res, piv);
 sol = sol - cor;
