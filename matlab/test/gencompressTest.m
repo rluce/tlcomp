@@ -97,7 +97,7 @@ B = (randn(n,r) + 1i * randn(n,r)) * randn(r,R);
 [Gred, Bred] = gencompress(G,B,r+1);
 testCase.assertEqual(size(Gred), [n,r+1]);
 testCase.assertEqual(size(Bred), [n,r+1]);
-testCase.assertEqual(Gred*Bred', G*B', 'RelTol', 32*n*eps);
+testCase.assertEqual(Gred*Bred', G*B', 'RelTol', 64*n*eps);
 
 [Gred, Bred] = gencompress(G,B,r-1);
 testCase.assertEqual(size(Gred), [n,r-1]);

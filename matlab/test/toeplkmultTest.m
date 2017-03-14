@@ -133,6 +133,7 @@ function test_invtoep(testCase)
 n = 14;
 c = randn(n,1);
 r = randn(n,1);
+c(1) = c(1) + 1;
 r(1) = c(1);
 T = toeplitz(c,r);
 e = ones(n,1);

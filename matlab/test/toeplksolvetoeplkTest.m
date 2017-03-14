@@ -41,6 +41,7 @@ r1 = 3;
 r2 = 2;
 
 G1 = randn(n, r1);
+G1(1,1) = G1(1,1) + 1;
 B1 = randn(n, r1);
 G2 = randn(n, r2);
 B2 = randn(n, r2);

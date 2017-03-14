@@ -589,7 +589,7 @@ b = randn(14,3);
 x = TL \ b;
 xx = full(TL) \ b;
 testCase.assertTrue(isreal(x));
-testCase.assertEqual(x, xx, 'AbsTol', 100*eps, 'RelTol', 100*eps);
+testCase.assertEqual(x, xx, 'AbsTol', 500*eps, 'RelTol', 500*eps);
 
 end
 
