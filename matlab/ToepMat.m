@@ -300,5 +300,9 @@ classdef ToepMat
             val = norm(full(TM), p);
         end
         
+        function l = length(TM)
+            l = max(size(TM));
+        end
+        
     end
 end
