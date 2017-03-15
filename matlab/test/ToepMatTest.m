@@ -710,3 +710,12 @@ testCase.assertEqual(full(inv(TM)), inv(T), 'AbsTol', ...
     1e4*eps, 'RelTol', 1e4*eps);
 
 end
+
+function test_norm(testCase)
+
+[c, r, T] = random_toeplitz(7,7);
+TM = ToepMat(c,r);
+testCase.assertEqual(norm(TM, 1), norm(T, 1));
+testCase.assertEqual(norm(TM, 'inf'), norm(T, 'inf'));
+testCase.assertEqual(norm(TM, 'fro'), norm(T, 'fro'));
+end

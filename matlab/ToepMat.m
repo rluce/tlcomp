@@ -295,5 +295,10 @@ classdef ToepMat
                         'Operation not implemented yet, fixme');
             end
         end
+        
+        function val = norm(TM, p)
+            val = norm(full(TM), p);
+        end
+        
     end
 end
