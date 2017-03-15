@@ -632,6 +632,9 @@ b = T*x;
 TM = ToepMat(c,r);
 testCase.assertTrue(isreal(TM\b));
 testCase.assertEqual(TM\b, x, 'AbsTol', 100*eps, 'RelTol', 100*eps);
+
+TM = toepeye(8);
+testCase.assertError( @() TM \ 1.0, 'tlzstein:InconsistentInput');
 end
 
 function test_mldivide_toepmat(testCase)

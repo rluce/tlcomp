@@ -279,6 +279,13 @@ classdef ToepMat
         function X = mldivide(TM, B)
             assert(isa(TM, 'ToepMat'));
             
+            [m,~] = size(TM);
+            [mm, ~] = size(B);
+            if m ~= mm
+                error('tlzstein:InconsistentInput', ...
+                    'Matrix dimensions must agree');
+            end
+            
             switch class(B)
                 case 'double'
                     X = toepsolve(TM.c, TM.r, B);
