@@ -722,3 +722,9 @@ testCase.assertEqual(norm(TM, 1), norm(T, 1));
 testCase.assertEqual(norm(TM, 'inf'), norm(T, 'inf'));
 testCase.assertEqual(norm(TM, 'fro'), norm(T, 'fro'));
 end
+
+function test_mrdivide(testCase)
+
+
+
+end
