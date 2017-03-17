@@ -14,18 +14,8 @@ n = size(G,1);
 
 % Idea: Recover T by forming cumulative sums along all diagonals of G*B'.
 T = G*B';
-
-% First half of diagonals
 for j = 1:(n-1)
-    T((j+1):end, j+1) = T((j+1):end, j+1) + T(j:(end-1), j);
+    T(2:end, j+1) = T(2:end, j+1) + T(1:(end-1), j);
 end
-
-% Second half of diagonals.  Work on transpose to avoid strided memory
-% access.
-T = T';
-for j = 1:(n-1)
-    T((j+2):end, j+1) = T((j+2):end, j+1) + T((j+1):(end-1), j);
-end
-T = T';
 
 end
