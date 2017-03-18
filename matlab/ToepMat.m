@@ -311,5 +311,30 @@ classdef ToepMat
             l = max(size(TM));
         end
         
+        function R = mrdivide(op1, op2)
+            if ~isa(op1, 'ToepMat')
+                error('tlzstein:NotImplemented', 'Not implemented, fixme.');
+            end
+            
+            switch class(op2)
+                case 'double'
+                    R = dispatch_mrdivide_tm_double(op1, op2);
+                otherwise
+                    error('tlzstein:NotImplemented', 'Not implemented, fixme.');
+            end
+        end
+        
+        function R = dispatch_mrdivide_tm_double(TM, A)
+            assert(isa(TM, 'ToepMat'));
+            assert(isa(A, 'double'));
+            
+            [mm, nn] = size(A);
+            if mm == 1 && nn == 1
+                % Resolves through scalar multiplication
+                R = TM.mtimes_scalar(1.0 / A);
+                return;
+            end
+            error('tlzstein:NotImplemented', 'Not implemented, fixme.');
+        end
     end
 end

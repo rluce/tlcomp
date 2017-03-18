@@ -725,6 +725,22 @@ end
 
 function test_mrdivide(testCase)
 
+TM = toepeye(1);
+A = TM / 1;
+testCase.assertTrue(isa(A, 'ToepMat'));
+testCase.assertEqual(full(A), 1);
+
+TM = toepeye(6);
+A = TM / 4;
+testCase.assertTrue(isa(A, 'ToepMat'));
+testCase.assertEqual(full(A), .25 * eye(6));
+
+[c, r, T] = random_toeplitz(9,9);
+TM = ToepMat(c,r);
+testCase.assertEqual(full(TM/1), T/1);
+testCase.assertEqual(full(TM/2), T/2);
+testCase.assertEqual(full(TM/5), T/5, 'AbsTol', 10*eps, 'RelTol', 10*eps);
+testCase.assertEqual(full(TM/.2), T/.2, 'AbsTol', 10*eps, 'RelTol', 10*eps);
 
 
 end
