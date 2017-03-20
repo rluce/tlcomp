@@ -293,6 +293,22 @@ classdef TLMat
                 'det not implemented, using dense det');
             d = det(full(TL));
         end
-
+        
+        function TL = mrdivide(TL, s)
+           % Implement only a special case for debug purpose
+           assert(isa(TL, 'TLMat'));
+           assert(isa(s, 'double'));
+           assert(all(size(s) == [1,1]));
+           TL = scalar_mult(TL, 1.0/s);
+        end
+        
+        function val = norm(TL, p)
+            val = norm(full(TL), p);
+        end
+    
+        function TL = inv(TL)
+            [m,n] = size(TL);
+            TL = TL \ tleye(n);
+        end
     end % of methods section
 end
