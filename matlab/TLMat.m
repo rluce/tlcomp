@@ -282,9 +282,17 @@ classdef TLMat
             D = TLMat(Gs, Bs, 'GB');
         end
         
+        
         function TL = compress(TL)
             [TL.G, TL.B] = gencompress(TL.G, TL.B);
         end
-        
+
+        %%%%%%%% CAUTION DEBUG ONLY
+        function d = det(TL)
+            warning('tlzstein:CubicOperatoin', ...
+                'det not implemented, using dense det');
+            d = det(full(TL));
+        end
+
     end % of methods section
 end
