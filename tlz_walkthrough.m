@@ -52,7 +52,7 @@ disp(norm(E - EE, 'fro') / norm(EE, 'fro'));
 %% Toeplitz-inverse is a |TLMat| of d-rank 2
 disp(inv(TM1));
 
-%% Shifted inverseXS, useful for partial fraction expansion
+%% Shifted inverse, useful for partial fraction expansion
 sigma = exp(3i/4 * pi);
 disp(inv(TM1 - sigma * toepeye(8)));
 
