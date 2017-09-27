@@ -5,61 +5,12 @@ tests = functiontests(localfunctions);
 
 end
 
-function test_stein_generator1(testCase)
-% Test corner case n=1
-
-c = 1;
-r = 1;
-[G, B] = stein_generator(c,r);
-G_true = [1, 1];
-B_true = [1, 0];
-testCase.assertEqual(G, G_true, 'AbsTol', eps);
-testCase.assertEqual(B, B_true, 'AbsTol', eps);
-
-% Complex variation
-c = 1i;
-r = 1i;
-[G, B] = stein_generator(c,r);
-G_true = [1i, 1];
-B_true = [1, 0];
-testCase.assertEqual(G, G_true, 'AbsTol', eps);
-testCase.assertEqual(B, B_true, 'Abstol', eps);
-end
-
-function test_stein_generator2(testCase)
-% Fail hard on inconsistent data
-c = [1;2;3];
-r = [4,5,6];
-testCase.assertError( @() stein_generator(c,r), 'tlzstein:InconsistentInput');
-end
-
-function test_stein_generator3(testCase)
-% Simple 3x3 example
-
-c = [3, -2i, 0];
-r = [3, 1i, 1+1i];
-G_true = [
-    3, 1;
-    -2i, 0;
-    0, 0;
-    ];
-B_true = [
-    1, 0;
-    0, -1i;
-    0, 1-1i;
-    ];
-
-[G,B] = stein_generator(c,r);
-testCase.assertEqual(G, G_true, 'AbsTol', eps);
-testCase.assertEqual(B, B_true, 'AbsTol', eps);
-end
-
 function test_reconstruct(testCase)
 T = gallery('prolate', 15, 0.51);
 c = T(:,1);
 r = T(1,:);
 
-[G,B] = stein_generator(c,r);
+[G,B] = toepgen(c,r);
 T2 = stein_reconstruction(G,B);
 testCase.assertEqual(T2, T, 'RelTol', 2*eps);
 end

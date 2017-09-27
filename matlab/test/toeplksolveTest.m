@@ -54,7 +54,7 @@ function test_prolate_matrix(testCase)
 
 n = 17;
 T = gallery('prolate', n, 0.35);
-[G, B] = stein_generator(T(:,1), T(1,:));
+[G, B] = toepgen(T(:,1), T(1,:));
 b = [ones(n,1), linspace(0,1,n)'];
 x_true = T\b;
 x = toeplksolve(G,B,b);

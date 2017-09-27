@@ -85,7 +85,7 @@ TL = TLMat(c,r);
 T2 = stein_reconstruction(TL.G, TL.B);
 testCase.assertEqual(T2, T, 'RelTol', 100*eps);
 
-[G, B] = stein_generator(c,r);
+[G, B] = toepgen(c,r);
 TL = TLMat(G,B);
 T2 = stein_reconstruction(TL.G, TL.B);
 testCase.assertEqual(T2, T, 'RelTol', 100*eps);

@@ -110,7 +110,7 @@ function test_redundant_toeplitz(testCase)
 
 n = 13;
 [c,r,T] = random_toeplitz(n,n);
-[G,B] = stein_generator(c,r);
+[G,B] = toepgen(c,r);
 
 % These are generators for 2 * T
 GG = [G, G];

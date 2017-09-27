@@ -51,8 +51,8 @@ function test_toeplitz(testCase)
 
 [c1, r1, T1] = random_toeplitz(8,8);
 [c2, r2, T2] = random_toeplitz(8,8);
-[G1, B1] = stein_generator(c1,r1);
-[G2, B2] = stein_generator(c2,r2);
+[G1, B1] = toepgen(c1,r1);
+[G2, B2] = toepgen(c2,r2);
 [GP, BP] = toeplkprod(G1, B1, G2, B2);
 P = stein_reconstruction(GP, BP);
 testCase.assertEqual(P, T1 * T2, 'AbsTol', 100*eps, 'RelTol', 100*eps);

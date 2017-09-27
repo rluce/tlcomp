@@ -28,7 +28,7 @@ function test_identity(TestCase)
 n=15;
 e1 = zeros(n,1);
 e1(1) = 1.0;
-[G, B] = stein_generator(e1,e1);
+[G, B] = toepgen(e1,e1);
 T2_true = eye(n);
 runallalgs(TestCase, T2_true, G, B, 'AbsTol', n * eps)
 
@@ -43,7 +43,7 @@ r(1) = c(1);
 T = toeplitz(c,r);
 T2_true = T*T;
 
-[G, B] = stein_generator(c,r);
+[G, B] = toepgen(c,r);
 runallalgs(TestCase, T2_true, G, B, 'RelTol', 1024 * n * eps)
 end
 
@@ -55,7 +55,7 @@ r = randn(n,1) + 1i*randn(n,1);
 r(1) = c(1);
 T = toeplitz(c,r);
 T2_true = T*T;
-[G, B] = stein_generator(c,r);
+[G, B] = toepgen(c,r);
 runallalgs(TestCase, T2_true, G, B, 'RelTol', 128 * n * eps)
 
 end

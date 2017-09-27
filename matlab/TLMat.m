@@ -45,8 +45,8 @@ classdef TLMat
                         G = c;
                         B = r;
                     else
-                        % We assume it to be first row/col
-                        [G, B] = stein_generator(c,r);
+                        % We assume it to be first col/row
+                        [G, B] = toepgen(c, r);
                     end
                 else
                     % Two inputs, and at least one is not a vector,

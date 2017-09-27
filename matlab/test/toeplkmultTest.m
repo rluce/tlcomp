@@ -8,7 +8,7 @@ end
 function test_singleton(testCase)
 c = 0;
 r = 0;
-[G,B] = stein_generator(c,r);
+[G,B] = toepgen(c,r);
 
 x = 1;
 y_true = 0;
@@ -17,7 +17,7 @@ testCase.assertEqual(y, y_true, 'AbsTol', eps);
 
 c = 1;
 r = 1;
-[G,B] = stein_generator(c,r);
+[G,B] = toepgen(c,r);
 x = 1;
 y_true = 1;
 y = toeplkmult(G,B,x);
@@ -25,7 +25,7 @@ testCase.assertEqual(y, y_true, 'AbsTol', eps);
 
 c = 1i;
 r = 1i;
-[G,B] = stein_generator(c,r);
+[G,B] = toepgen(c,r);
 
 x = 1i;
 y_true = -1;
@@ -43,7 +43,7 @@ e1(1) = 1.0;
 
 c = e1;
 r = e1;
-[G,B] = stein_generator(c,r);
+[G,B] = toepgen(c,r);
 
 x = e1;
 y_true = e1;
@@ -69,7 +69,7 @@ n = 15;
 c = ones(n,1);
 r = zeros(n,1);
 r(1) = 1;
-[G,B] = stein_generator(c,r);
+[G,B] = toepgen(c,r);
 
 x = ones(n,1);
 y_true = (1:n)';
@@ -84,7 +84,7 @@ n = 14;
 c = randn(n,1);
 r = zeros(n,1);
 r(1) = c(1);
-[G,B] = stein_generator(c,r);
+[G,B] = toepgen(c,r);
 
 T = toeplitz(c,r);
 x = ones(n,1);
@@ -150,7 +150,7 @@ n=8;
 T = gallery('prolate', n, 0.48);
 c = T(:,1);
 r = T(1,:)';
-[G,B] = stein_generator(c,r);
+[G,B] = toepgen(c,r);
 [Gs, Bs] = toeplksquare(G, B);
 x = ones(n,1);
 y_true = T*(T*x);
@@ -168,8 +168,8 @@ c2 = orth(randn(n,1));
 r2 = orth(randn(n,1));
 r2(1) = c2(1);
 
-[G1, B1] = stein_generator(c1,r1);
-[G2, B2] = stein_generator(c2,r2);
+[G1, B1] = toepgen(c1,r1);
+[G2, B2] = toepgen(c2,r2);
 G = [G1, G2];
 B = [B1, B2];
 T = toeplitz(c1+c2, r1+r2);

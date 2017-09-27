@@ -30,7 +30,7 @@ end
 Gpowers = cell(1,s);
 Bpowers = cell(1,s);
 
-[G, B] = stein_generator(c,r);
+[G, B] = toepgen(c,r);
 
 Gpowers{1} = G;
 Bpowers{1} = B;
@@ -63,7 +63,7 @@ end
 Gpowers = cell(1,s);
 Bpowers = cell(1,s);
 
-[G, B] = stein_generator(c,r);
+[G, B] = toepgen(c,r);
 
 e1 = G(:,2);
 
