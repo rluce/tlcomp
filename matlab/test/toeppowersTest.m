@@ -93,7 +93,7 @@ s = length(Bpowers);
 T_true  = eye(size(T));
 for i=1:s
     T_true = T_true * T;
-    Tr = stein_reconstruction(Gpowers{i}, Bpowers{i});
+    Tr = toeplkreconstruct(Gpowers{i}, Bpowers{i});
     testCase.assertEqual(Tr, T_true, 'RelTol', 64*n*eps, 'AbsTol', 64*n*eps);
 end
 

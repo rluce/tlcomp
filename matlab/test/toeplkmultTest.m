@@ -98,7 +98,7 @@ function test_random_real_rank1(testCase)
 n = 9;
 G = orth(randn(n,1));
 B = orth(randn(n,1));
-T = stein_reconstruction(G,B);
+T = toeplkreconstruct(G,B);
 x = linspace(1,2,n)';
 y_true = T*x;
 y = toeplkmult(G,B,x);
@@ -110,7 +110,7 @@ function test_random_real_rank4(testCase)
 n = 9;
 G = orth(randn(n,4));
 B = orth(randn(n,4));
-T = stein_reconstruction(G,B);
+T = toeplkreconstruct(G,B);
 x = ones(n,1);
 y_true = T*x;
 y = toeplkmult(G,B,x);
@@ -121,7 +121,7 @@ function test_random_complex_rank4(testCase)
 n = 9;
 G = orth(randn(n,4) + 1i * randn(n,4));
 B = orth(randn(n,4) + 1i * randn(n,4));
-T = stein_reconstruction(G,B);
+T = toeplkreconstruct(G,B);
 x = ones(n,1);
 y_true = T*x;
 y = toeplkmult(G,B,x);
@@ -186,7 +186,7 @@ n = 7;
 
 G = orth(randn(n,3));
 B = orth(randn(n,3));
-T = stein_reconstruction(G,B);
+T = toeplkreconstruct(G,B);
 
 x = eye(n,2);
 y = toeplkmult(G,B,x);

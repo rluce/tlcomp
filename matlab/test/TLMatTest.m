@@ -78,22 +78,22 @@ n = 9;
 [c,r,T] = random_toeplitz(n,n);
 
 TL = TLMat(T);
-T2 = stein_reconstruction(TL.G, TL.B);
+T2 = toeplkreconstruct(TL.G, TL.B);
 testCase.assertEqual(T2, T, 'RelTol', 100*eps);
 
 TL = TLMat(c,r);
-T2 = stein_reconstruction(TL.G, TL.B);
+T2 = toeplkreconstruct(TL.G, TL.B);
 testCase.assertEqual(T2, T, 'RelTol', 100*eps);
 
 [G, B] = toepgen(c,r);
 TL = TLMat(G,B);
-T2 = stein_reconstruction(TL.G, TL.B);
+T2 = toeplkreconstruct(TL.G, TL.B);
 testCase.assertEqual(T2, T, 'RelTol', 100*eps);
 
 GG = [2 * G, -G];
 BB = [B, B];
 TL = TLMat(GG, BB);
-T2 = stein_reconstruction(TL.G, TL.B);
+T2 = toeplkreconstruct(TL.G, TL.B);
 testCase.assertEqual(T2, T, 'RelTol', 100*eps);
 
 

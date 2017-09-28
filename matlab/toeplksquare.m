@@ -53,7 +53,7 @@ end
 
 function [Gs, Bs] = tlsquare_full(G, B)
 
-T = stein_reconstruction(G,B);
+T = toeplkreconstruct(G,B);
 
 G2_part1 = vapply(G, 'inv');
 G2_part1 = T*G2_part1;

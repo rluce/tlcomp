@@ -12,7 +12,7 @@ r = 1;
 
 [Ginv, Binv] = toepinv_generators(c,r);
 
-Tinv = stein_reconstruction(Ginv, Binv);
+Tinv = toeplkreconstruct(Ginv, Binv);
 testCase.assertEqual(Tinv, 1, 'AbsTol', eps);
 
 
@@ -21,7 +21,7 @@ r = -1;
 
 [Ginv, Binv] = toepinv_generators(c,r);
 
-Tinv = stein_reconstruction(Ginv, Binv);
+Tinv = toeplkreconstruct(Ginv, Binv);
 testCase.assertEqual(Tinv, -1, 'AbsTol', eps);
 
 
@@ -30,7 +30,7 @@ r = 1i;
 
 [Ginv, Binv] = toepinv_generators(c,r);
 
-Tinv = stein_reconstruction(Ginv, Binv);
+Tinv = toeplkreconstruct(Ginv, Binv);
 testCase.assertEqual(Tinv, -1i, 'AbsTol', eps);
 
 
@@ -46,7 +46,7 @@ c(1) = 1.0;
 r(1) = 1.0;
 
 [Ginv, Binv] = toepinv_generators(c,r);
-I = stein_reconstruction(Ginv, Binv);
+I = toeplkreconstruct(Ginv, Binv);
 testCase.assertEqual(I, eye(n), 'AbsTol', eps);
 
 end
@@ -63,7 +63,7 @@ c(1) = r(1);
 testCase.assertEqual(size(Ginv), [n,2]);
 testCase.assertEqual(size(Binv), [n,2]);
 
-Tinv = stein_reconstruction(Ginv, Binv);
+Tinv = toeplkreconstruct(Ginv, Binv);
 T = toeplitz(c,r);
 resnorm = norm(Tinv * T - eye(n), 'fro') / norm(T, 'fro');
 testCase.assertLessThan(resnorm, 1e-8);
@@ -79,7 +79,7 @@ assert(~isreal(c(1)));
 testCase.assertEqual(size(Ginv), [n,2]);
 testCase.assertEqual(size(Binv), [n,2]);
 
-Tinv = stein_reconstruction(Ginv, Binv);
+Tinv = toeplkreconstruct(Ginv, Binv);
 resnorm = norm(Tinv * T - eye(n), 'fro') / norm(T, 'fro');
 testCase.assertLessThan(resnorm, 5e-12);
 

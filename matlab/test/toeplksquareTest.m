@@ -11,7 +11,7 @@ G = 0;
 B = 0;
 
 [Gs, Bs] = toeplksquare(G, B);
-T2 = stein_reconstruction(Gs, Bs);
+T2 = toeplkreconstruct(Gs, Bs);
 TestCase.assertEqual(T2, 0);
 
 
@@ -64,7 +64,7 @@ function runallalgs(testCase, Ts_true, G, B, varargin)
 
 for alg = {'full', 'fft'}
     [Gs, Bs] = toeplksquare(G, B, alg{:});
-    Ts = stein_reconstruction(Gs, Bs);
+    Ts = toeplkreconstruct(Gs, Bs);
     testCase.assertEqual(Ts, Ts_true, varargin{:});
 end
 

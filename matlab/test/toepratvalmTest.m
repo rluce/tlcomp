@@ -12,14 +12,14 @@ r = -5;
 p = 1;
 q = 1;
 [G,B] = toepratvalm(c,r,p,q);
-testCase.assertEqual(stein_reconstruction(G,B), 1);
+testCase.assertEqual(toeplkreconstruct(G,B), 1);
 
 c = -5;
 r = -5;
 p = [1,0];
 q = 1;
 [G,B] = toepratvalm(c,r,p,q);
-testCase.assertEqual(stein_reconstruction(G,B), -5);
+testCase.assertEqual(toeplkreconstruct(G,B), -5);
 
 
 
@@ -28,14 +28,14 @@ r = -5;
 p = [1,0];
 q = 1;
 [G,B] = toepratvalm(c,r,p,q);
-testCase.assertEqual(stein_reconstruction(G,B), -5);
+testCase.assertEqual(toeplkreconstruct(G,B), -5);
 
 c = -5;
 r = -5;
 p = 1;
 q = [1,0];
 [G,B] = toepratvalm(c,r,p,q);
-testCase.assertEqual(stein_reconstruction(G,B), -1/5, 'AbsTol', eps);
+testCase.assertEqual(toeplkreconstruct(G,B), -1/5, 'AbsTol', eps);
 
 
 
@@ -47,19 +47,19 @@ r = 1;
 p = 0;
 q = 1;
 [G,B] = toepratvalm(c,r,p,q);
-testCase.assertEqual(stein_reconstruction(G,B), 0);
+testCase.assertEqual(toeplkreconstruct(G,B), 0);
 
 
 
 c = 0;
 r = 0;
 [G,B] = toepratvalm(c,r,p,q);
-testCase.assertEqual(stein_reconstruction(G,B), 0);
+testCase.assertEqual(toeplkreconstruct(G,B), 0);
 
 p = [1,1,1,0];
 q = [0.5, 1];
 [G,B] = toepratvalm(c,r,p,q);
-testCase.assertEqual(stein_reconstruction(G,B), 0);
+testCase.assertEqual(toeplkreconstruct(G,B), 0);
 
 
 n = 7;
@@ -69,8 +69,8 @@ r = zeros(n,1);
 % NOTE:  Somewhere in the transformation to Cauchy-like or inside drsolve's
 % clsolve, a small perturbation results in a slightly nonzero solution.
 % Maybe we can do better, but this is not priority.
-testCase.verifyEqual(stein_reconstruction(G,B), zeros(n));
-testCase.assertEqual(stein_reconstruction(G,B), zeros(n), 'AbsTol', 10*n*eps);
+testCase.verifyEqual(toeplkreconstruct(G,B), zeros(n));
+testCase.assertEqual(toeplkreconstruct(G,B), zeros(n), 'AbsTol', 10*n*eps);
 
 
 
@@ -85,19 +85,19 @@ e1(1) = 1;
 p = 1;
 q = 1;
 [G,B] = toepratvalm(e1, e1, p, q);
-A = stein_reconstruction(G,B);
+A = toeplkreconstruct(G,B);
 testCase.assertEqual(A, eye(n), 'AbsTol', eps);
 
 p = [1,0];
 q = 1;
 [G,B] = toepratvalm(e1, e1, p, q);
-A = stein_reconstruction(G,B);
+A = toeplkreconstruct(G,B);
 testCase.assertEqual(A, eye(n), 'AbsTol', eps);
 
 p = [1,0];
 q = -2;
 [G,B] = toepratvalm(e1, e1, p, q);
-A = stein_reconstruction(G,B);
+A = toeplkreconstruct(G,B);
 testCase.assertEqual(A, -eye(n)/2, 'AbsTol', eps);
 
 
@@ -120,7 +120,7 @@ T = s*T;
 
 pT_true = expm(T);
 [G,B] = toepratvalm(c, r, p, 1);
-pT = stein_reconstruction(G, B);
+pT = toeplkreconstruct(G, B);
 
 testCase.assertEqual(pT, pT_true, 'AbsTol', 32*n*eps);
 
@@ -139,7 +139,7 @@ p = 1;
 q = [1, 0];
 
 [G,B] = toepratvalm(c,r,p,q);
-A = stein_reconstruction(G,B);
+A = toeplkreconstruct(G,B);
 A_true = inv(T);
 testCase.assertEqual(A, A_true, 'RelTol', 256*n*eps, 'AbsTol', 8*n*eps);
 
@@ -154,7 +154,7 @@ p = 1;
 q = [1, 0];
 
 [G,B] = toepratvalm(c,r,p,q);
-A = stein_reconstruction(G,B);
+A = toeplkreconstruct(G,B);
 A_true = inv(T);
 testCase.assertEqual(A, A_true, 'RelTol', 256*n*eps, 'AbsTol', 8*n*eps);
 
@@ -177,7 +177,7 @@ qA = polyvalm(q, T);
 rA_true = qA\pA;
 
 [G, B] = toepratvalm(c,r,p,q);
-rA = stein_reconstruction(G,B);
+rA = toeplkreconstruct(G,B);
 testCase.assertEqual(rA, rA_true, 'AbsTol', 32*eps);
 
 
@@ -205,7 +205,7 @@ qA = polyvalm(q, T);
 rA_true = qA\pA;
 
 [G, B] = toepratvalm(c,r,p,q);
-rA = stein_reconstruction(G,B);
+rA = toeplkreconstruct(G,B);
 testCase.assertEqual(rA, rA_true, 'RelTol', 32*n*eps, 'AbsTol', 8*n*eps);
 
 end
@@ -228,7 +228,7 @@ qT = polyvalm(q, T);
 rT_true = qT\pT;
 
 [G, B] = toepratvalm(c,r,p,q);
-rT = stein_reconstruction(G,B);
+rT = toeplkreconstruct(G,B);
 testCase.assertEqual(rT, rT_true, 'RelTol', n*eps, 'AbsTol', 8*n*eps);
 
 
@@ -253,7 +253,7 @@ qT = polyvalm(q, T);
 rT_true = qT\pT;
 
 [G, B] = toepratvalm(c,r,p,q);
-rT = stein_reconstruction(G,B);
+rT = toeplkreconstruct(G,B);
 testCase.assertEqual(rT, rT_true, 'RelTol', 32*n*eps, 'AbsTol', 8*n*eps);
 
 

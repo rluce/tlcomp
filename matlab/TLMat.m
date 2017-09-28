@@ -91,7 +91,7 @@ classdef TLMat
         end
         
         function T = full(TL)
-            T = stein_reconstruction(TL.G, TL.B);
+            T = toeplkreconstruct(TL.G, TL.B);
         end
         
         function TL = transpose(TL)

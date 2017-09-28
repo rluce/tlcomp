@@ -50,8 +50,8 @@ Bp = [B2, Bp_part1, Bp_part2];
 end
 
 function [Gp, Bp] = tlprod_full(G1, B1, G2, B2)
-T1 = stein_reconstruction(G1,B1);
-T2 = stein_reconstruction(G2,B2);
+T1 = toeplkreconstruct(G1,B1);
+T2 = toeplkreconstruct(G2,B2);
 
 Gp_part1 = vapply(G2, 'inv');
 Gp_part1 = T1*Gp_part1;

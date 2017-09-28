@@ -118,7 +118,7 @@ BB = [B, B];
 
 [GGred, BBred, res_sv] = gencompress(GG, BB, 2);
 testCase.assertLessThan(res_sv, 10*eps);
-TT = stein_reconstruction(GGred, BBred);
+TT = toeplkreconstruct(GGred, BBred);
 testCase.assertEqual(TT, 2*T, 'RelTol', 20*n*eps);
 
 end
@@ -131,7 +131,7 @@ B = [1,1,1,1];
 [G, B] = gencompress(G,B,2);
 testCase.assertEqual(size(G,2), 1);
 testCase.assertEqual(size(B,2), 1);
-T = stein_reconstruction(G,B);
+T = toeplkreconstruct(G,B);
 testCase.assertEqual(T, 4);
 
 

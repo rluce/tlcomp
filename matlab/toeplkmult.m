@@ -24,7 +24,7 @@ end
 end
 
 function y = tlmult_full(G, B, x)
-T = stein_reconstruction(G,B);
+T = toeplkreconstruct(G,B);
 y = T*x;
 end
 

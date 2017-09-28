@@ -5,16 +5,6 @@ tests = functiontests(localfunctions);
 
 end
 
-function test_reconstruct(testCase)
-T = gallery('prolate', 15, 0.51);
-c = T(:,1);
-r = T(1,:);
-
-[G,B] = toepgen(c,r);
-T2 = stein_reconstruction(G,B);
-testCase.assertEqual(T2, T, 'RelTol', 2*eps);
-end
-
 function test_compute_generator1(testCase)
 % Random test
 n = 9;
@@ -52,7 +42,7 @@ n = 11;
 U = orth(randn(n,5) + 1i * randn(n,5));
 V = orth(randn(n,5) + 1i * randn(n,5));
 
-T = stein_reconstruction(U,V);
+T = toeplkreconstruct(U,V);
 [G,B] = compute_generator(T);
 testCase.assertEqual([n,5], size(G));
 testCase.assertEqual([n,5], size(B));
@@ -69,11 +59,11 @@ U = orth(randn(n,3) + 1i * randn(n,3));
 V = orth(randn(n,3) + 1i * randn(n,3));
 
 U = U * diag([1,1,1e-8]);
-T = stein_reconstruction(U,V);
+T = toeplkreconstruct(U,V);
 [G,B] = compute_generator(T, 2);
 testCase.assertEqual([n,2], size(G));
 testCase.assertEqual([n,2], size(B));
-Tapprox = stein_reconstruction(G,B);
+Tapprox = toeplkreconstruct(G,B);
 testCase.assertTrue( norm(T - Tapprox) <= n * 1e-8 );
 end
 
@@ -83,12 +73,12 @@ n = 11;
 U = orth(randn(n,3) + 1i * randn(n,3));
 V = orth(randn(n,3) + 1i * randn(n,3));
 
-T_true = stein_reconstruction(U,V);
+T_true = toeplkreconstruct(U,V);
 [G,B] = compute_generator(T_true, 5);
 testCase.assertEqual([n,5], size(G));
 testCase.assertEqual([n,5], size(B));
 
-T = stein_reconstruction(G,B);
+T = toeplkreconstruct(G,B);
 testCase.assertEqual(T, T_true, 'RelTol', 15*eps, 'AbsTol', 10*eps);
 end
 

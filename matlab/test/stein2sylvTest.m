@@ -21,7 +21,7 @@ Bstein = 0;
 
 [Gsylv, Bsylv] = stein2sylv(Gstein, Bstein);
 D = Gsylv * Bsylv';
-D_true = sylvdisplacement(stein_reconstruction(Gstein, Bstein));
+D_true = sylvdisplacement(toeplkreconstruct(Gstein, Bstein));
 testCase.assertEqual(D, D_true, 'RelTol', 8*eps);
 
 
@@ -30,7 +30,7 @@ Bstein = 1;
 
 [Gsylv, Bsylv] = stein2sylv(Gstein, Bstein);
 D = Gsylv * Bsylv';
-D_true = sylvdisplacement(stein_reconstruction(Gstein, Bstein));
+D_true = sylvdisplacement(toeplkreconstruct(Gstein, Bstein));
 testCase.assertEqual(D, D_true, 'RelTol', 8*eps);
 
 Gstein = [1,1,1];
@@ -38,7 +38,7 @@ Bstein = [1,1,1];
 
 [Gsylv, Bsylv] = stein2sylv(Gstein, Bstein);
 D = Gsylv * Bsylv';
-D_true = sylvdisplacement(stein_reconstruction(Gstein, Bstein));
+D_true = sylvdisplacement(toeplkreconstruct(Gstein, Bstein));
 testCase.assertEqual(D, D_true, 'RelTol', 8*eps);
 end
 
@@ -90,7 +90,7 @@ r = 5;
 Gstein = orth(randn(n,r));
 Bstein = orth(randn(n,r));
 
-T = stein_reconstruction(Gstein,Bstein);
+T = toeplkreconstruct(Gstein,Bstein);
 [Gsylv, Bsylv] = stein2sylv(Gstein, Bstein);
 D = Gsylv * Bsylv';
 D_true = sylvdisplacement(T);

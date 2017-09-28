@@ -196,7 +196,7 @@ function allalgstrial(testCase, c, r, p, pT_true, varargin)
 
 for alg = {'full', 'reduced'};%, 'horner'}
     [G, B] = toeppolyvalm(c, r, p, alg{:});
-    pT = stein_reconstruction(G, B);
+    pT = toeplkreconstruct(G, B);
     testCase.assertEqual(pT, pT_true, varargin{:});
 end
 
