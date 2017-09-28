@@ -1,10 +1,12 @@
-function [G,B] = compute_generator(A, r)
-% [G,B] = compute_generator(A)
+function [G, B] = toeplkgen(A, r)
+% [G,B] = toeplkgen(A)
 %
-% Compute some Z-generator for A.  If r is supplied, the generator is
-% truncated to that rank.
+% Compute an approximate Z1/Zm1-generator for A.  If a rank r is supplied, the
+% generator is truncated to that rank.
 %
 % CAUTION: expensive comutation, debug use only!
+% TODO: We should do an ACA here instead of SVD, which would give us O(rn^2)
+% run time.
 
 n = size(A, 1);
 
@@ -15,8 +17,7 @@ if nargin >= 2 && ~isempty(r)
     end
 end
 
-Z = downshift(n);
-D = A - Z * A * Z';
+D = displace(A);
 [U, S, V] = svd(D);
 
 r_svd = rank(S);

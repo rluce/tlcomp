@@ -28,7 +28,7 @@ classdef TLMat
             end
             
             if nargin == 1
-                [G, B] = compute_generator(c);
+                [G, B] = toeplkgen(c);
             else
                 % Two argument instantiation
                 sc = size(c);
