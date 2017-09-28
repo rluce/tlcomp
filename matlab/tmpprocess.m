@@ -1,6 +1,11 @@
 function tmpprocess
 
-runtests test/toepgenTest.m
-runtests test/toeplkreconstructTest.m
+runtests({
+    'test/toepgenTest.m', ...
+    'test/toeplkreconstructTest.m', ...
+    'test/fcirculantTest.m', ...
+    'test/displaceTest.m', ...
+    });
+
 
 end
