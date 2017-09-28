@@ -5,6 +5,26 @@ tests = functiontests(localfunctions);
 
 end
 
+function test_empty(testCase)
+testCase.assertTrue(isempty(toeplkreconstruct([], [])));
+end
+
+function test_onebyone(testCase)
+G = 1;
+B = 1;
+T_true = 0.5;
+T = toeplkreconstruct(G, B);
+testCase.assertEqual(T, T_true);
+end
+
+function test_nonminimal_onebyone(testCase)
+
+G = [1, 1, 1];
+B = [1, 1,-1];
+T_true = 0.5;
+T = toeplkreconstruct(G, B);
+testCase.assertEqual(T, T_true);
+end
 
 function test_simple(testCase)
 % Simple 3x3 example
@@ -39,4 +59,13 @@ r = T(1,:);
 [G,B] = toepgen(c,r);
 T2 = toeplkreconstruct(G,B);
 testCase.assertEqual(T2, T, 'RelTol', 2*eps);
+end
+
+function test_inconsistent_generator(testCase)
+
+G = randn(10, 4);
+B = randn(10, 5);
+
+testCase.assertError( @() toeplkreconstruct(G, B), ...
+    'tlzstein:InconsistentInput');
 end

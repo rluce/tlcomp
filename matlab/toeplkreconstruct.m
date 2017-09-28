@@ -10,9 +10,24 @@ function T = toeplkreconstruct(G,B)
 %
 % Complexity O(d*n^2), where d is the displacement rank of T.
 
+n = size(G, 1);
 
-% Idea: Reconstruction by wrap-around cumulative sums and differences
-n = size(G,1);
+if size(B, 2) ~= size(G, 2)
+    % Generator matrices are not compatible
+    error('tlzstein:InconsistentInput', ...
+            'G and B must have the same number of columns');
+end
+
+% Only implemented for square, could possibly be lifted.
+assert(size(B, 1) == n);
+
+if n == 0
+    T = [];
+    return;
+end
+
+% General idea: Reconstruction by wrap-around cumulative sums and differences
+
 T = G*B';
 
 % Compute diagonal-wrap-around sums (Use sym D 4x4 to understand the result)
