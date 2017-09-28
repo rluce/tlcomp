@@ -1,5 +1,5 @@
-function val = is_exact_toeplitz(A)
-% val = is_exact_toeplitz(A) -- true/false, indicating wether A is a
+function val = istoeplitz(A)
+% val = istoeplitz(A) -- true/false, indicating whether A is an exact
 % Toeplitz matrix.
 
 if isempty(A)

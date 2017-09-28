@@ -163,7 +163,7 @@ classdef TLMat
             
             % At this point A is a non-scalar, non-empty matrix
             
-            if is_exact_toeplitz(A)
+            if istoeplitz(A)
                 % Magic: If A is a dense toeplitz matrix, we retain TL
                 % structure
                 S = TL.add_tlmat(TLMat(A(:,1), A(1,:)));
