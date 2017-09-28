@@ -5,21 +5,6 @@ tests = functiontests(localfunctions);
 
 end
 
-function test_teye(testCase)
-
-E = toepeye(0);
-testCase.assertEqual(class(E), 'ToepMat');
-testCase.assertTrue(isempty(full(E)));
-
-E = toepeye(1);
-testCase.assertEqual(class(E), 'ToepMat');
-testCase.assertEqual(full(E),1);
-
-E = toepeye(9);
-testCase.assertEqual(class(E), 'ToepMat');
-testCase.assertEqual(full(E),eye(9));
-
-end
 
 function test_is_exact_toeplitz(testCase)
 testCase.assertTrue(is_exact_toeplitz([]));
