@@ -4,6 +4,14 @@ tests = functiontests(localfunctions);
 
 end
 
+function test_empty(testCase)
+
+testCase.assertTrue(isempty(fcirculant(0)));
+testCase.assertTrue(isempty(fcirculant(0,1)));
+testCase.assertTrue(isempty(fcirculant(0,-2i)));
+
+end
+
 function test_singleton(testCase)
 
 n = 1;

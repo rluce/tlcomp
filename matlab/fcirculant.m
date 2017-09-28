@@ -13,6 +13,12 @@ if nargin < 2 || isempty(f)
     f = 0.0;
 end
 
+if n <= 0
+    % Convention: Empty f-circulant is empty+sparse
+    C = sparse(0,0);
+    return;
+end
+
 v = ones(n-1,1);
 C = spdiags(v, -1, n, n);
 C(1,n) = f;
