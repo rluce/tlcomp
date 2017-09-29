@@ -1,6 +1,6 @@
 classdef toeplkmultTest < matlab.unittest.TestCase
     properties (TestParameter)
-        alg = {'old', 'new', 'full'};
+        alg = {'full', 'fft_naive', 'fft'};
     end
 
     methods (Test)
@@ -73,7 +73,7 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             x = ones(n,1);
             y_true = (1:n)';
             y = toeplkmult(G,B,x,alg);
-            testCase.assertEqual(y, y_true, 'RelTol', n*eps);
+            testCase.assertEqual(y, y_true, 'RelTol', 4*n*eps);
             
             
         end
