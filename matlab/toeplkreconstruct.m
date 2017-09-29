@@ -10,6 +10,15 @@ function T = toeplkreconstruct(G,B)
 %
 % Complexity O(d*n^2), where d is the displacement rank of T.
 
+% TODO: This function is used for toeplkmult, where not the matrix T is
+% needed as a whole, but only for the purpose of computing T*x. In this
+% setting the reconstruction technique used here
+% could be optimized for memory consumption.  As of now the full
+% outer product T=G*B' is computed first, and then processed in a second
+% step.  But there T is only accessed only column-by-column, so we could
+% generate one (or a small batch of) column, process it, use it and forget
+% it.  Consequently we would use only O(n) memory instead of O(n^2).
+
 n = size(G, 1);
 
 if size(B, 2) ~= size(G, 2)
