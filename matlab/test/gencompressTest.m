@@ -132,7 +132,7 @@ B = [1,1,1,1];
 testCase.assertEqual(size(G,2), 1);
 testCase.assertEqual(size(B,2), 1);
 T = toeplkreconstruct(G,B);
-testCase.assertEqual(T, 4);
+testCase.assertEqual(T, 2);
 
 
 end
