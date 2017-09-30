@@ -23,67 +23,29 @@ function y = toeplkmult(G, B, x, alg)
 %   Pan book 2001 TODO.
 
 if nargin < 4 || isempty(alg)
-    alg = 'full';
+    alg = 'fft';
 end
 
-%y = tlmult_full(G, B, x);
-%return;
+% Corner case: T is 1x1 and the generator is non-minimal.  This confuses
+% the way the dimension in the FFT is inferred.  Instead of obfuscating the
+% syntax in the blocked FFT algorithm, we redirect this corner case.
+if size(B, 1) == 1 && size(B, 2) > 1 && strcmp(alg, 'fft')
+    alg = 'fft_naive';
+end
 
 switch alg
     case 'fft_naive'
+        % Readable implementation of the circulant expansion
         y = naive_alg(G,B,x);
     case 'fft'
-        y = lu_circulant_expand(G,B,x);
+        % Basic blocking and avoidance of a few ifft calls
+        y = fftmult(G,B,x);
     case 'full'
-        y = tlmult_full(G, B, x);
+        T = toeplkreconstruct(G,B);
+        y = T*x;
     otherwise
         error('Invalid alg choice');
 end
-
-end
-
-function y = tlmult_full(G, B, x)
-T = toeplkreconstruct(G,B);
-y = T*x;
-end
-
-function y = lu_circulant_expand(G,B,x)
-[n,r] = size(G);
-nb = size(x,2);
-
-N = 2*n - 1;
-
-% FFT of X
-Fx = fft(x, N, 1);
-
-% FFT of U
-FU = fft([conj(B(1,:)); zeros(n-1, r); conj(B(end:-1:2,:))], N);
-
-% FFT of L
-FL = fft(G, N, 1);
-
-% Accumulation of the (transformed) terms L_k * U_k * X
-acc = zeros(N, nb);
-
-for k=1:r
-    % TODO Is there a way to avoid the fft/ifft transforms inside this
-    % loop?  Maybe there exists a clever circulant embdedding for L*U that
-    % does the trick?
-    
-    % In later Matlab versions, something goes wrong for singletons here,
-    % i.e. if size(G,1) == 1 so that T is a scalar.  Unclear what the best
-    % fix is. TODO.
-    tmp = repmat(FU(:,k), 1, nb) .* Fx;
-    tmp = ifft(tmp);
-    tmp = tmp(1:n,:);
-    tmp = fft(tmp,N,1);
-    tmp = repmat(FL(:,k), 1, nb) .* tmp;
-    acc = acc + tmp;
-end
-
-% IFFT tranform of result
-Y = ifft(acc);
-y = Y(1:n,:);
 
 end
 
@@ -153,6 +115,48 @@ y = v .* x;
 
 % Pull back to original coordinates
 y = dinv .* ifft(y);
+
+if realdata
+    y = real(y);
+end
+
+end
+
+function y = fftmult(G, B, x)
+
+realdata = isreal(G) && isreal(B) && isreal(x);
+
+n = size(G, 1);
+drank = size(G, 2);
+nrhs = size(x,2);
+
+% n-th unit root of -1
+nrf = exp(1i * pi / n);
+
+% Scaling matrix for the diagonalization of C_{-1}
+d = transpose(nrf.^(0:n-1));
+dinv = 1.0 ./ d;
+
+% Transform the generators to FFT space, suiteable for circulant
+% representation.
+G = fft(G);
+B = fft(d .* conj(B(end:-1:1, :)));
+
+% Pull scaled RHS vectors to fft space
+x = fft(d .* x);
+
+y = zeros(n, nrhs);
+
+for k=1:drank
+    tmp = dinv .* ifft(B(:,k) .* x);
+    if realdata
+        % Gives a little bit of performance
+        tmp = real(tmp);
+    end
+    y = y + G(:,k) .* fft(tmp);
+end
+
+y = 0.5 * ifft(y);
 
 if realdata
     y = real(y);
