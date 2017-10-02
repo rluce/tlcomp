@@ -19,6 +19,10 @@ function T = toeplkreconstruct(G,B)
 % generate one (or a small batch of) column, process it, use it and forget
 % it.  Consequently we would use only O(n) memory instead of O(n^2).
 
+% TODO: It's worth some time to figure out how to reconstruct sections of
+% the matrix, in particular bands and submatrices.  Some of these cases can
+% certainly be better implemented than constructing the whole matrix first.
+
 n = size(G, 1);
 
 if size(B, 2) ~= size(G, 2)
