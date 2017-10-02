@@ -206,20 +206,35 @@ classdef ToepMat
             % DEBUG ONLY
             
             n = size(TM,1);
+            
+            % Normalization, not really needed but handy for data
+            % inspection later.
             t0 = TM.c(1);
             G = 1./t0 * [TM.r, [0;TM.r(2:end)]]';
             
-            
             R = zeros(n,n);
+            
+            % Init: Read off first row of chol(T), prepare Schur complement
+            % generator
             R(1,1:n) = G(1,1:n);
             G(1,2:n) = G(1,1:n-1);
             G(1,1) = 0;
+            
+            % Loop to generate rows 2,...,n of R
             for i = 2:n
-                rho = -G(2,i) /G(1,i);
+                % Parameter of the rotation
+                rho = -G(2,i) / G(1,i);
                 s = 1.0 / sqrt((1-rho)*(1+rho));
-                G(:, i:n) = s * [1 rho; rho 1] * G(:,i:n);
-                R(i, i:n) = G(1,i:n); G(1,i+1:n)=G(1,i:n-1);
-                G(1,i) = 0;
+                
+                % Rotation / elimination step
+                G(:, i:n) = s * [1, rho; rho, 1] * G(:, i:n);
+                
+                % Copy over first row of current Schur complement
+                R(i, i:n) = G(1,i:n);
+                
+                % Shift generator
+                G(1,i+1:n) = G(1,i:n-1);
+                G(1,i) = 0; % not really needed but nice for inspection
             end
             
             R = sqrt(t0) * R;
