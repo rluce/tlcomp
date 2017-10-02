@@ -54,3 +54,23 @@ testCase.assertEqual(Z, ZZ+ZZZ);
 
 end
 
+
+function test_issparse(testCase)
+% In several places we need to apply the unit f-ciruclant matrix Z to a
+% vector or a matrix.  This amounts to scaling and permuting the operand,
+% but we are lazy to do that on our own.  If Z is in sparse format,
+% Matlab's sparse matrix multiply achieves already the best complexity for
+% this permutation, so we simply resort to Z*A.  Hence, we really need
+% that Z is in sparse format.
+
+n = 83;
+Z0 = fcirculant(n);
+Z1 = fcirculant(n, 1);
+Zm1 = fcirculant(n, -1);
+Zpi = fcirculant(n, pi);
+
+testCase.assertTrue(issparse(Z0));
+testCase.assertTrue(issparse(Z1));
+testCase.assertTrue(issparse(Zm1));
+testCase.assertTrue(issparse(Zpi));
+end
