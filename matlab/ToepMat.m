@@ -200,6 +200,31 @@ classdef ToepMat
             end
         end
         
+        
+        function R = chol(TM)
+            % Simplistic Schur algorithm for Cholesky factorization
+            % DEBUG ONLY
+            
+            n = size(TM,1);
+            t0 = TM.c(1);
+            G = 1./t0 * [TM.r, [0;TM.r(2:end)]]';
+            
+            
+            R = zeros(n,n);
+            R(1,1:n) = G(1,1:n);
+            G(1,2:n) = G(1,1:n-1);
+            G(1,1) = 0;
+            for i = 2:n
+                rho = -G(2,i) /G(1,i);
+                s = 1.0 / sqrt((1-rho)*(1+rho));
+                G(:, i:n) = s * [1 rho; rho 1] * G(:,i:n);
+                R(i, i:n) = G(1,i:n); G(1,i+1:n)=G(1,i:n-1);
+                G(1,i) = 0;
+            end
+            
+            R = sqrt(t0) * R;
+        end
+        
         function P = dispatch_tm_mtimes_double(TM, A)
             assert(isa(TM, 'ToepMat'));
             assert(isa(A, 'double'));
