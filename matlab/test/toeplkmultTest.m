@@ -1,17 +1,18 @@
 classdef toeplkmultTest < matlab.unittest.TestCase
     properties (TestParameter)
         alg = {'full', 'fft_naive', 'fft'};
+        ctrans = {false, true};
     end
 
     methods (Test)
-        function test_singleton(testCase, alg)
+        function test_singleton(testCase, ctrans, alg)
             c = 0;
             r = 0;
             [G,B] = toepgen(c,r);
             
             x = 1;
             y_true = 0;
-            y = toeplkmult(G,B,x, alg);
+            y = toeplkmult(G, B, x, ctrans, alg);
             testCase.assertEqual(y, y_true, 'AbsTol', eps);
             
             c = 1;
@@ -19,7 +20,7 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             [G,B] = toepgen(c,r);
             x = 1;
             y_true = 1;
-            y = toeplkmult(G,B,x, alg);
+            y = toeplkmult(G, B, x, ctrans, alg);
             testCase.assertEqual(y, y_true, 'AbsTol', eps);
             
             c = 1i;
@@ -27,14 +28,18 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             [G,B] = toepgen(c,r);
             
             x = 1i;
-            y_true = -1;
-            y = toeplkmult(G,B,x, alg);
+            
+            if ~ctrans
+                y_true = -1;
+            else
+                y_true = 1;
+            end
+            
+            y = toeplkmult(G, B,  x, ctrans, alg);
             testCase.assertEqual(y, y_true, 'AbsTol', eps);
         end
-        
-        
-        function test_identity(testCase, alg)
-            
+
+        function test_identity(testCase, ctrans, alg)
             n = 13;
             
             e1 = zeros(n,1);
@@ -46,23 +51,21 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             
             x = e1;
             y_true = e1;
-            y = toeplkmult(G,B,x,alg);
+            y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'AbsTol', n*eps);
             
             x = randn(n,1);
             y_true = x;
-            y = toeplkmult(G,B,x,alg);
+            y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'AbsTol', n*eps);
             
             x = randn(n,1) + 1i * randn(n,1);
             y_true = x;
-            y = toeplkmult(G,B,x,alg);
+            y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'AbsTol', n*eps);
-            
-            
         end
         
-        function test_tril_ones(testCase, alg)
+        function test_tril_ones(testCase, ctrans, alg)
             n = 15;
             
             c = ones(n,1);
@@ -71,80 +74,125 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             [G,B] = toepgen(c,r);
             
             x = ones(n,1);
-            y_true = (1:n)';
-            y = toeplkmult(G,B,x,alg);
+            
+            if ~ctrans
+                y_true = (1:n)';
+            else
+                y_true = (n:-1:1)';
+            end
+            
+            y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'RelTol', 4*n*eps);
-            
-            
         end
         
-        function test_triltoep(testCase, alg)
+        function test_triltoep_real(testCase, ctrans, alg)
             n = 14;
             c = randn(n,1);
             r = zeros(n,1);
             r(1) = c(1);
             [G,B] = toepgen(c,r);
             
-            T = toeplitz(c,r);
             x = ones(n,1);
-            y_true = T*x;
-            y = toeplkmult(G,B,x,alg);
+            y_true = cumsum(c);
+            if ctrans
+                y_true = y_true(end:-1:1);
+            else
+                
+            end
+            y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'RelTol', 256*n*eps);
             
         end
+
+        function test_triltoep_complex(testCase, ctrans, alg)
+            n = 14;
+            c = randn(n,1) + 1i * randn(n,1);
+            r = zeros(n,1);
+            r(1) = c(1);
+            [G,B] = toepgen(c,r);
+            
+            x = ones(n,1);
+            y_true = cumsum(c);
+            if ctrans
+                y_true = conj(y_true(end:-1:1));
+            else
+                
+            end
+            y = toeplkmult(G,B,x,ctrans,alg);
+            testCase.assertEqual(y, y_true, 'RelTol', 256*n*eps);
+            
+        end
+
         
-        function test_random_real_rank1(testCase, alg)
+        function test_random_real_rank1(testCase, ctrans, alg)
             n = 9;
             G = orth(randn(n,1));
             B = orth(randn(n,1));
             T = toeplkreconstruct(G,B);
             x = linspace(1,2,n)';
-            y_true = T*x;
-            y = toeplkmult(G,B,x,alg);
+            if ~ctrans
+                y_true = T * x;
+            else
+                y_true = T' * x;
+            end
+            y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'RelTol', 128*n*eps);
         end
         
         
-        function test_random_real_rank4(testCase, alg)
+        function test_random_real_rank4(testCase, ctrans, alg)
             n = 9;
             G = orth(randn(n,4));
             B = orth(randn(n,4));
             T = toeplkreconstruct(G,B);
             x = ones(n,1);
-            y_true = T*x;
-            y = toeplkmult(G,B,x, alg);
+            
+            if ~ctrans
+                y_true = T*x;
+            else
+                y_true = T'*x;
+            end
+            y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'RelTol', 128*n*eps);
         end
         
-        function test_random_complex_rank4(testCase, alg)
+        function test_random_complex_rank4(testCase, ctrans, alg)
             n = 9;
             G = orth(randn(n,4) + 1i * randn(n,4));
             B = orth(randn(n,4) + 1i * randn(n,4));
             T = toeplkreconstruct(G,B);
             x = ones(n,1);
-            y_true = T*x;
-            y = toeplkmult(G,B,x, alg);
+            if ~ctrans
+                y_true = sum(T, 2);
+            else
+                y_true = sum(T, 1)';
+            end
+            y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'RelTol', 16*n*eps);
         end
         
         
-        function test_invtoep(testCase, alg)
+        function test_invtoep(testCase, ctrans, alg)
             n = 14;
-            c = randn(n,1);
-            r = randn(n,1);
-            c(1) = c(1) + 1;
+            c = rand(n,1);
+            r = rand(n,1);
+            c(1) = c(1) + n;
             r(1) = c(1);
             T = toeplitz(c,r);
             e = ones(n,1);
-            x = T*e;
+            if ~ctrans
+                x = T*e;
+            else
+                x = T' * e;
+            end
             
             [Ginv, Binv] = toepinv_generators(c,r);
-            y = toeplkmult(Ginv, Binv, x, alg);
+            y = toeplkmult(Ginv, Binv, x, ctrans, alg);
             testCase.assertEqual(y, e, 'AbsTol', 8192*n*eps);
         end
         
         
-        function test_squared_toep(testCase, alg)
+        function test_squared_toep(testCase, ctrans, alg)
             n=8;
             T = gallery('prolate', n, 0.48);
             c = T(:,1);
@@ -152,13 +200,17 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             [G,B] = toepgen(c,r);
             [Gs, Bs] = toeplksquare(G, B);
             x = ones(n,1);
-            y_true = T*(T*x);
-            y = toeplkmult(Gs, Bs, x, alg);
+            if ~ctrans
+                y_true = T*(T*x);
+            else
+                y_true = (T*T)' * x;
+            end
+            y = toeplkmult(Gs, Bs, x, ctrans, alg);
             testCase.assertEqual(y, y_true, 'RelTol', n*eps);
         end
         
         
-        function test_sum_toep(testCase, alg)
+        function test_sum_toep(testCase, ctrans, alg)
             n = 15;
             c1 = orth(randn(n,1));
             r1 = orth(randn(n,1));
@@ -174,12 +226,16 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             T = toeplitz(c1+c2, r1+r2);
             
             x = rand(n,1);
-            y_true = T*x;
-            y = toeplkmult(G, B, x, alg);
+            if ~ctrans
+                y_true = T*x;
+            else
+                y_true = T' * x;
+            end
+            y = toeplkmult(G, B, x, ctrans, alg);
             testCase.assertEqual(y, y_true, 'AbsTol', n*eps);
         end
         
-        function test_multrhs(testCase, alg)
+        function test_multrhs(testCase, ctrans, alg)
             
             n = 7;
             
@@ -188,9 +244,15 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             T = toeplkreconstruct(G,B);
             
             x = eye(n,2);
-            y = toeplkmult(G,B,x, alg);
-            testCase.assertEqual(y(:,1), T(:,1), 'RelTol', 128*n*eps);
-            testCase.assertEqual(y(:,2), T(:,2), 'RelTol', 256*n*eps);
+            y = toeplkmult(G,B,x, ctrans, alg);
+            if ~ctrans
+                testCase.assertEqual(y(:,1), T(:,1), 'RelTol', 128*n*eps);
+                testCase.assertEqual(y(:,2), T(:,2), 'RelTol', 256*n*eps);
+            else
+                testCase.assertEqual(y(:,1), T(1,:)', 'RelTol', 128*n*eps);
+                testCase.assertEqual(y(:,2), T(2,:)', 'RelTol', 256*n*eps);
+                
+            end
             
             
         end
