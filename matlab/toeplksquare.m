@@ -8,7 +8,7 @@ function [Gs, Bs] = toeplksquare(G, B, alg)
 %   'fft'  -- FFT based matrix vector product
 
 if nargin < 3 || isempty(alg)
-    alg = 'full';
+    alg = 'fft';
 end
 
 switch alg
@@ -24,53 +24,18 @@ end
 
 function [Gs, Bs] = tlsquare_fft(G,B)
 
-
-
 n = size(G,1);
-
-onesvec = ones(n,1);
-
-G2_part1 = vapply(G, 'inv');
-G2_part1 = toeplkmult(G, B, G2_part1);
-G2_part1 = vapply(G2_part1);
-
-G2_part2 = toeplkmult(G, B, -onesvec);
-G2_part2 = vapply(G2_part2);
-
-Gs = [G2_part1, G, -G2_part2];
-
-B2_part1 = vapply(B, 'inv');
-B2_part1 = toeplkmult(B, G, B2_part1);
-B2_part1 = vapply(B2_part1);
-
-B2_part2 = toeplkmult(B, G, -onesvec);
-B2_part2 = vapply(B2_part2);
-
-Bs = [B, B2_part1, B2_part2];
-
-
+e = zeros(n,1);
+e(1) = 1;
+Gs = [ toeplkmult(G, B, [e, G], 'fft'), G];
+e(1) = 0;
+e(n) = 1;
+tmp = toeplkmult(conj(B), conj(G), [e, B], 'fft');
+Bs = [-2 * tmp(:,1), B, tmp(:, 2:end)];
 end
 
 function [Gs, Bs] = tlsquare_full(G, B)
-
 T = toeplkreconstruct(G,B);
-
-G2_part1 = vapply(G, 'inv');
-G2_part1 = T*G2_part1;
-G2_part1 = vapply(G2_part1);
-
-G2_part2 = - sum(T,2);
-G2_part2 = vapply(G2_part2);
-
-Gs = [G2_part1, G, -G2_part2];
-
-B2_part1 = vapply(B, 'inv');
-B2_part1 = T' * B2_part1;
-
-B2_part1 = vapply(B2_part1);
-B2_part2 = - sum(T,1)';
-B2_part2 = vapply(B2_part2);
-
-Bs = [B, B2_part1, B2_part2];
-
+Gs = [ T(:,1), T*G, G ];
+Bs = [ -2*T(end,:)', B, T' * B ];
 end
