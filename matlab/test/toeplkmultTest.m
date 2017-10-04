@@ -137,6 +137,8 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             end
             y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'RelTol', 128*n*eps);
+            
+            testCase.assertTrue(isreal(y));
         end
         
         
@@ -154,6 +156,8 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             end
             y = toeplkmult(G,B,x,ctrans,alg);
             testCase.assertEqual(y, y_true, 'RelTol', 128*n*eps);
+            testCase.assertTrue(isreal(y));
+
         end
         
         function test_random_complex_rank4(testCase, ctrans, alg)
