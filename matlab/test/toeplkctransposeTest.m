@@ -32,7 +32,7 @@ testCase.assertEqual(Tc, Tc_true, 'AbsTol', eps, 'RelTol', eps);
 
 % Complex
 G = 2i;
-B = 1i;
+B = 1;
 Tc_true = -1i;
 
 [Gc, Bc] = toeplkctranspose(G, B);
@@ -45,12 +45,12 @@ n = 6;
 G = zeros(n,1);
 B = zeros(n,1);
 G(1) = 2;
-B(1) = 1;
+B(n) = 1;
 Tc_true = eye(n);
 
 [Gc, Bc] = toeplkctranspose(G, B);
 Tc = toeplkreconstruct(Gc, Bc);
-testCase.assertEqual(Tc, Tc_true, 'AbsTol', eps, 'RelTol', eps);
+testCase.assertEqual(Tc, Tc_true, 'AbsTol', 2*eps, 'RelTol', 2*eps);
 end
 
 function test_random_real(testCase)
@@ -64,7 +64,7 @@ Tc_true = toeplkreconstruct(G, B)';
 
 [Gc, Bc] = toeplkctranspose(G, B);
 Tc = toeplkreconstruct(Gc, Bc);
-testCase.assertEqual(Tc, Tc_true, 'AbsTol', eps, 'RelTol', eps);
+testCase.assertEqual(Tc, Tc_true, 'AbsTol', 8*n*eps, 'RelTol', 8*n*eps);
 end
 
 
@@ -79,5 +79,5 @@ Tc_true = toeplkreconstruct(G, B)';
 
 [Gc, Bc] = toeplkctranspose(G, B);
 Tc = toeplkreconstruct(Gc, Bc);
-testCase.assertEqual(Tc, Tc_true, 'AbsTol', eps, 'RelTol', eps);
+testCase.assertEqual(Tc, Tc_true, 'AbsTol', 8*n*eps, 'RelTol', 8*n*eps);
 end
