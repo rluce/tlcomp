@@ -46,7 +46,7 @@ classdef toeplksquareTest < matlab.unittest.TestCase
 
             [Gs, Bs] = toeplksquare(G, B, alg);
             Ts = toeplkreconstruct(Gs, Bs);
-            testCase.assertEqual(Ts, Ts_true, 'AbsTol', n*eps, 'RelTol', n*eps);
+            testCase.assertEqual(Ts, Ts_true, 'AbsTol', 4*n*eps, 'RelTol', 4*n*eps);
         end
         
         function test_random_complex(testCase, alg)
@@ -71,7 +71,7 @@ classdef toeplksquareTest < matlab.unittest.TestCase
             Ts_true = T * T;
             [Gs, Bs] = toeplksquare(G, B, alg);
             Ts = toeplkreconstruct(Gs, Bs);
-            testCase.assertEqual(Ts, Ts_true, 'RelTol', 4*n*eps, 'AbsTol', 4*n*eps);
+            testCase.assertEqual(Ts, Ts_true, 'RelTol', 32*n*eps, 'AbsTol', 32*n*eps);
             
         end
     end
