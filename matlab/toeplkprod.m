@@ -1,14 +1,29 @@
 function [Gp, Bp] = toeplkprod(G1, B1, G2, B2, alg)
 % [Gs, Bs] = toeplkprod(G1, B1, G2, B2, alg)
 %
-% Compute generator for product of TL matrices.
+% Compute generator for product Tp = T1 * T2 of two TL matrices.
 %
-% Possible choices for paramter 'alg':
-%   'full' -- traditional matrix vector product with reconstructed matrix
-%   'fft'  -- FFT based matrix vector product
+% Input:
+%   G1, B1 -- Generator for the TL matrix T1
+%   G2, B2 -- Generator for the TL matrix T2
+%   alg    -- Algorithmic choice:
+%            'full': traditional matrix vector product with reconstructed
+%                    matrix. Cost O((d1+d2)n^2).
+%            'fft':  (default) FFT based matrix vector product.
+%                    Cost O(d1 * d2 * n * log n).
+
+% Generator formulas follow from the general Schur complement formula
+% applied to the embedding
+%
+%   M = [
+%         -I,  T2;
+%         T1,   0;
+%       ];
+%
+% This is spelled out directly in the 'full' code path.
 
 if nargin < 5 || isempty(alg)
-    alg = 'full';
+    alg = 'fft';
 end
 
 switch alg
@@ -23,51 +38,32 @@ end
 end
 
 function [Gp, Bp] = tlprod_fft(G1, B1, G2, B2)
+n = size(G1, 1);
 
+e1 = zeros(n,1);
+e1(1) = 1;
+en = zeros(n,1);
+en(end) = 1;
 
-
-n = size(G1,1);
-
-onesvec = ones(n,1);
-
-Gp_part1 = vapply(G2, 'inv');
-Gp_part1 = toeplkmult(G1, B1, Gp_part1);
-Gp_part1 = vapply(Gp_part1);
-
-Gp_part2 = toeplkmult(G1, B1, -onesvec);
-Gp_part2 = vapply(Gp_part2);
-
-Gp = [Gp_part1, G1, -Gp_part2];
-
-Bp_part1 = vapply(B1, 'inv');
-Bp_part1 = toeplkmult(B2, G2, Bp_part1);
-Bp_part1 = vapply(Bp_part1);
-
-Bp_part2 = toeplkmult(B2, G2, -onesvec);
-Bp_part2 = vapply(Bp_part2);
-
-Bp = [B2, Bp_part1, Bp_part2];
+tmp = toeplkmult(G1,B1,[e1, G2], false, 'fft');
+Gp = [tmp, G1];
+tmp = toeplkmult(G2, B2, [en, B1], true, 'fft');
+Bp = [-2 * tmp(:,1), B2, tmp(:, 2:end)];
 end
 
 function [Gp, Bp] = tlprod_full(G1, B1, G2, B2)
+
+n = size(G1, 1);
+
 T1 = toeplkreconstruct(G1,B1);
 T2 = toeplkreconstruct(G2,B2);
 
-Gp_part1 = vapply(G2, 'inv');
-Gp_part1 = T1*Gp_part1;
-Gp_part1 = vapply(Gp_part1);
+e1 = zeros(n,1);
+e1(1) = 1;
+en = zeros(n,1);
+en(end) = 1;
 
-Gp_part2 = - sum(T1,2);
-Gp_part2 = vapply(Gp_part2);
+Gp = [T1 * e1, T1 * G2, G1];
+Bp = [-2 * T2' * en, B2, T2' * B1];
 
-Gp = [Gp_part1, G1, -Gp_part2];
-
-Bp_part1 = vapply(B1, 'inv');
-Bp_part1 = T2' * Bp_part1;
-Bp_part1 = vapply(Bp_part1);
-
-Bp_part2 = - sum(T2,1)';
-Bp_part2 = vapply(Bp_part2);
-
-Bp = [B2, Bp_part1, Bp_part2];
 end
