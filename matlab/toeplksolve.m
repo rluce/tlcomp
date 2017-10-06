@@ -12,9 +12,10 @@ function sol = toeplksolve(G, B, rhs)
 
 if size(G,1) == 1
     % Special code path for 1x1 matrices
-    T = G*B';
+    T = 0.5 * G*B'; % 1x1 recostruction formula
     if T == 0
-        % system may be inconsistent, FIXME
+        % FIXME: System may be inconsistent, we should issue a warning or
+        % so.
         sol = zeros(size(rhs));
         return;
     end
@@ -25,17 +26,11 @@ end
 % Use Gu pivoting w/ generator reorthogonalization
 piv = 4;
 
-% Transform to Z(1) / Z(-1) Sylvester displacement equation
-[GG, BB] = stein2sylv(G, B);
-% FIXME is this compression really necessary?
-[GG, BB] = gencompress(GG, BB);
-
 % Solve sytem
-sol = tlsolve(GG, BB, rhs, piv);
+sol = tlsolve(G, B, rhs, piv);
 
 % One step of refinement
 res = toeplkmult(G, B, sol) - rhs;
-cor = tlsolve(GG, BB, res, piv);
+cor = tlsolve(G, B, res, piv);
 sol = sol - cor;
-
 end
