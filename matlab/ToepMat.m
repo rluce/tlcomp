@@ -307,7 +307,7 @@ classdef ToepMat
         end
         
         function TMinv = inv(TM)
-            [Ginv, Binv] = toepinv_generators(TM.c, TM.r);
+            [Ginv, Binv] = toepinvgen(TM.c, TM.r);
             TMinv = TLMat(Ginv, Binv, 'GB');
         end
         

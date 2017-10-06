@@ -1,4 +1,4 @@
-function tests = toepinv_generatorsTest
+function tests = toepinvgenTest
 % Test various utility functions
 
 tests = functiontests(localfunctions);
@@ -10,7 +10,7 @@ function test_singleton(testCase)
 c = 1;
 r = 1;
 
-[Ginv, Binv] = toepinv_generators(c,r);
+[Ginv, Binv] = toepinvgen(c,r);
 
 Tinv = toeplkreconstruct(Ginv, Binv);
 testCase.assertEqual(Tinv, 1, 'AbsTol', eps);
@@ -19,7 +19,7 @@ testCase.assertEqual(Tinv, 1, 'AbsTol', eps);
 c = -1;
 r = -1;
 
-[Ginv, Binv] = toepinv_generators(c,r);
+[Ginv, Binv] = toepinvgen(c,r);
 
 Tinv = toeplkreconstruct(Ginv, Binv);
 testCase.assertEqual(Tinv, -1, 'AbsTol', eps);
@@ -28,7 +28,7 @@ testCase.assertEqual(Tinv, -1, 'AbsTol', eps);
 c = 1i;
 r = 1i;
 
-[Ginv, Binv] = toepinv_generators(c,r);
+[Ginv, Binv] = toepinvgen(c,r);
 
 Tinv = toeplkreconstruct(Ginv, Binv);
 testCase.assertEqual(Tinv, -1i, 'AbsTol', eps);
@@ -45,7 +45,7 @@ r = zeros(n,1);
 c(1) = 1.0;
 r(1) = 1.0;
 
-[Ginv, Binv] = toepinv_generators(c,r);
+[Ginv, Binv] = toepinvgen(c,r);
 I = toeplkreconstruct(Ginv, Binv);
 testCase.assertEqual(I, eye(n), 'AbsTol', eps);
 
@@ -59,7 +59,7 @@ c = rand(n,1);
 r = rand(n,1);
 c(1) = r(1);
 
-[Ginv, Binv] = toepinv_generators(c,r);
+[Ginv, Binv] = toepinvgen(c,r);
 testCase.assertEqual(size(Ginv), [n,2]);
 testCase.assertEqual(size(Binv), [n,2]);
 
@@ -75,7 +75,7 @@ n = 9;
 [c,r,T] = random_toeplitz(n,n);
 assert(~isreal(c(1)));
 
-[Ginv, Binv] = toepinv_generators(c,r);
+[Ginv, Binv] = toepinvgen(c,r);
 testCase.assertEqual(size(Ginv), [n,2]);
 testCase.assertEqual(size(Binv), [n,2]);
 

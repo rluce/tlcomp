@@ -1,5 +1,5 @@
-function [Ginv, Binv] = toepinv_generators(c, r)
-% [Ginv, Binv] = toepinv_generators(c, r)
+function [Ginv, Binv] = toepinvgen(c, r)
+% [Ginv, Binv] = toepinvgen(c, r)
 %
 % Computes a generator for the inverse of a Toeplitz matrix, with respect
 % to the Sylvester displacement equation

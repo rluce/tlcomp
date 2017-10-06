@@ -190,7 +190,7 @@ classdef toeplkmultTest < matlab.unittest.TestCase
                 x = T' * e;
             end
             
-            [Ginv, Binv] = toepinv_generators(c,r);
+            [Ginv, Binv] = toepinvgen(c,r);
             y = toeplkmult(Ginv, Binv, x, ctrans, alg);
             testCase.assertEqual(y, e, 'AbsTol', 8192*n*eps);
         end
