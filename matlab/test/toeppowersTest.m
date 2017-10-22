@@ -47,6 +47,17 @@ check_generators(testCase, T, Gpowers, Bpowers);
 
 end
 
+function test_jordan_block(testCase)
+n = 9;
+
+c = zeros(n,1);
+r = zeros(1,n);
+r(2) = 1.0;
+s = 9;
+T = toeplitz(c,r);
+[Gpowers, Bpowers] = toeppowers(c, r, s);
+check_generators(testCase, T, Gpowers, Bpowers);
+end
 
 function test_random(testCase)
 n = 8;
