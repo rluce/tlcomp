@@ -1,11 +1,13 @@
-function sol = toeplksolve(G, B, rhs)
+function sol = toeplksolve(G, B, rhs, ctrans)
 % sol = toeplksolve(G, B, rhs)
 %
-% Solve a Toeplitz-like system of equations with dense RHS.
+% Solve a Toeplitz-like system Ax = rhs of equations with dense RHS.
 %
 % Input:
-%   G, B   -- the Stein-Z generator of the system matrix
-%   rhs    -- right hand side of the system (multiple columns allowed)
+%   G, B   -- the generator of the system matrix A
+%   rhs    -- right hand side rhs of the system (multiple columns allowed)
+%   ctrans -- (optional) true/false switch.  If true, solve A'x = rhs
+%             instead. Default: false.
 %
 % Output:
 %   sol    -- solution to the system
