@@ -125,7 +125,7 @@ function [G,B] = monomial_eval(c,r,p,alg)
 
 N = length(p) - 1;
 
-[Gpow , Bpow] = toeppowers(c, r, N, alg);
+[Gpow , Bpow] = toeppowers(c, r, N);
 
 for i = 1:N
     Gpow{i} = p(N-i+1) * Gpow{i};

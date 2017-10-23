@@ -4,22 +4,6 @@ tests = functiontests(localfunctions);
 
 end
 
-function test_empty(testCase)
-% We require them to be empty, but don't require a specific size in the
-% nonzero dimension.
-
-c = [];
-r = [];
-T = [];
-[Gpowers, Bpowers] = toeppowers(c,r,101);
-
-for k = 1:101
-    testCase.assertTrue(isempty(Gpowers{k}));
-    testCase.assertTrue(isempty(Bpowers{k}));
-end
-
-end
-
 function test_zero(testCase)
 
 c = 0;
@@ -65,8 +49,10 @@ s = 3;
 [c,r] = random_toeplitz(n,n);
 
 T = toeplitz(c,r);
+nT = norm(T);
 [Gpowers, Bpowers] = toeppowers(c, r, s);
-check_generators(testCase, T, Gpowers, Bpowers);
+check_generators(testCase, T, Gpowers, Bpowers, ...
+    'AbsTol', nT*16*eps, 'RelTol', nT*16*eps);
 end
 
 
@@ -79,7 +65,7 @@ c = T(:,1);
 r = T(1,:);
 
 [Gpowers, Bpowers] = toeppowers(c, r, s);
-check_generators(testCase, T, Gpowers, Bpowers);
+check_generators(testCase, T, Gpowers, Bpowers, 'AbsTol', 32*eps, 'RelTol', 32*eps);
 end
 
 
@@ -109,7 +95,7 @@ for k=1:deg
     [~,s1] = size(Gp{k});
     [~,s2] = size(Bp{k});
     testCase.assertEqual(s1, s2);
-    testCase.assertEqual(s1, 2*deg);
+    testCase.assertEqual(s1, 2*k);
 end
 
 end

@@ -1,31 +1,7 @@
-function [Gpowers, Bpowers] = toeppowers(c, r, s, alg)
-% [Bpowers, Tpowers] = power_generators(c, r, s, alg)
+function [Gpowers, Bpowers] = toeppowers(c, r, s)
+% [Bpowers, Tpowers] = power_generators(c, r, s)
 %
-% Compute some generators for each power T^1, ... T^s.
-%
-% Paramter alg chooses between the 'full' and 'reduced' algorithm.
-
-if nargin < 4
-    alg = 'full';
-end
-
-switch(alg)
-    case 'full'
-        [Gpowers, Bpowers] = full_algorithm(c, r, s);
-    case 'reduced'
-        [Gpowers, Bpowers] = reduced_algorithm(c, r, s);
-    otherwise
-        error('expmt:InvalidParameter', ...
-            'Invalid choice for alg parameter');
-end
-
-end
-
-function [Gpowers, Bpowers] = reduced_algorithm(c,r,s)
-
-if s < 1
-    return;
-end
+% Compute generators for each monomial T^1, ..., T^s.
 
 Gpowers = cell(1,s);
 Bpowers = cell(1,s);
@@ -35,72 +11,35 @@ Bpowers = cell(1,s);
 Gpowers{1} = G;
 Bpowers{1} = B;
 
-% Store intermediate factors
-PG_times_G1 = G;
-PB_times_B1 = B;
-for i=2:s
-    PG_times_G1 = apply_PG(c, r, PG_times_G1);
-    PB_times_B1 = apply_PB(c, r, PB_times_B1);
-    
-    Gupdt = [ PG_times_G1, Gpowers{i-1}];
-    % Implicit gauss elimination in order to make generators short.
-    Gupdt(:,3) = Gupdt(:,3) - Gupdt(:,2);
-    
-    Bupdt = [ Bpowers{i-1}, PB_times_B1];
-    Gpowers{i} = Gupdt;
-    Bpowers{i} = Bupdt;
-end
-
-
-end
-
-function [Gpowers, Bpowers] = full_algorithm(c,r,s)
-
-if s < 1
-    return;
-end
-
-Gpowers = cell(1,s);
-Bpowers = cell(1,s);
-
-[G, B] = toepgen(c,r);
-
-e1 = G(:,2);
-
-Gpowers{1} = G;
-Bpowers{1} = B;
-
-% Store intermediate factors
-PG_times_G1 = G;
-PG_times_e1 = e1;
-PB_times_B1 = B;
-PB_times_e1 = e1;
+% Initilziation
+% Caution: Here we use implicit knowledge about the structure of G and B.
+Tg = G(:,1);
+Tb = B(:,2);
+Te1 = G(:,2);
+Ten = B(:,1);
 
 for i=2:s
-    PG_times_G1 = apply_PG(c, r, PG_times_G1);
-    PG_times_e1 = apply_PG(c, r, PG_times_e1);
+    % At iteration i Tg = T^(i-1) * g, analoguous for the other three vectors
+    tmp = toepmult(c, r, [Tg, Te1]);
+    Tg  = tmp(:,1);
+    Te1 = tmp(:,2);
 
-    PB_times_B1 = apply_PB(c, r, PB_times_B1);
-    PB_times_e1 = apply_PB(c, r, PB_times_e1);
+    % At iteration i Tb = T'^(i-1) * b (note the ')
+    tmp = toepmult(conj(r), conj(c), [Ten, Tb]);
+    Ten = tmp(:,1);
+    Tb  = tmp(:,2);
+    
+    % Extend G from power i-1 to power i
+    G(:,end-1) = G(:,end-1) - Te1; % second last column needs update
+    G = [G, Tg, Te1]; %#ok<AGROW>
 
-    Gupdt = [ PG_times_G1, Gpowers{i-1}, -PG_times_e1];
-    Bupdt = [ Bpowers{i-1}(:,1:2*(i-1)), PB_times_B1, PB_times_e1, ...
-        Bpowers{i-1}(:,end-i+3:end) ];
-    Gpowers{i} = Gupdt;
-    Bpowers{i} = Bupdt;
+    % Extend B from power i-1 to power i
+    B(:,2) = B(:,2) - Ten;
+    B = [Ten, Tb, B]; %#ok<AGROW>
+    
+    Gpowers{i} = G;
+    Bpowers{i} = B;
 end
 
-end
 
-function Y = apply_PG(c, r, X)
-Y = vapply(X, 'inv');
-Y = toepmult(c,r,Y);
-Y = vapply(Y);
 end
-
-function Y = apply_PB(c, r, X)
-Y = vapply(X, 'inv');
-Y = toepmult(conj(r), conj(c), Y);
-Y = vapply(Y);
-end
-
