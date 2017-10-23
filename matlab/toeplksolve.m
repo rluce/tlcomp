@@ -11,6 +11,11 @@ function sol = toeplksolve(G, B, rhs, ctrans)
 %
 % Output:
 %   sol    -- solution to the system
+
+if nargin < 4 || isempty(ctrans)
+    ctrans = false;
+end
+
 n = size(G,1);
 if n == 1
     % Special code path for 1x1 matrices

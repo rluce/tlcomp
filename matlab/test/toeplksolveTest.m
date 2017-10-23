@@ -112,5 +112,23 @@ classdef toeplksolveTest < matlab.unittest.TestCase
             x = toeplksolve(G,B,b, ctrans);
             testCase.assertEqual(x, x_true, 'RelTol', 32*n*eps);
         end
+        
+        function test_default_notranspose(testCase)
+            n = 7;
+            c = 1:n;
+            r = zeros(n,1);
+            r(1) = 1;
+            
+            T = toeplitz(c,r);
+            [G, B] = toepgen(c,r);
+            b = ones(n,1);
+            x_true = zeros(n,1);
+            x_true(1) = 1;
+            x_true(2) = -1;   
+            x = toeplksolve(G,B,b); % No value for ctrans, so 'no transpose'
+            testCase.assertEqual(x, x_true, 'RelTol', 4*n*eps, 'AbsTol', 4*n*eps);
+
+           
+        end
     end
 end
