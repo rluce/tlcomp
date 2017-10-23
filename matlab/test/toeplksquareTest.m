@@ -55,11 +55,12 @@ classdef toeplksquareTest < matlab.unittest.TestCase
             r = randn(n,1) + 1i*randn(n,1);
             r(1) = c(1);
             T = toeplitz(c,r);
+            nT = norm(T);
             Ts_true = T*T;
             [G, B] = toepgen(c,r);
             [Gs, Bs] = toeplksquare(G, B, alg);
             Ts = toeplkreconstruct(Gs, Bs);
-            testCase.assertEqual(Ts, Ts_true, 'AbsTol', 4*n*eps, 'RelTol', 4*n*eps);
+            testCase.assertEqual(Ts, Ts_true, 'AbsTol', 8*nT*eps, 'RelTol', 8*nT*eps);
         end
         
         function test_random_d5(testCase, alg)
