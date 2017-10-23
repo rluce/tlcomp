@@ -57,6 +57,31 @@ classdef toeplksolveTest < matlab.unittest.TestCase
             testCase.assertEqual(x, x_true);
         end
         
+        
+        function test_identity(testCase, ctrans)
+            n = 17;
+            e1 = zeros(n,1);
+            e1(1) = 1;
+            [G, B] = toepgen(e1,e1);
+            
+            b = ones(n,1);
+            x = toeplksolve(G, B, b, ctrans);
+            testCase.assertEqual(x, b, 'AbsTol', 4*eps, 'RelTol', 4*eps);
+
+            b = (1:n)';
+            x = toeplksolve(G, B, b, ctrans);
+            testCase.assertEqual(x, b, 'AbsTol', 16*eps, 'RelTol', 16*eps);
+            
+            b = randn(n,1);
+            x = toeplksolve(G, B, b, ctrans);
+            testCase.assertEqual(x, b, 'AbsTol', 4*eps, 'RelTol', 4*eps);
+
+            b = randn(n,1) + 1i * randn(n,1);
+            x = toeplksolve(G, B, b, ctrans);
+            testCase.assertEqual(x, b, 'AbsTol', 4*eps, 'RelTol', 4*eps);
+
+        end
+        
         function test_prolate_matrix(testCase, ctrans)
             n = 17;
             T = gallery('prolate', n, 0.35);
