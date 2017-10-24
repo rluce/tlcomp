@@ -101,7 +101,7 @@ classdef toeplkmultTest < matlab.unittest.TestCase
                 
             end
             y = toeplkmult(G,B,x,ctrans,alg);
-            testCase.assertEqual(y, y_true, 'RelTol', 4*nT*eps);
+            testCase.assertEqual(y, y_true, 'RelTol', 16*nT*eps);
             
         end
 
