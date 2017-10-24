@@ -91,6 +91,7 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             r = zeros(n,1);
             r(1) = c(1);
             [G,B] = toepgen(c,r);
+            nT = norm(toeplitz(c,r));
             
             x = ones(n,1);
             y_true = cumsum(c);
@@ -100,7 +101,7 @@ classdef toeplkmultTest < matlab.unittest.TestCase
                 
             end
             y = toeplkmult(G,B,x,ctrans,alg);
-            testCase.assertEqual(y, y_true, 'RelTol', 512*n*eps);
+            testCase.assertEqual(y, y_true, 'RelTol', 4*nT*eps);
             
         end
 
