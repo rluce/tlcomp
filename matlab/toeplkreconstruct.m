@@ -27,7 +27,7 @@ n = size(G, 1);
 
 if size(B, 2) ~= size(G, 2)
     % Generator matrices are not compatible
-    error('tlzstein:InconsistentInput', ...
+    error('tlcomp:InconsistentInput', ...
             'G and B must have the same number of columns');
 end
 

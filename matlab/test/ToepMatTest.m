@@ -23,22 +23,22 @@ testCase.assertEqual(T.r, r(:));
 
 c = 6;
 r = 1;
-testCase.assertError( @() ToepMat(c,r), 'tlzstein:InconsistentInput');
+testCase.assertError( @() ToepMat(c,r), 'tlcomp:InconsistentInput');
 
 c = rand(9,1);
 r = c;
 r(1) = r(1) + 1e-8;
-testCase.assertError( @() ToepMat(c,r), 'tlzstein:InconsistentInput');
+testCase.assertError( @() ToepMat(c,r), 'tlcomp:InconsistentInput');
 
 % For the moment, we only support square matrices
 c = ones(4,1);
 r = ones(3,1);
-testCase.assertError( @() ToepMat(c,r), 'tlzstein:InconsistentInput');
+testCase.assertError( @() ToepMat(c,r), 'tlcomp:InconsistentInput');
 
 % Only vectors allowed
 c = ones(4,2);
 r = ones(4,2);
-testCase.assertError( @() ToepMat(c,r), 'tlzstein:InconsistentInput');
+testCase.assertError( @() ToepMat(c,r), 'tlcomp:InconsistentInput');
 
 end
 
@@ -149,8 +149,8 @@ testCase.assertEqual(class(B), 'ToepMat');
 testCase.assertTrue(isempty(full(B)));
 
 T = toepeye(3);
-testCase.assertError( @() T + rand(2), 'tlzstein:InconsistentInput');
-testCase.assertError( @() rand(2) - T, 'tlzstein:InconsistentInput');
+testCase.assertError( @() T + rand(2), 'tlcomp:InconsistentInput');
+testCase.assertError( @() rand(2) - T, 'tlcomp:InconsistentInput');
 
 [c,r,T] = random_toeplitz(9,9);
 TM = ToepMat(c,r);
@@ -247,7 +247,7 @@ testCase.assertEqual(full(TM2 - TM1), T2-T1);
 
 TM1 = ToepMat([1,2,3], [1,5,6]);
 TM2 = ToepMat([6,5], [6,0]);
-testCase.assertError( @() TM1 + TM2, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TM1 + TM2, 'tlcomp:InconsistentInput');
 
 
 end
@@ -335,7 +335,7 @@ function test_mtimes_toep(testCase)
 
 TM1 = ToepMat([1,1], [1,2]);
 TM2 = ToepMat([1,1,1], [1,2,2]);
-testCase.assertError( @() TM1 * TM2, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TM1 * TM2, 'tlcomp:InconsistentInput');
 
 
 TM1 = ToepMat([], []);
@@ -394,7 +394,7 @@ function test_mtimes_tl(testCase)
 
 TM = ToepMat([1,1], [1,2]);
 TL = TLMat([1,1,1], [1,2,2]);
-testCase.assertError( @() TM * TL, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TM * TL, 'tlcomp:InconsistentInput');
 
 TM = ToepMat([], []);
 TL = TLMat([]);
@@ -463,8 +463,8 @@ function test_mtimes_double_matrix(testCase)
 
 TM = ToepMat([1,1], [1,2]);
 A = randn(3);
-testCase.assertError( @() TM * A, 'tlzstein:InconsistentInput');
-testCase.assertError( @() A * TM, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TM * A, 'tlcomp:InconsistentInput');
+testCase.assertError( @() A * TM, 'tlcomp:InconsistentInput');
 
 TM = ToepMat([],[]);
 A = [];
@@ -634,7 +634,7 @@ testCase.assertTrue(isreal(TM\b));
 testCase.assertEqual(TM\b, x, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 
 TM = toepeye(8);
-testCase.assertError( @() TM \ 1.0, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TM \ 1.0, 'tlcomp:InconsistentInput');
 end
 
 function test_mldivide_toepmat(testCase)

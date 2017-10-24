@@ -10,7 +10,7 @@ classdef ToepMat
             %   T is Toeplitz matrix with prescribed first col/row
             
             if min(size(c)) > 1 || min(size(r)) > 1
-                error('tlzstein:InconsistentInput', 'c, r must be vectors');
+                error('tlcomp:InconsistentInput', 'c, r must be vectors');
             end
             
             % Homogenize
@@ -18,13 +18,13 @@ classdef ToepMat
             r = r(:);
             
             if length(c) ~= length(r)
-                error('tlzstein:InconsistentInput', 'c, r must have same length');
+                error('tlcomp:InconsistentInput', 'c, r must have same length');
             end
             
             n = length(r);
             
             if n>0 && c(1) ~= r(1)
-                error('tlzstein:InconsistentInput', 'c(1),r(1) must be equal');
+                error('tlcomp:InconsistentInput', 'c(1),r(1) must be equal');
             end
             
             T.c = c;
@@ -44,7 +44,7 @@ classdef ToepMat
                 elseif dim == 2
                     s1 = length(T.r);
                 else
-                    error('tlzstein:InconsistentInput', ...
+                    error('tlcomp:InconsistentInput', ...
                         'No such dimension');
                 end
             else
@@ -117,7 +117,7 @@ classdef ToepMat
                 case 'ToepMat'
                     S = op1.add_toepmat(op2);
                 otherwise
-                    error('tlzstein:NotImplemented', ...
+                    error('tlcomp:NotImplemented', ...
                         'Addition not implemented for this operand');
             end
         end
@@ -130,7 +130,7 @@ classdef ToepMat
         
         function S = add_toepmat(TM1, TM2)
             if any(size(TM1) ~= size(TM2))
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                     'Matrix dimensions must agree');
             end
             TM1.r = TM1.r + TM2.r;
@@ -140,7 +140,7 @@ classdef ToepMat
         
         function S = add_dense_toeplitz_matrix(TM, T)
             if any(size(TM) ~= size(T))
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                 'Matrix dimensions must agree');
             end
 
@@ -159,7 +159,7 @@ classdef ToepMat
         
         function S = add_dense_matrix(TM, A)
             if any(size(TM) ~= size(A))
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                 'Matrix dimensions must agree');
             end
             S = full(TM) + A;
@@ -181,7 +181,7 @@ classdef ToepMat
                         TL = TLMat(op1.c, op1.r);
                         P = TL * op2;                        
                     otherwise
-                        error('tlzstein:NotImplemented', ...
+                        error('tlcomp:NotImplemented', ...
                             'Multiplication not implemented for this operand');
                 end
             elseif isa(op2, 'ToepMat')
@@ -190,7 +190,7 @@ classdef ToepMat
                     case 'double'
                         P = dispatch_double_mtimes_tm(op1, op2);
                     otherwise
-                        error('tlzstein:NotImplemented', ...
+                        error('tlcomp:NotImplemented', ...
                             'Multiplication not implemented for this operand');
 
                 end
@@ -253,7 +253,7 @@ classdef ToepMat
             
             [m, n] = size(TM);
             if n~= mm
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                     'Matrix dimensions must agree');
             end
             
@@ -280,7 +280,7 @@ classdef ToepMat
             
             [m, n] = size(TM);
             if m~= nn
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                     'Matrix dimensions must agree');
             end
             
@@ -322,7 +322,7 @@ classdef ToepMat
             [m,~] = size(TM);
             [mm, ~] = size(B);
             if m ~= mm
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                     'Matrix dimensions must agree');
             end
             
@@ -338,7 +338,7 @@ classdef ToepMat
                     TL = TLMat(TM.c, TM.r);
                     X = TL \ B;
                 otherwise
-                    error('tlzstein:NotImplemented', ...
+                    error('tlcomp:NotImplemented', ...
                         'Operation not implemented yet, fixme');
             end
         end
@@ -353,14 +353,14 @@ classdef ToepMat
         
         function R = mrdivide(op1, op2)
             if ~isa(op1, 'ToepMat')
-                error('tlzstein:NotImplemented', 'Not implemented, fixme.');
+                error('tlcomp:NotImplemented', 'Not implemented, fixme.');
             end
             
             switch class(op2)
                 case 'double'
                     R = dispatch_mrdivide_tm_double(op1, op2);
                 otherwise
-                    error('tlzstein:NotImplemented', 'Not implemented, fixme.');
+                    error('tlcomp:NotImplemented', 'Not implemented, fixme.');
             end
         end
         
@@ -374,7 +374,7 @@ classdef ToepMat
                 R = TM.mtimes_scalar(1.0 / A);
                 return;
             end
-            error('tlzstein:NotImplemented', 'Not implemented, fixme.');
+            error('tlcomp:NotImplemented', 'Not implemented, fixme.');
         end
     end
 end

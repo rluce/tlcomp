@@ -82,5 +82,5 @@ function test_generator6(testCase)
 % Fail hard on inconsistent data
 [~,~,T] = random_toeplitz(8,8);
 testCase.assertError( @() toeplkgen(T,10), ...
-    'tlzstein:InconsistentInput');
+    'tlcomp:InconsistentInput');
 end

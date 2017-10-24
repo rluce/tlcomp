@@ -16,7 +16,7 @@ function [G,B] = toepgen(c, r)
 %  structure. Mathematics of Computation, 64(212), 1557?1576.
 
 if c(1) ~= r(1)
-    error('tlzstein:InconsistentInput', ...
+    error('tlcomp:InconsistentInput', ...
         'first elements of c and r must be equal');
 end
 

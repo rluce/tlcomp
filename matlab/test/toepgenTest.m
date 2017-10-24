@@ -30,7 +30,7 @@ function test_inconsistent(testCase)
 % Fail hard on inconsistent data
 c = [1;2;3];
 r = [4,5,6];
-testCase.assertError( @() toepgen(c,r), 'tlzstein:InconsistentInput');
+testCase.assertError( @() toepgen(c,r), 'tlcomp:InconsistentInput');
 end
 
 function test_simple(testCase)

@@ -67,5 +67,5 @@ G = randn(10, 4);
 B = randn(10, 5);
 
 testCase.assertError( @() toeplkreconstruct(G, B), ...
-    'tlzstein:InconsistentInput');
+    'tlcomp:InconsistentInput');
 end

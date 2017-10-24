@@ -47,7 +47,7 @@ testCase.assertEqual(0.5 * TL.G * TL.B', A);
 
 c = 6;
 r = 1;
-testCase.assertError( @() TLMat(c,r), 'tlzstein:InconsistentInput');
+testCase.assertError( @() TLMat(c,r), 'tlcomp:InconsistentInput');
 
 
 end
@@ -107,7 +107,7 @@ end
 function test_construct_badinput(testCase)
 
 testCase.assertError( @() TLMat(rand(4,2), rand(4,3)), ...
-    'tlzstein:InconsistentInput');
+    'tlcomp:InconsistentInput');
 
 end
 
@@ -447,8 +447,8 @@ function test_mtimes_toepmat(testCase)
 
 TL = tleye(5);
 TM = toepeye(4);
-testCase.assertError( @() TL * TM, 'tlzstein:InconsistentInput');
-testCase.assertError( @() TM * TL, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TL * TM, 'tlcomp:InconsistentInput');
+testCase.assertError( @() TM * TL, 'tlcomp:InconsistentInput');
 
 TL = TLMat([]);
 TM = ToepMat([], []);
@@ -489,8 +489,8 @@ function test_mtimes_tlmat(testCase)
 
 TL1 = tleye(8);
 TL2 = TLMat([1,2,3], [1, -2, -1]);
-testCase.assertError( @() TL1 * TL2, 'tlzstein:InconsistentInput');
-testCase.assertError( @() TL2 * TL1, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TL1 * TL2, 'tlcomp:InconsistentInput');
+testCase.assertError( @() TL2 * TL1, 'tlcomp:InconsistentInput');
 
 TL1 = tleye(1);
 TL2 = TLMat(3i);
@@ -549,8 +549,8 @@ function test_mtimes_double_matrix(testCase)
 
 TL = tleye(8);
 A = rand(7);
-testCase.assertError( @() TL * A, 'tlzstein:InconsistentInput');
-testCase.assertError( @() A * TL, 'tlzstein:InconsistentInput');
+testCase.assertError( @() TL * A, 'tlcomp:InconsistentInput');
+testCase.assertError( @() A * TL, 'tlcomp:InconsistentInput');
 
 TL = TLMat([]);
 A = [];

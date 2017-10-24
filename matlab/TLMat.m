@@ -39,7 +39,7 @@ classdef TLMat
                     if force_gb
                         % But we read it as generators
                         if sc(2) ~= sr(2)
-                            error('tlzstein:InconsistentInput', ...
+                            error('tlcomp:InconsistentInput', ...
                                 'Generator matrices must have equal length');
                         end
                         G = c;
@@ -52,7 +52,7 @@ classdef TLMat
                     % Two inputs, and at least one is not a vector,
                     % so the input is a generator.
                     if sc(2) ~= sr(2)
-                        error('tlzstein:InconsistentInput', ...
+                        error('tlcomp:InconsistentInput', ...
                             'Generator matrices must be of equal size');
                     end
                     G = c;
@@ -128,7 +128,7 @@ classdef TLMat
                 case 'ToepMat'
                     S = op1.add_toepmat(op2);
                 otherwise
-                    error('tlzstein:NotImplemented', ...
+                    error('tlcomp:NotImplemented', ...
                         'Addition not implemented for this operand');
             end
         end
@@ -151,7 +151,7 @@ classdef TLMat
             % A is not scalar.
             [mm, nn] = size(TL);
             if mm~=m || nn~=n
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                     'Matrix dimensions must agree.');
             end
             
@@ -235,7 +235,7 @@ classdef TLMat
         
         function B = mtimes_double(TL, A)
             if size(TL,2) ~= size(A,1)
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                     'Matrix dimensions must agree');
             end
             
@@ -244,7 +244,7 @@ classdef TLMat
         
         function P = mtimes_tlmat(TL1, TL2)
             if any(size(TL1) ~= size(TL2))
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                     'Matrix dimensions must agree');
             end
             [Gp, Bp] = toeplkprod(TL1.G, TL1.B, TL2.G, TL2.B);
@@ -259,7 +259,7 @@ classdef TLMat
             m = size(TL, 1);
             mm = size(op,1);
             if mm ~= m
-                error('tlzstein:InconsistentInput', ...
+                error('tlcomp:InconsistentInput', ...
                     'Matrix dimensions must agree');
             end
             
@@ -272,7 +272,7 @@ classdef TLMat
                     op = TLMat(op.c, op.r);
                     D = TL.mldivide(op);
                 otherwise
-                    error('tlzstein:NotImplemented', ...
+                    error('tlcomp:NotImplemented', ...
                         'No mldivide for this operand type, fixme');
             end
         end
@@ -289,7 +289,7 @@ classdef TLMat
 
         %%%%%%%% CAUTION DEBUG ONLY
         function d = det(TL)
-            warning('tlzstein:CubicOperatoin', ...
+            warning('tlcomp:CubicOperatoin', ...
                 'det not implemented, using dense det');
             d = det(full(TL));
         end

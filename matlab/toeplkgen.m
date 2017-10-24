@@ -12,7 +12,7 @@ n = size(A, 1);
 
 if nargin >= 2 && ~isempty(r)
     if r > n
-        error('tlzstein:InconsistentInput', ...
+        error('tlcomp:InconsistentInput', ...
             'Requested rank exceeds matrix dimension');
     end
 end
