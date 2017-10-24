@@ -6,7 +6,7 @@ classdef TLMat
     
     methods
         function TL = TLMat(c, r, flag)
-            % TL = TLMat(c ,r)
+            % TL = TLMat(c, r)
             %   Generate a TL matrix from the first col/row of a Toeplitz
             %   matrix.
             %
@@ -95,15 +95,15 @@ classdef TLMat
         end
         
         function TL = transpose(TL)
-            tmp = TL.G;
-            TL.G = conj(TL.B);
-            TL.B = conj(tmp);
+            TL = TL';
+            TL.G = conj(TL.G);
+            TL.B = conj(TL.B);
         end
 
         function TL = ctranspose(TL)
-            tmp = TL.G;
-            TL.G = TL.B;
-            TL.B = tmp;
+            [Gt, Bt] = toeplkctranspose(TL.G, TL.B);
+            TL.G = Gt;
+            TL.B = Bt;
         end
 
         

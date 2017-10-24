@@ -22,24 +22,28 @@ end
 
 
 function test_construct_scalar(testCase)
+% Recall reconstruction formula for 1-by-1 case: T(G,B) = 0.5 * G * B'
+
 A = 6;
 TL = TLMat(A);
-testCase.assertEqual(TL.G * TL.B', A);
+testCase.assertEqual(0.5 * TL.G * TL.B', A);
 
-G = 2;
-B = 3;
+% Generators for A = 6
+G = 12;
+B = 1;
 TL = TLMat(G,B, 'GB');
-testCase.assertEqual(TL.G * TL.B', A);
+testCase.assertEqual(0.5 * TL.G * TL.B', A);
 
-G = [1, 1];
+% Non-minimal 1-by-1 generators for A = 6
+G = [2, 2];
 B = [3, 3];
 TL = TLMat(G,B, 'GB');
-testCase.assertEqual(TL.G * TL.B', A);
+testCase.assertEqual(0.5 * TL.G * TL.B', A);
 
 c = 6;
 r = 6;
 TL = TLMat(c,r);
-testCase.assertEqual(TL.G * TL.B', A);
+testCase.assertEqual(0.5 * TL.G * TL.B', A);
 
 c = 6;
 r = 1;
@@ -54,22 +58,23 @@ n = 8;
 
 E = eye(8);
 e1 = E(:,1);
+en = E(:,end);
 z = zeros(n,1);
 
 TL = TLMat(E);
-testCase.assertEqual(TL.G * TL.B', e1 * e1');
+testCase.assertEqual(TL.G * TL.B', 2*e1*en');
 
 TL = TLMat(e1,e1);
-testCase.assertEqual(TL.G * TL.B', e1 * e1');
+testCase.assertEqual(TL.G * TL.B', 2*e1*en');
 
-TL = TLMat(e1,e1, 'GB');
-testCase.assertEqual(TL.G * TL.B', e1 * e1');
+TL = TLMat(2*e1, en, 'GB');
+testCase.assertEqual(TL.G * TL.B', 2*e1*en');
 
-TL = TLMat([e1,z], [e1,z], 'GB');
-testCase.assertEqual(TL.G * TL.B', e1 * e1');
+TL = TLMat([2*e1,z], [en,z], 'GB');
+testCase.assertEqual(TL.G * TL.B', 2*e1*en');
 
-TL = TLMat([e1,z], [e1,z]);
-testCase.assertEqual(TL.G * TL.B', e1 * e1');
+TL = TLMat([2*e1,z], [en,z]);
+testCase.assertEqual(TL.G * TL.B', 2*e1*en');
 
 end
 
@@ -79,22 +84,22 @@ n = 9;
 
 TL = TLMat(T);
 T2 = toeplkreconstruct(TL.G, TL.B);
-testCase.assertEqual(T2, T, 'RelTol', 100*eps);
+testCase.assertEqual(T2, T, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 
 TL = TLMat(c,r);
 T2 = toeplkreconstruct(TL.G, TL.B);
-testCase.assertEqual(T2, T, 'RelTol', 100*eps);
+testCase.assertEqual(T2, T, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 
 [G, B] = toepgen(c,r);
 TL = TLMat(G,B);
 T2 = toeplkreconstruct(TL.G, TL.B);
-testCase.assertEqual(T2, T, 'RelTol', 100*eps);
+testCase.assertEqual(T2, T, 'AbsTol', 100*eps, 'RelTol', 100*eps);
 
 GG = [2 * G, -G];
 BB = [B, B];
 TL = TLMat(GG, BB);
 T2 = toeplkreconstruct(TL.G, TL.B);
-testCase.assertEqual(T2, T, 'RelTol', 100*eps);
+testCase.assertEqual(T2, T, 'AbsTol', 100*eps,  'RelTol', 100*eps);
 
 
 end
@@ -221,11 +226,11 @@ function test_plus_dense_toeplitz(testCase)
 
 n = 13;
 TL = TLMat(1i * rand(n,3) + rand(n,3), rand(n,3));
-
+nTL = norm(full(TL));
 B = TL + zeros(n);
 testCase.assertEqual(class(B), 'TLMat');
 testCase.assertEqual(drank(B), 3);
-testCase.assertEqual(full(B), full(TL), 'AbsTol', 10*eps, 'RelTol', 10*eps);
+testCase.assertEqual(full(B), full(TL), 'AbsTol', nTL*eps, 'RelTol', nTL*eps);
 
 sigma = rand(1,1) + 1i * rand(1,1);
 B = TL + sigma * eye(n);
@@ -245,14 +250,15 @@ testCase.assertEqual(drank(TL - T), 5); % fails with prob 0
 testCase.assertEqual(drank(T + TL), 5); % fails with prob 0
 testCase.assertEqual(drank(T - TL), 5); % fails with prob 0
 
+nfact = norm(full(T)) + norm(full(TL));
 testCase.assertEqual(full(TL + T), full(TL) + T, ...
-    'AbsTol', 100*eps, 'RelTol', 100*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(full(TL - T), full(TL) - T, ...
-    'AbsTol', 100*eps, 'RelTol', 100*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(full(T + TL), T + full(TL), ...
-    'Abstol', 100*eps, 'RelTol', 100*eps);
+    'Abstol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(full(T - TL), T - full(TL), ...
-    'Abstol', 100*eps, 'RelTol', 100*eps);
+    'Abstol', nfact*eps, 'RelTol', nfact*eps);
 
 end
 
@@ -297,16 +303,19 @@ r = 3;
 TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
 TL_true = full(TL) + diag(ones(n,1));
 TL = TL + toepeye(n);
+
+nfact = norm(TL_true);
 testCase.assertEqual(class(TL), 'TLMat');
-testCase.assertEqual(full(TL), TL_true, 'RelTol', 100*eps);
+testCase.assertEqual(full(TL), TL_true, 'RelTol', nfact*eps, 'AbsTol', nfact*eps);
 testCase.assertEqual(drank(TL), r + 1); % Fails with prob. 0
 
 TL = TLMat(rand(n,r), rand(n,r) + 1i * rand(n,r));
 sigma = rand + 1i * rand;
 TL_true = full(TL) + diag(sigma * ones(n,1));
 TL = TL + sigma * toepeye(n);
+nTL = norm(full(TL));
 testCase.assertEqual(class(TL), 'TLMat');
-testCase.assertEqual(full(TL), TL_true, 'RelTol', 100*eps);
+testCase.assertEqual(full(TL), TL_true, 'AbsTol', 2*nTL*eps, 'RelTol', 2*nTL*eps);
 testCase.assertEqual(drank(TL), r + 1); % Fails with prob. 0
 
 % Sum of random matrices
@@ -315,18 +324,20 @@ dr = 3;
 TL = TLMat(rand(n,dr), rand(n,dr) + 1i * rand(n,dr));
 [c,r, T] = random_toeplitz(n,n);
 TM = ToepMat(c,r);
+
+nfact = 2 * (norm(full(TM)) + norm(full(TL)));
 testCase.assertEqual(class(TL + TM), 'TLMat');
 testCase.assertEqual(class(TL - TM), 'TLMat');
 testCase.assertEqual(class(TM + TL), 'TLMat');
 testCase.assertEqual(class(TM - TL), 'TLMat');
 testCase.assertEqual(full(TL + TM), full(TL) + T, ...
-    'RelTol', 100*eps, 'AbsTol', 100*eps);
+    'RelTol', nfact*eps, 'AbsTol', nfact*eps);
 testCase.assertEqual(full(TL - TM), full(TL) - T, ...
-    'RelTol', 100*eps, 'AbsTol', 100*eps);
+    'RelTol', nfact*eps, 'AbsTol', nfact*eps);
 testCase.assertEqual(full(TM + TL), T + full(TL), ...
-    'RelTol', 100*eps, 'AbsTol', 100*eps);
+    'RelTol', nfact*eps, 'AbsTol', nfact*eps);
 testCase.assertEqual(full(TM - TL), T - full(TL), ...
-    'RelTol', 100*eps, 'AbsTol', 100*eps);
+    'RelTol', nfact*eps, 'AbsTol', nfact*eps);
 
 % These four tests fail with probability 0
 testCase.assertEqual(drank(TL + TM), dr+2);
@@ -361,13 +372,13 @@ testCase.assertEqual(full((TL.').'), full(TL));
 
 TL = tleye(6);
 testCase.assertEqual(class(TL.'), 'TLMat');
-testCase.assertEqual(full(TL.'), full(TL).');
-testCase.assertEqual(full((TL.').'), full(TL));
+testCase.assertEqual(full(TL.'), full(TL).', 'AbsTol', 4*eps, 'RelTol', 4*eps);
+testCase.assertEqual(full((TL.').'), full(TL), 'AbsTol', 4*eps, 'RelTol', 4*eps);
 
 TL = TLMat(randn(9,4), 1i * rand(9,4));
 testCase.assertEqual(class(TL.'), 'TLMat');
-testCase.assertEqual(full(TL.'), full(TL).', 'Abstol', 2*eps, 'RelTol', 2*eps);
-testCase.assertEqual(full((TL.').'), full(TL));
+testCase.assertEqual(full(TL.'), full(TL).', 'Abstol', 64*eps, 'RelTol', 64*eps);
+testCase.assertEqual(full((TL.').'), full(TL), 'Abstol', 64*eps, 'RelTol', 64*eps);
 
 end
 
@@ -384,13 +395,13 @@ testCase.assertEqual(full((TL')'), full(TL));
 
 TL = tleye(6);
 testCase.assertEqual(class(TL'), 'TLMat');
-testCase.assertEqual(full(TL'), full(TL)');
-testCase.assertEqual(full((TL')'), full(TL));
+testCase.assertEqual(full(TL'), full(TL)', 'AbsTol', 4*eps, 'RelTol', 4*eps);
+testCase.assertEqual(full((TL')'), full(TL), 'AbsTol', 4*eps, 'RelTol', 4*eps);
 
 TL = TLMat(randn(9,4), 1i * rand(9,4));
 testCase.assertEqual(class(TL'), 'TLMat');
-testCase.assertEqual(full(TL'), full(TL)', 'AbsTol', 2*eps, 'RelTol', 2*eps);
-testCase.assertEqual(full((TL')'), full(TL));
+testCase.assertEqual(full(TL'), full(TL)', 'AbsTol', 64*eps, 'RelTol', 64*eps);
+testCase.assertEqual(full((TL')'), full(TL), 'AbsTol', 64*eps, 'RelTol', 64*eps);
 end
 
 function test_mtimes_scalar(testCase)
@@ -421,13 +432,14 @@ testCase.assertEqual(full(s * TL), s * T, 'AbsTol', 30*eps, 'RelTol', 30*eps);
 testCase.assertEqual(full(TL * s), s * T, 'AbsTol', 30*eps, 'RelTol', 30*eps);
 
 TL = TLMat(1i * rand(12,4), rand(12,4));
+nTL = norm(full(TL));
 s = -2 + 4i;
 testCase.assertEqual(class(s * TL), 'TLMat');
 testCase.assertEqual(class(TL * s), 'TLMat');
 testCase.assertEqual(full(s * TL), s * full(TL), ...
-    'AbsTol', 30*eps, 'RelTol', 30*eps);
+    'AbsTol', 2*nTL*eps, 'RelTol', 2*nTL*eps);
 testCase.assertEqual(full(TL * s), s * full(TL), ...
-    'AbsTol', 30*eps, 'RelTol', 30*eps);
+    'AbsTol', 2*nTL*eps, 'RelTol', 2*nTL*eps);
 
 end
 
@@ -456,19 +468,20 @@ TL = tleye(6);
 TM = toepeye(6);
 testCase.assertEqual(class(TL * TM), 'TLMat');
 testCase.assertEqual(class(TM * TL), 'TLMat');
-testCase.assertEqual(full(TL * TM), eye(6));
-testCase.assertEqual(full(TM * TL), eye(6));
+testCase.assertEqual(full(TL * TM), eye(6), 'AbsTol', eps);
+testCase.assertEqual(full(TM * TL), eye(6), 'Abstol', eps);
 testCase.assertEqual(drank(TM * TL), 1);
 
 TL = TLMat(rand(12,3), rand(12,3) + 1i * rand(12,3));
 [c,r,T] = random_toeplitz(12,12);
 TM = ToepMat(c,r);
+nfact = norm(full(TM)) * norm(full(TL));
 testCase.assertEqual(class(TL * TM), 'TLMat');
 testCase.assertEqual(class(TM * TL), 'TLMat');
 testCase.assertEqual(full(TL * TM), full(TL) * T, ...
-    'AbsTol', 500*eps, 'RelTol', 500*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(full(TM * TL), T * full(TL), ...
-    'AbsTol', 500*eps, 'RelTol', 500*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(drank(TM * TL), 5);
 end
 
@@ -496,18 +509,16 @@ testCase.assertEqual(full(TL1 * TL2), full(TL1), ...
 testCase.assertEqual(full(TL2 * TL1), full(TL1), ...
     'AbsTol', 50*eps, 'RelTol', 50*eps);
 
-testCase.assertEqual(drank(TL1 * TL2), 2);
-
 TL1 = TLMat(rand(8,3), 1i*rand(8,3));
 TL2 = TLMat(ones(8,1), ones(8,1));
+n1 = norm(full(TL1));
+n2 = norm(full(TL2));
 testCase.assertEqual(class(TL1 * TL2), 'TLMat');
 testCase.assertEqual(class(TL2 * TL1), 'TLMat');
 testCase.assertEqual(full(TL1 * TL2), full(TL1) * ones(8), ...
-    'AbsTol', 100*eps, 'RelTol', 100*eps);
+    'AbsTol', 2*n1*n2*eps, 'RelTol', 2*n1*n2*eps);
 testCase.assertEqual(full(TL2 * TL1), ones(8) * full(TL1), ...
-    'AbsTol', 100*eps, 'RelTol', 100*eps);
-
-testCase.assertEqual(drank(TL1 * TL2), 2);
+    'AbsTol', n1*n2*eps, 'RelTol', n1*n2*eps);
 
 TL1 = TLMat(rand(9,1), 1i*rand(9,1), 'GB');
 TL2 = TLMat(1i*randn(9,1), randn(9,1), 'GB');
@@ -552,34 +563,43 @@ TL = tleye(3);
 A = eye(3);
 testCase.assertEqual(class(TL * A), 'double');
 testCase.assertEqual(class(A * TL), 'double');
-testCase.assertEqual(TL * A, eye(3));
-testCase.assertEqual(A * TL, eye(3));
+testCase.assertEqual(TL * A, eye(3), 'AbsTol', 2*eps);
+testCase.assertEqual(A * TL, eye(3), 'AbsTol', 2*eps);
 
 TL = TLMat(rand(3), rand(3));
+nTL = norm(full(TL));
 A = rand(3);
+nA = norm(A);
 testCase.assertEqual(class(TL * A), 'double');
 testCase.assertEqual(class(A * TL), 'double');
-testCase.assertEqual(TL * A, full(TL) * A);
-testCase.assertEqual(A * TL, A * full(TL), 'AbsTol', 10*eps, 'RelTol', 10*eps);
+testCase.assertEqual(TL * A, full(TL) * A, ...
+    'AbsTol', nA*nTL*eps, 'RelTol', 2*nA*nTL*eps);
+testCase.assertEqual(A * TL, A * full(TL), ...
+    'AbsTol', 2*nA*nTL*eps, 'RelTol', 2*nA*nTL*eps);
 
 TL = TLMat(randn(12,3) + 1i * randn(12,3), randn(12,3));
 A = 1i * randn(12);
+nA = norm(A);
+nTL = norm(full(TL));
+
 testCase.assertEqual(class(TL * A), 'double');
 testCase.assertEqual(class(A * TL), 'double');
-testCase.assertEqual(TL * A, full(TL) * A);
+testCase.assertEqual(TL * A, full(TL) * A, ...
+    'AbsTol', nA*nTL*eps, 'RelTol', nA*nTL*eps);
 testCase.assertEqual(A * TL, A * full(TL), ...
-    'AbsTol', 100*eps, 'RelTol', 100*eps);
+    'AbsTol', nA*nTL*eps, 'RelTol', nA*nTL*eps);
 end
 
 function test_mtimes_double_vector(testCase)
 
 TL = tleye(9);
 x = ones(9,1);
-testCase.assertEqual(TL * x, x);
+testCase.assertEqual(TL * x, x, 'AbsTol', eps);
 
 TL = TLMat(randn(9,3), randn(9,3));
+nTL = norm(full(TL));
 x = randn(9,1);
-testCase.assertEqual(TL * x, full(TL) * x);
+testCase.assertEqual(TL * x, full(TL) * x, 'AbsTol', 4*nTL*eps, 'RelTol', 4*nTL*eps);
 end
 
 function test_mldivide_double(testCase)
@@ -588,8 +608,10 @@ TL = TLMat(randn(14,4), randn(14,4));
 b = randn(14,3);
 x = TL \ b;
 xx = full(TL) \ b;
+
+nfact = cond(full(TL)) * norm(b);
 testCase.assertTrue(isreal(x));
-testCase.assertEqual(x, xx, 'AbsTol', 500*eps, 'RelTol', 500*eps);
+testCase.assertEqual(x, xx, 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 
 end
 
@@ -599,7 +621,7 @@ TL1 = tleye(5);
 TL2 = tleye(5);
 testCase.assertEqual(class(TL1 \ TL2), 'TLMat');
 testCase.assertEqual(drank(TL1 \ TL2), 1);
-testCase.assertEqual(full(TL1 \ TL2), eye(5));
+testCase.assertEqual(full(TL1 \ TL2), eye(5), 'AbsTol', eps);
 
 TL1 = TLMat(randn(12,3), 1i * randn(12,3)) + tleye(12);
 TL2 = TLMat(1i * randn(12,2), randn(12,2));

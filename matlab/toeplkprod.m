@@ -26,6 +26,12 @@ if nargin < 5 || isempty(alg)
     alg = 'fft';
 end
 
+if isempty([G1, B1, G2, B2])
+    Gp = [];
+    Bp = [];
+    return
+end
+
 switch alg
     case 'full'
         [Gp, Bp] = tlprod_full(G1,B1,G2,B2);
