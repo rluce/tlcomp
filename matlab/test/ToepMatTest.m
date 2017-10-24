@@ -370,7 +370,7 @@ testCase.assertEqual(class(TM2 * TM1), 'TLMat');
 testCase.assertEqual(full(TM2 * TM1), ones(8) * T, ...
     'RelTol', 500*eps, 'AbsTol', 500*eps);
 testCase.assertEqual(drank(TM1*TM2), 2);
-testCase.assertEqual(drank(TM2*TM1), 2);
+testCase.assertEqual(drank(TM2*TM1), 1);
 
 [c1, r1, T1] = random_toeplitz(9,9);
 TM1 = ToepMat(c1,r1);
@@ -428,7 +428,7 @@ testCase.assertEqual(class(TL * TM), 'TLMat');
 testCase.assertEqual(full(TL * TM), ones(8) * T, ...
     'AbsTol', 500*eps, 'RelTol', 500*eps);
 testCase.assertEqual(drank(TM*TL), 2);
-testCase.assertEqual(drank(TL*TM), 2);
+testCase.assertEqual(drank(TL*TM), 1);
 
 [c1, r1, T1] = random_toeplitz(9,9);
 TM = ToepMat(c1,r1);
@@ -588,7 +588,7 @@ T = 1i * eye(9);
 P = polyvalm(p, TM);
 P_true = polyvalm(p, T);
 testCase.assertEqual(class(P), 'TLMat');
-testCase.assertEqual(full(P), P_true);
+testCase.assertEqual(full(P), P_true, 'AbsTol', 2*eps, 'RelTol', 2*eps);
 
 p = randn(1, 2) + 1i * randn(1,2);
 [c,r,T] = random_toeplitz(12,12);
@@ -646,7 +646,7 @@ TM = TM1 \ TM2;
 % We could do better and detect truely Toeplitz matrices, but for now we
 % always promote to TLMat
 testCase.assertTrue(isa(TM, 'TLMat'));
-testCase.assertEqual(full(TM), eye(9));
+testCase.assertEqual(full(TM), eye(9), 'AbsTol', eps, 'RelTol', eps);
 
 % Cayley transform
 e2 = zeros(16,1);
