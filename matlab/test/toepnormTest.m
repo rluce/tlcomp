@@ -45,14 +45,16 @@ classdef toepnormTest < matlab.unittest.TestCase
             c(1) = r(1);
             val_true = norm(toeplitz(c,r), p);
             val = toepnorm(c,r,p);
-            testCase.assertEqual(val, val_true);
+            testCase.assertEqual(val, val_true, ...
+                'RelTol', val_true * eps, 'AbsTol', val_true * eps);
         end
 
         function test_random_complex(testCase, p)
             [c,r,T] = random_toeplitz(9,9);
             val_true = norm(T, p);
             val = toepnorm(c,r,p);
-            testCase.assertEqual(val, val_true);
+            testCase.assertEqual(val, val_true, ...
+                'RelTol', val_true * eps, 'AbsTol', val_true * eps);
         end
 
         
