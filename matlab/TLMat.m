@@ -104,6 +104,9 @@ classdef TLMat
             [Gt, Bt] = toeplkctranspose(TL.G, TL.B);
             TL.G = Gt;
             TL.B = Bt;
+            % Generator rank may have increased, but rank is in fact the
+            % same.
+            TL = TL.compress();
         end
 
         

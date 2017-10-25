@@ -250,7 +250,7 @@ testCase.assertEqual(drank(TL - T), 5); % fails with prob 0
 testCase.assertEqual(drank(T + TL), 5); % fails with prob 0
 testCase.assertEqual(drank(T - TL), 5); % fails with prob 0
 
-nfact = norm(full(T)) + norm(full(TL));
+nfact = 2 * (norm(full(T)) + norm(full(TL)));
 testCase.assertEqual(full(TL + T), full(TL) + T, ...
     'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(full(TL - T), full(TL) - T, ...
@@ -325,7 +325,7 @@ TL = TLMat(rand(n,dr), rand(n,dr) + 1i * rand(n,dr));
 [c,r, T] = random_toeplitz(n,n);
 TM = ToepMat(c,r);
 
-nfact = 2 * (norm(full(TM)) + norm(full(TL)));
+nfact = 4 * (norm(full(TM)) + norm(full(TL)));
 testCase.assertEqual(class(TL + TM), 'TLMat');
 testCase.assertEqual(class(TL - TM), 'TLMat');
 testCase.assertEqual(class(TM + TL), 'TLMat');
@@ -376,9 +376,12 @@ testCase.assertEqual(full(TL.'), full(TL).', 'AbsTol', 4*eps, 'RelTol', 4*eps);
 testCase.assertEqual(full((TL.').'), full(TL), 'AbsTol', 4*eps, 'RelTol', 4*eps);
 
 TL = TLMat(randn(9,4), 1i * rand(9,4));
+nfact = 16*norm(full(TL));
 testCase.assertEqual(class(TL.'), 'TLMat');
-testCase.assertEqual(full(TL.'), full(TL).', 'Abstol', 64*eps, 'RelTol', 64*eps);
-testCase.assertEqual(full((TL.').'), full(TL), 'Abstol', 64*eps, 'RelTol', 64*eps);
+testCase.assertEqual(full(TL.'), full(TL).', ...
+    'Abstol', nfact*eps, 'RelTol', nfact*eps);
+testCase.assertEqual(full((TL.').'), full(TL), ...
+    'Abstol', nfact*eps, 'RelTol', nfact*eps);
 
 end
 
@@ -399,9 +402,31 @@ testCase.assertEqual(full(TL'), full(TL)', 'AbsTol', 4*eps, 'RelTol', 4*eps);
 testCase.assertEqual(full((TL')'), full(TL), 'AbsTol', 4*eps, 'RelTol', 4*eps);
 
 TL = TLMat(randn(9,4), 1i * rand(9,4));
+nfact = 16*norm(full(TL));
 testCase.assertEqual(class(TL'), 'TLMat');
-testCase.assertEqual(full(TL'), full(TL)', 'AbsTol', 64*eps, 'RelTol', 64*eps);
-testCase.assertEqual(full((TL')'), full(TL), 'AbsTol', 64*eps, 'RelTol', 64*eps);
+testCase.assertEqual(full(TL'), full(TL)', ...
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
+testCase.assertEqual(full((TL')'), full(TL), ...
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
+end
+
+function test_transpose_rank(testCase)
+% A curiosity of the Zp/Zm Sylvester operator is that the rank may increase
+% under transposition.   For TL matrices that are in fact Toeplitz
+% matrices, or "derive" from such a matrix, the rank should not increase.
+n = 13;
+[c,r] = random_toeplitz(n,n);
+[G, B] = toepgen(c,r);
+T = TLMat(G, B);
+
+testCase.assertEqual(drank(T), 2);
+testCase.assertEqual(drank(T'), 2); % This will fail sometimes with drank=3
+
+G = randn(n,4);
+B = randn(n,4);
+T = TLMat(G,B);
+testCase.assertEqual(drank(T), 4);
+testCase.assertEqual(drank(T'), 6);
 end
 
 function test_mtimes_scalar(testCase)
@@ -475,7 +500,7 @@ testCase.assertEqual(drank(TM * TL), 1);
 TL = TLMat(rand(12,3), rand(12,3) + 1i * rand(12,3));
 [c,r,T] = random_toeplitz(12,12);
 TM = ToepMat(c,r);
-nfact = norm(full(TM)) * norm(full(TL));
+nfact = 2 * (norm(full(TM)) * norm(full(TL)));
 testCase.assertEqual(class(TL * TM), 'TLMat');
 testCase.assertEqual(class(TM * TL), 'TLMat');
 testCase.assertEqual(full(TL * TM), full(TL) * T, ...
@@ -570,24 +595,29 @@ TL = TLMat(rand(3), rand(3));
 nTL = norm(full(TL));
 A = rand(3);
 nA = norm(A);
+
+nfact = 8 * nTL * nA;
+
 testCase.assertEqual(class(TL * A), 'double');
 testCase.assertEqual(class(A * TL), 'double');
 testCase.assertEqual(TL * A, full(TL) * A, ...
-    'AbsTol', nA*nTL*eps, 'RelTol', 2*nA*nTL*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(A * TL, A * full(TL), ...
-    'AbsTol', 2*nA*nTL*eps, 'RelTol', 2*nA*nTL*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 
 TL = TLMat(randn(12,3) + 1i * randn(12,3), randn(12,3));
 A = 1i * randn(12);
 nA = norm(A);
 nTL = norm(full(TL));
 
+nfact = 2 * nTL * nA;
+
 testCase.assertEqual(class(TL * A), 'double');
 testCase.assertEqual(class(A * TL), 'double');
 testCase.assertEqual(TL * A, full(TL) * A, ...
-    'AbsTol', nA*nTL*eps, 'RelTol', nA*nTL*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(A * TL, A * full(TL), ...
-    'AbsTol', nA*nTL*eps, 'RelTol', nA*nTL*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 end
 
 function test_mtimes_double_vector(testCase)
@@ -626,9 +656,10 @@ testCase.assertEqual(full(TL1 \ TL2), eye(5), 'AbsTol', eps);
 TL1 = TLMat(randn(12,3), 1i * randn(12,3)) + tleye(12);
 TL2 = TLMat(1i * randn(12,2), randn(12,2));
 D = TL1 \ TL2;
+nfact = cond(full(TL1)) * norm(full(TL2));
 testCase.assertEqual(drank(D), 6);
 testCase.assertEqual(full(D), full(TL1) \ full(TL2), ...
-    'AbsTol', 1e4*eps, 'RelTol', 1e4*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 end
 
 function test_mldivide_toepmat(testCase)
