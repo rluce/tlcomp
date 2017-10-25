@@ -685,7 +685,7 @@ T = TLMat(1,1);
 s = 1;
 T = T/s;
 testCase.assertEqual(full(T), 1);
-testCase.assertEqual(isa(T, 'TLMat'));
+testCase.assertTrue(isa(T, 'TLMat'));
 
 s = 2;
 T = T/s;
@@ -700,7 +700,7 @@ end
 function test_mrdivide_toepmat(testCase)
 TL = TLMat(2i,2i);
 B = ToepMat(3,3);
-testCase.assertTrue(isa(B/T, 'TLMat'));
+testCase.assertTrue(isa(B/TL, 'TLMat'));
 testCase.assertEqual(B/TL, -3i/2);
 
 TL = tleye(9);
@@ -736,7 +736,7 @@ end
 function test_mrdivide_tlmat(testCase)
 TL = TLMat(2i,2i);
 B = TLMat(3,3);
-testCase.assertTrue(isa(B/T, 'TLMat'));
+testCase.assertTrue(isa(B/TL, 'TLMat'));
 testCase.assertEqual(B/TL, -3i/2);
 
 TL = tleye(8);
