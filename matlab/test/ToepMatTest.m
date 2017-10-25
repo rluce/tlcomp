@@ -493,12 +493,14 @@ testCase.assertEqual(drank(TL*TM), 4);
 [c, r, T] = random_toeplitz(12,12);
 TM = ToepMat(c,r);
 TL = TLMat(rand(12,4),rand(12,4));
+
+nfact = norm(full(TM)) * norm(full(TL));
 testCase.assertEqual(class(TM * TL), 'TLMat');
 testCase.assertEqual(full(TM * TL), T * full(TL), ...
-    'AbsTol', 500*eps, 'RelTol', 500*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(class(TL * TM), 'TLMat');
 testCase.assertEqual(full(TL * TM), full(TL) * T, ...
-    'AbsTol', 500*eps, 'RelTol', 500*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 testCase.assertEqual(drank(TM*TL), 6);
 testCase.assertEqual(drank(TL*TM), 6);
 
@@ -711,8 +713,10 @@ testCase.assertEqual(full(R), (T - eye(16)) \ (T + eye(16)), ...
 TM1 = ToepMat(c1, r1);
 TM2 = ToepMat(c2, r2);
 TM = TM1 \ TM2;
+
+nfact = cond(full(TM1)) * norm(full(TM2));
 testCase.assertTrue(isa(TM, 'TLMat'));
-testCase.assertEqual(full(TM), T1 \T2, 'AbsTol', 1e4*eps, 'RelTol', 1e4*eps);
+testCase.assertEqual(full(TM), T1 \T2, 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 
 end
 
@@ -767,9 +771,20 @@ function test_norm(testCase)
 
 [c, r, T] = random_toeplitz(7,7);
 TM = ToepMat(c,r);
-testCase.assertEqual(norm(TM, 1), norm(T, 1));
-testCase.assertEqual(norm(TM, 'inf'), norm(T, 'inf'));
-testCase.assertEqual(norm(TM, 'fro'), norm(T, 'fro'));
+testCase.assertEqual(norm(TM, 1), norm(T, 1), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TM, 'inf'), norm(T, 'inf'), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TM, inf), norm(T, inf), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TM, 'fro'), norm(T, 'fro'), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+
+testCase.assertWarning(@() norm(TM), 'tlcomp:Unsupported');
+testCase.assertWarning(@() norm(TM, 2), 'tlcomp:Unsupported');
+testCase.assertError(@() norm(TM, 3), 'tlcomp:InconsistentInput');
+
+warning('OFF', 'tlcomp:Unsupported');
+testCase.assertEqual(norm(TM), norm(T));
+testCase.assertEqual(norm(TM, 2), norm(T, 2));
+warning('ON', 'tlcomp:Unsupported');
+
 end
 
 function test_mrdivide(testCase)

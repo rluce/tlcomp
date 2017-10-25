@@ -363,7 +363,41 @@ classdef ToepMat
         end
         
         function val = norm(TM, p)
-            val = norm(full(TM), p);
+            % v = norm(T, p) -- computes the matrix p-norm
+            %
+            % Supported values for p are 1, inf and 'fro'.
+            %
+            % Warning: if no value for p is given, or p equals to 2, the
+            % entailing computation is carried out with Matlab's unstructured
+            % matrices, which takes a cubic number of operations.  Consider
+            % using normest instead.
+            %
+            % See also: normest.m norm.m
+            
+            if nargin < 2
+                p = 2;
+            end
+            
+            if p == 2
+                warning('tlcomp:Unsupported', ...
+                    ['2-norm not supported, computation will be slow. ', ...
+                    'Consider using normest']);
+            end
+
+            switch p
+                case 1
+                    val = toepnorm(TM.c, TM.r, p);
+                case 2
+                    val = norm(full(TM), 2);
+                case inf
+                    val = toepnorm(TM.c, TM.r, p);
+                case 'inf'
+                    val = toepnorm(TM.c, TM.r, inf);
+                case 'fro'
+                    val = toepnorm(TM.c, TM.r, 'fro');
+                otherwise
+                    error('tlcomp:InconsistentInput', 'Unsupported matrix norm');
+            end
         end
         
         function l = length(TM)

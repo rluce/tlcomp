@@ -354,7 +354,7 @@ classdef TLMat
         
         %%%%%%%% CAUTION DEBUG ONLY
         function d = det(TL)
-            warning('tlcomp:CubicOperatoin', ...
+            warning('tlcomp:CubicOperation', ...
                 'det not implemented, using dense det');
             d = det(full(TL));
         end

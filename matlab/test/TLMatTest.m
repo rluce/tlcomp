@@ -750,7 +750,7 @@ testCase.assertEqual(full(B/TL), full(B)/full(TL), ...
 
 TL = TLMat(rand(12,3), 1i * randn(12,3)) + tleye(12);
 B = TLMat(randn(12,3), randn(12,3));
-nfact = 8 * norm(full(TL)) * norm(full(B));
+nfact = 16 * cond(full(TL)) * norm(full(B));
 testCase.assertEqual(full(B/TL), full(B)/full(TL), ...
     'RelTol', nfact * eps, 'AbsTol', nfact*eps);
 end
