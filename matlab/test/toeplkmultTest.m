@@ -250,16 +250,19 @@ classdef toeplkmultTest < matlab.unittest.TestCase
             
             x = eye(n,2);
             y = toeplkmult(G,B,x, ctrans, alg);
+            nfact = 4 * norm(T) * norm(y);
             if ~ctrans
-                testCase.assertEqual(y(:,1), T(:,1), 'RelTol', 128*n*eps);
-                testCase.assertEqual(y(:,2), T(:,2), 'RelTol', 256*n*eps);
+                testCase.assertEqual(y(:,1), T(:,1), ...
+                    'RelTol', nfact * eps, 'AbsTol', nfact * eps);
+                testCase.assertEqual(y(:,2), T(:,2), ...
+                    'RelTol', nfact * eps, 'AbsTol', nfact * eps);
             else
-                testCase.assertEqual(y(:,1), T(1,:)', 'RelTol', 128*n*eps);
-                testCase.assertEqual(y(:,2), T(2,:)', 'RelTol', 256*n*eps);
+                testCase.assertEqual(y(:,1), T(1,:)', ...
+                    'RelTol', nfact * eps, 'AbsTol', nfact * eps);
                 
+                testCase.assertEqual(y(:,2), T(2,:)', ...
+                    'RelTol', nfact * eps, 'AbsTol', nfact * eps);
             end
-            
-            
         end
     end
 end
