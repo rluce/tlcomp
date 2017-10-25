@@ -30,7 +30,7 @@ warning('off', id);
 T = ToepMat(c,r);
 warning('on', id);
 testCase.assertEqual(T.c, 6);
-testCase.assertEqula(T.r, 6);
+testCase.assertEqual(T.r, 6);
 
 end
 
@@ -46,7 +46,8 @@ testCase.assertEqual(T.r, r(:));
 % built-in 'toeplitz' and let the column information win.
 c = rand(9,1);
 r = rand(9,1);
-testCase.assertWarning( @() ToepMat(c,r), 'tlcomp:InconsistentInput');
+id = 'tlcomp:InconsistentInput';
+testCase.assertWarning( @() ToepMat(c,r), id);
 warning('off', id);
 T = ToepMat(c,r);
 warning('on', id);
@@ -69,19 +70,25 @@ end
 function test_construct_one_vec(testCase)
 % Construct a Hermitian Toeplitz matrix
 n = 7;
-c = randn(n,1) + 1i * randn(n,1);
-c(1) = abs(c(1));
-T = ToepMat(c);
-testCase.assertEqual(T.c, c(:));
-testCase.assertEqual(T.r, conj(c(:)));
-testCase.assertEqual(full(T), toeplitz(c)); % Align with Matlab built-in
+r = randn(n,1) + 1i * randn(n,1);
+r(1) = abs(r(1));
+T = ToepMat(r);
+testCase.assertEqual(T.r, r(:));
+testCase.assertEqual(T.c, conj(r(:)));
+testCase.assertEqual(full(T), toeplitz(r)); % Align with Matlab built-in
 
 % Diagonal not real -> Hermitian only on the off-diagonals
-c = randn(n,1) + 1i * randn(n,1);
-T = ToepMat(c);
-testCase.assertEqual(T.c, c(:));
-testCase.assertEqual(T.r, [c(1); conj(c(2:end))]);
-testCase.assertEqual(full(T), toeplitz(c)); % Align with Matlab built-in
+r = randn(n,1) + 1i * randn(n,1);
+T = ToepMat(r);
+testCase.assertEqual(T.r, r(:));
+testCase.assertEqual(T.c, [r(1); conj(r(2:end))]);
+testCase.assertEqual(full(T), toeplitz(r)); % Align with Matlab built-in
+
+
+% Only vectors allowed
+r = ones(4,2);
+testCase.assertError( @() ToepMat(r), 'tlcomp:InconsistentInput');
+
 end
 
 function test_size(testCase)

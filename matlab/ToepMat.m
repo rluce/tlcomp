@@ -9,28 +9,47 @@ classdef ToepMat
             % T = ToepMat(c,r)
             %   T is Toeplitz matrix with prescribed first col/row
             
-            if min(size(c)) > 1 || min(size(r)) > 1
-                error('tlcomp:InconsistentInput', 'c, r must be vectors');
+            if nargin == 2
+                if min(size(c)) > 1 || min(size(r)) > 1
+                    error('tlcomp:InconsistentInput', 'c, r must be vectors');
+                end
+                
+                % Homogenize
+                c = c(:);
+                r = r(:);
+                
+                if length(c) ~= length(r)
+                    error('tlcomp:InconsistentInput', 'c, r must have same length');
+                end
+                
+                n = length(r);
+                
+                if n>0 && c(1) ~= r(1)
+                    warning('tlcomp:InconsistentInput', ...
+                        'First elements of c,r are not equal, c wins conflict');
+                    r(1) = c(1);
+                end
+                
+                T.c = c;
+                T.r = r;
+            else
+                % Only r is provided
+                assert(nargin == 1);
+                r = c;
+                if min(size(r)) > 1
+                    error('tlcomp:InconsistentInput', 'r must be a vector');
+                end
+                
+                if isreal(r(1))
+                    c = conj(r);
+                else
+                    c = [r(1); conj(r(2:end))];
+                end
+                T.c = c(:);
+                T.r = r(:);
             end
-            
-            % Homogenize
-            c = c(:);
-            r = r(:);
-            
-            if length(c) ~= length(r)
-                error('tlcomp:InconsistentInput', 'c, r must have same length');
-            end
-            
-            n = length(r);
-            
-            if n>0 && c(1) ~= r(1)
-                error('tlcomp:InconsistentInput', 'c(1),r(1) must be equal');
-            end
-            
-            T.c = c;
-            T.r = r;
         end
-       
+        
         function [s1, s2] = size(T, dim)
             if nargin == 1
                 s1 = length(T.c);
@@ -141,17 +160,17 @@ classdef ToepMat
         function S = add_dense_toeplitz_matrix(TM, T)
             if any(size(TM) ~= size(T))
                 error('tlcomp:InconsistentInput', ...
-                'Matrix dimensions must agree');
+                    'Matrix dimensions must agree');
             end
-
+            
             if isempty(T)
                 S = TM;
                 return;
             end
-                
+            
             cc = T(:,1);
             rr = T(1,:);
-
+            
             TM.c = TM.c + cc(:);
             TM.r = TM.r + rr(:);
             S = TM;
@@ -160,7 +179,7 @@ classdef ToepMat
         function S = add_dense_matrix(TM, A)
             if any(size(TM) ~= size(A))
                 error('tlcomp:InconsistentInput', ...
-                'Matrix dimensions must agree');
+                    'Matrix dimensions must agree');
             end
             S = full(TM) + A;
         end
@@ -179,7 +198,7 @@ classdef ToepMat
                     case 'ToepMat'
                         % Promote op1, resort to TL matmul
                         TL = TLMat(op1.c, op1.r);
-                        P = TL * op2;                        
+                        P = TL * op2;
                     otherwise
                         error('tlcomp:NotImplemented', ...
                             'Multiplication not implemented for this operand');
@@ -192,7 +211,7 @@ classdef ToepMat
                     otherwise
                         error('tlcomp:NotImplemented', ...
                             'Multiplication not implemented for this operand');
-
+                        
                 end
             else
                 % Impossible
@@ -264,9 +283,9 @@ classdef ToepMat
             
             % A is at least 2x2
             P = toepmult(TM.c, TM.r, A);
-
+            
         end
-
+        
         function P = dispatch_double_mtimes_tm(A, TM)
             assert(isa(TM, 'ToepMat'));
             assert(isa(A, 'double'));
@@ -292,9 +311,9 @@ classdef ToepMat
             % A is at least 2x2
             TM = TM';
             P = toepmult(TM.c, TM.r, A')';
-
+            
         end
-
+        
         function P = mtimes_scalar(TM, s)
             TM.c = s * TM.c;
             TM.r = s * TM.r;
