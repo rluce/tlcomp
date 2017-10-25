@@ -5,30 +5,54 @@ tests = functiontests(localfunctions);
 end
 
 
-function test_constructor(testCase)
-
+function test_constructor_empty(testCase)
 T = ToepMat([], []);
 testCase.assertTrue(isempty(T.c));
 testCase.assertTrue(isempty(T.r));
+end
 
+function test_construct_scalar(testCase)
 T = ToepMat(-1, -1);
 testCase.assertEqual(T.c, -1);
 testCase.assertEqual(T.r, -1);
 
+T = ToepMat(3);
+testCase.assertEqual(T.c, 3);
+testCase.assertEqual(T.r, 3);
+
+% Conflicting information for diagonal element.  We align with the Matlab
+% built-in 'toeplitz' and let the column information win.
+c = 6;
+r = 1;
+id = 'tlcomp:InconsistentInput';
+testCase.assertWarning( @() ToepMat(c,r), id);
+warning('off', id);
+T = ToepMat(c,r);
+warning('on', id);
+testCase.assertEqual(T.c, 6);
+testCase.assertEqula(T.r, 6);
+
+end
+
+
+function test_constructor_two_vec(testCase)
 [c,r] = random_toeplitz(7,7);
 
 T = ToepMat(c,r);
 testCase.assertEqual(T.c, c(:));
 testCase.assertEqual(T.r, r(:));
 
-c = 6;
-r = 1;
-testCase.assertError( @() ToepMat(c,r), 'tlcomp:InconsistentInput');
-
+% Conflicting information for diagonal element.  We align with the Matlab
+% built-in 'toeplitz' and let the column information win.
 c = rand(9,1);
-r = c;
-r(1) = r(1) + 1e-8;
-testCase.assertError( @() ToepMat(c,r), 'tlcomp:InconsistentInput');
+r = rand(9,1);
+testCase.assertWarning( @() ToepMat(c,r), 'tlcomp:InconsistentInput');
+warning('off', id);
+T = ToepMat(c,r);
+warning('on', id);
+testCase.assertEqual(T.c, c(:));
+testCase.assertEqual(T.r, [c(1); r(2:end)]);
+
 
 % For the moment, we only support square matrices
 c = ones(4,1);
@@ -40,6 +64,24 @@ c = ones(4,2);
 r = ones(4,2);
 testCase.assertError( @() ToepMat(c,r), 'tlcomp:InconsistentInput');
 
+end
+
+function test_construct_one_vec(testCase)
+% Construct a Hermitian Toeplitz matrix
+n = 7;
+c = randn(n,1) + 1i * randn(n,1);
+c(1) = abs(c(1));
+T = ToepMat(c);
+testCase.assertEqual(T.c, c(:));
+testCase.assertEqual(T.r, conj(c(:)));
+testCase.assertEqual(full(T), toeplitz(c)); % Align with Matlab built-in
+
+% Diagonal not real -> Hermitian only on the off-diagonals
+c = randn(n,1) + 1i * randn(n,1);
+T = ToepMat(c);
+testCase.assertEqual(T.c, c(:));
+testCase.assertEqual(T.r, [c(1); conj(c(2:end))]);
+testCase.assertEqual(full(T), toeplitz(c)); % Align with Matlab built-in
 end
 
 function test_size(testCase)
