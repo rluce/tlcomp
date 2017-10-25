@@ -378,6 +378,10 @@ classdef ToepMat
             switch class(op2)
                 case 'double'
                     R = dispatch_mrdivide_tm_double(op1, op2);
+                case 'TLMat'
+                    % Promote self to TLMat, handle mldivide there
+                    TL1 = TLMat(op1.c, op1.r);
+                    R = TL1 / op2;
                 otherwise
                     error('tlcomp:NotImplemented', 'Not implemented, fixme.');
             end

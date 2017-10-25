@@ -500,7 +500,7 @@ testCase.assertEqual(drank(TM * TL), 1);
 TL = TLMat(rand(12,3), rand(12,3) + 1i * rand(12,3));
 [c,r,T] = random_toeplitz(12,12);
 TM = ToepMat(c,r);
-nfact = 2 * (norm(full(TM)) * norm(full(TL)));
+nfact = 4 * (norm(full(TM)) * norm(full(TL)));
 testCase.assertEqual(class(TL * TM), 'TLMat');
 testCase.assertEqual(class(TM * TL), 'TLMat');
 testCase.assertEqual(full(TL * TM), full(TL) * T, ...
@@ -701,16 +701,16 @@ function test_mrdivide_toepmat(testCase)
 TL = TLMat(2i,2i);
 B = ToepMat(3,3);
 testCase.assertTrue(isa(B/TL, 'TLMat'));
-testCase.assertEqual(B/TL, -3i/2);
+testCase.assertEqual(full(B/TL), -3i/2);
 
 TL = tleye(9);
 B = ToepMat(1:9);
 testCase.assertTrue(isa(B/TL, 'TLMat'));
-testCase.assertEqual(full(B/TL), full(B));
+testCase.assertEqual(full(B/TL), full(B), 'AbsTol', 64*eps, 'RelTol', 64*eps);
 
 TL = TLMat(randn(7,2), randn(7,2));
 B = ToepMat(randn(7,1));
-nfact = cond(full(TL)) * norm(full(B));
+nfact = 4 * cond(full(TL)) * norm(full(B));
 testCase.assertEqual(full(B/TL), ...
     full(B)/full(TL), 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 end
@@ -719,32 +719,38 @@ end
 function test_mrdivide_double(testCase)
 
 TL = tleye(9);
-B = reshape(1:27, 9, 3);
+B = reshape(1:27, 3, 9);
 testCase.assertTrue(isa(B/TL, 'double'));
-testCase.assertEqual(B/TL, B);
+testCase.assertEqual(B/TL, B, 'AbsTol', 8*eps, 'RelTol', 8*eps);
 
 B = eye(9);
 testCase.assertTrue(isa(B/TL, 'double'));
-testCase.assertEqual(B/TL, eye(9));
+testCase.assertEqual(B/TL, eye(9), 'AbsTol', 2*eps, 'RelTol', 2*eps);
 
 TL = TLMat(randn(9,4), randn(9,4));
-b = randn(9,1) + 1i * randn(9,1);
+b = randn(1,9) + 1i * randn(1,9);
 nfact = cond(full(TL)) * norm(b);
 testCase.assertEqual(b/TL, b/full(TL), 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
+
+testCase.assertError(@() b' / TL, 'tlcomp:InconsistentInput');
 end
 
 function test_mrdivide_tlmat(testCase)
 TL = TLMat(2i,2i);
 B = TLMat(3,3);
 testCase.assertTrue(isa(B/TL, 'TLMat'));
-testCase.assertEqual(B/TL, -3i/2);
+testCase.assertEqual(full(B/TL), -3i/2);
 
 TL = tleye(8);
 B = TLMat(randn(8,2), randn(8,2));
+nfact = 16*norm(full(B));
 testCase.assertTrue(isa(B/TL, 'TLMat'));
-testCase.assertEqual(full(B/TL), full(B)/full(TL));
+testCase.assertEqual(full(B/TL), full(B)/full(TL), ...
+    'Abstol', nfact*eps, 'RelTol', nfact*eps);
 
 TL = TLMat(rand(12,3), 1i * randn(12,3)) + tleye(12);
 B = TLMat(randn(12,3), randn(12,3));
-testCase.assertEqual(full(B/TL), full(B)/full(TL));
+nfact = 8 * norm(full(TL)) * norm(full(B));
+testCase.assertEqual(full(B/TL), full(B)/full(TL), ...
+    'RelTol', nfact * eps, 'AbsTol', nfact*eps);
 end

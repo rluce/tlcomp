@@ -270,17 +270,17 @@ classdef TLMat
                 case 'double'
                     D = toeplksolve(TL.G, TL.B, op);
                 case 'TLMat'
-                    D = TL.mldivide_tlmat(op);
+                    D = TL.mldivide_tlmat_tlmat(op);
                 case 'ToepMat'
                     op = TLMat(op.c, op.r);
                     D = TL.mldivide(op);
                 otherwise
                     error('tlcomp:NotImplemented', ...
-                        'No mldivide for this operand type, fixme');
+                        'No mldivide for this operand type, fixme!');
             end
         end
         
-        function D = mldivide_tlmat(TL, TL_rhs)
+        function D = mldivide_tlmat_tlmat(TL, TL_rhs)
             [Gs, Bs] = toeplksolvetoeplk(TL.G, TL.B, TL_rhs.G, TL_rhs.B);
             D = TLMat(Gs, Bs, 'GB');
         end
@@ -290,6 +290,68 @@ classdef TLMat
             [TL.G, TL.B] = gencompress(TL.G, TL.B);
         end
 
+        function result = mrdivide(op_left, op_right)
+            % This function only dispatches and (maybe) verifies input.  No
+            % computation here.
+            
+            if isa(op_left, 'TLMat')
+                switch class(op_right)
+                    case 'double'
+                        if isscalar(op_right)
+                            result = mrdivide_TL_scalar(op_left, op_right);
+                        else
+                            assert(false, 'Code path not exising, fixme');
+                        end
+                    case 'TLMat'
+                        result = mrdivide_TL_TL(op_left, op_right);
+                    otherwise
+                        error('tlcomp:NotImplemented', ...
+                            'No mrdivide for this operand type, fixme!');
+                        
+                end
+            else
+                assert(isa(op_right, 'TLMat'));
+                
+                switch class(op_left)
+                    case 'double'
+                        result = mrdivide_double_TL(op_left, op_right);
+                    otherwise
+                        error('tlcomp:NotImplemented', ...
+                            'No mrdivide for this operand type, fixme!');
+                end
+
+            end
+            
+        end
+        
+        function TL = mrdivide_TL_scalar(TL, s)
+            % Compute TL / (double scalar)
+            TL = scalar_mult(TL, 1.0/s);
+        end
+
+        function result = mrdivide_double_TL(A, TL)
+            % Compute (double matrix) / TL, result is a double matrix
+            if size(A, 2) ~= size(TL, 2)
+                error('tlcomp:InconsistentInput', ...
+                    'Matrix dimensions must agree');
+            end
+            
+            result = toeplksolve(TL.G, TL.B, A', true)';
+        end
+        
+        function result = mrdivide_TL_TL(TL1, TL2)
+            % Compute TL / TL, result is a TL
+            % We do it the naive way TL1/TL2 = (TL2'\TL1')'
+            %
+            % TODO this could easily made better:  extend toeplksolvetoeplk
+            % to accept ctransposes of either argument, and thus switch
+            % implicitly between Zp/Zm and Zm/Zp displacement.  This avoids
+            % the numerical(!) ctranspose ops that are needed here!
+            %
+            % This should definitly improved, see issue #7.
+            result = mldivide(TL2', TL1')';
+        end
+        
         %%%%%%%% CAUTION DEBUG ONLY
         function d = det(TL)
             warning('tlcomp:CubicOperatoin', ...
@@ -297,13 +359,6 @@ classdef TLMat
             d = det(full(TL));
         end
         
-        function TL = mrdivide(TL, s)
-           % Implement only a special case for debug purpose
-           assert(isa(TL, 'TLMat'));
-           assert(isa(s, 'double'));
-           assert(all(size(s) == [1,1]));
-           TL = scalar_mult(TL, 1.0/s);
-        end
         
         function val = norm(TL, p)
             val = norm(full(TL), p);
