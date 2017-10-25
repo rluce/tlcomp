@@ -36,7 +36,7 @@ function test_fzero(testCase)
 
 n = 17;
 Z = fcirculant(n, 0);
-Z_true = downshift(n);
+Z_true = spdiags(ones(n,1), -1, n, n);
 testCase.assertEqual(Z, Z_true);
 
 end
@@ -46,7 +46,7 @@ function test_fnonzero(testCase)
 n = 9;
 f = pi;
 Z = fcirculant(n, f);
-ZZ = downshift(n);
+ZZ = spdiags(ones(n,1), -1, n, n);
 ZZZ = sparse(n,n);
 ZZZ(1,n) = f;
 
