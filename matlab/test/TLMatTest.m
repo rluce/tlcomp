@@ -710,7 +710,7 @@ testCase.assertEqual(full(B/TL), full(B), 'AbsTol', 64*eps, 'RelTol', 64*eps);
 
 TL = TLMat(randn(7,2), randn(7,2));
 B = ToepMat(randn(7,1));
-nfact = 4 * cond(full(TL)) * norm(full(B));
+nfact = 8 * cond(full(TL)) * norm(full(B));
 testCase.assertEqual(full(B/TL), ...
     full(B)/full(TL), 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 end

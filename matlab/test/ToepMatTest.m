@@ -402,10 +402,11 @@ testCase.assertEqual(full(TM2 * TM1), 2);
 [c, r, T] = random_toeplitz(8,8);
 TM1 = ToepMat(c,r);
 TM2 = toepeye(8);
+nfact = 4*norm(full(TM1)) * norm(full(TM2));
 testCase.assertEqual(class(TM1 * TM2), 'TLMat');
-testCase.assertEqual(full(TM1 * TM2), T, 'RelTol', 50*eps, 'AbsTol', 50*eps);
+testCase.assertEqual(full(TM1 * TM2), T, 'RelTol', nfact*eps, 'AbsTol', nfact*eps);
 testCase.assertEqual(class(TM2 * TM1), 'TLMat');
-testCase.assertEqual(full(TM2 * TM1), T, 'RelTol', 50*eps, 'AbsTol', 50*eps);
+testCase.assertEqual(full(TM2 * TM1), T, 'RelTol', nfact*eps, 'AbsTol', nfact*eps);
 testCase.assertEqual(drank(TM1*TM2), 2);
 testCase.assertEqual(drank(TM2*TM1), 2);
 
@@ -494,7 +495,7 @@ testCase.assertEqual(drank(TL*TM), 4);
 TM = ToepMat(c,r);
 TL = TLMat(rand(12,4),rand(12,4));
 
-nfact = norm(full(TM)) * norm(full(TL));
+nfact = 4 * norm(full(TM)) * norm(full(TL));
 testCase.assertEqual(class(TM * TL), 'TLMat');
 testCase.assertEqual(full(TM * TL), T * full(TL), ...
     'AbsTol', nfact*eps, 'RelTol', nfact*eps);
@@ -748,8 +749,9 @@ q = randn(1,4) + 1i * randn(1,4);
 [c,r,T] = random_toeplitz(9,9);
 TM = ToepMat(c,r);
 rT = TM.ratevalm(p,q);
+nfact = cond(polyvalm(q, T)) * norm(polyvalm(p, T));
 testCase.assertEqual(full(rT), polyvalm(q, T) \ polyvalm(p, T), ...
-    'AbsTol', 5e4*eps, 'RelTol', 5e4*eps);
+    'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 end
 
 

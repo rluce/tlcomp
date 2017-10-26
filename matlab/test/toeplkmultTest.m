@@ -173,7 +173,8 @@ classdef toeplkmultTest < matlab.unittest.TestCase
                 y_true = sum(T, 1)';
             end
             y = toeplkmult(G,B,x,ctrans,alg);
-            testCase.assertEqual(y, y_true, 'RelTol', 16*n*eps);
+            nfact = 4*norm(T);
+            testCase.assertEqual(y, y_true, 'RelTol', nfact*eps, 'AbsTol', nfact*eps);
         end
         
         
