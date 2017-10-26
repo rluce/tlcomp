@@ -57,7 +57,7 @@ piv = 4;
 sol = tlsolve(GG, BB, rhs, piv, xi, eta);
 
 % One step of refinement
-res = toeplkmult(G, B, sol, ctrans) - rhs;
-cor = tlsolve(GG, BB, res, piv, xi, eta);
-sol = sol - cor;
+%res = toeplkmult(G, B, sol, ctrans) - rhs;
+%cor = tlsolve(GG, BB, res, piv, xi, eta);
+%sol = sol - cor;
 end
