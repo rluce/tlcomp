@@ -4,7 +4,12 @@ classdef toepnormTest < matlab.unittest.TestCase
     end
 
     methods (Test)
-        
+
+        function test_empty(testCase, p)
+            val = toeplknorm([], [], p);
+            testCase.assertEqual(val, 0);
+        end
+
         function test_singleton(testCase, p)
             c = 0;
             val = toepnorm(c,c,p);
