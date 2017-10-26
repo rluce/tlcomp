@@ -721,11 +721,11 @@ function test_mrdivide_double(testCase)
 TL = tleye(9);
 B = reshape(1:27, 3, 9);
 testCase.assertTrue(isa(B/TL, 'double'));
-testCase.assertEqual(B/TL, B, 'AbsTol', 8*eps, 'RelTol', 8*eps);
+testCase.assertEqual(B/TL, B, 'AbsTol', 32*eps, 'RelTol', 32*eps);
 
 B = eye(9);
 testCase.assertTrue(isa(B/TL, 'double'));
-testCase.assertEqual(B/TL, eye(9), 'AbsTol', 2*eps, 'RelTol', 2*eps);
+testCase.assertEqual(B/TL, eye(9), 'AbsTol', 4*eps, 'RelTol', 4*eps);
 
 TL = TLMat(randn(9,4), randn(9,4));
 b = randn(1,9) + 1i * randn(1,9);

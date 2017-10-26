@@ -66,19 +66,19 @@ classdef toeplksolveTest < matlab.unittest.TestCase
             
             b = ones(n,1);
             x = toeplksolve(G, B, b, ctrans);
-            testCase.assertEqual(x, b, 'AbsTol', 4*eps, 'RelTol', 4*eps);
+            testCase.assertEqual(x, b, 'AbsTol', 32*eps, 'RelTol', 16*eps);
 
             b = (1:n)';
             x = toeplksolve(G, B, b, ctrans);
-            testCase.assertEqual(x, b, 'AbsTol', 16*eps, 'RelTol', 16*eps);
+            testCase.assertEqual(x, b, 'AbsTol', 128*eps, 'RelTol', 128*eps);
             
             b = randn(n,1);
             x = toeplksolve(G, B, b, ctrans);
-            testCase.assertEqual(x, b, 'AbsTol', 16*eps, 'RelTol', 16*eps);
+            testCase.assertEqual(x, b, 'AbsTol', 32*eps, 'RelTol', 16*eps);
 
             b = randn(n,1) + 1i * randn(n,1);
             x = toeplksolve(G, B, b, ctrans);
-            testCase.assertEqual(x, b, 'AbsTol', 16*eps, 'RelTol', 16*eps);
+            testCase.assertEqual(x, b, 'AbsTol', 32*eps, 'RelTol', 16*eps);
 
         end
         
