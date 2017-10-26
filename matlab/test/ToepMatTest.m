@@ -807,6 +807,44 @@ testCase.assertEqual(full(TM/1), T/1);
 testCase.assertEqual(full(TM/2), T/2);
 testCase.assertEqual(full(TM/5), T/5, 'AbsTol', 10*eps, 'RelTol', 10*eps);
 testCase.assertEqual(full(TM/.2), T/.2, 'AbsTol', 10*eps, 'RelTol', 10*eps);
+end
+
+function test_mpower_monomial(testCase)
+% Note: We would need to work in ToepMat to detect whether a T^s is in fact
+% a Toeplitz matrix.  We take an easy design choice and guaratee ToepMat
+% for s=0,1 and resort to TLMat for all s > 2.
+TM = ToepMat(0);
+testCase.assertEqual(full(TM^0), 1);
+testCase.assertTrue(isa(TM^0, 'ToepMat'));
+testCase.assertEqual(full(TM^1), 0);
+testCase.assertTrue(isa(TM^1, 'ToepMat'));
+testCase.assertEqual(full(TM^2), 0);
+testCase.assertTrue(isa(TM^2, 'TLMat'));
+
+TM = toepeye(1);
+for s = 0:4
+    testCase.assertEqual(full(TM^s), 1.0);
+end
+
+TM = toepeye(3);
+for s = 0:4
+    testCase.assertEqual(full(TM^s), eye(3))
+end
+testCase.assertTrue(isa(TM^0, 'ToepMat'));
+testCase.assertTrue(isa(TM^1, 'ToepMat'));
+testCase.assertTrue(isa(TM^2, 'TLMat'));
+
+[c,r,T] = random_toeplitz(8,8);
+TM = ToepMat(c,r);
+for s = 0:4
+    Tpow_true = T^s;
+    Tpow = TM^s;
+    nT = norm(Tpow_true);
+    testCase.assertEqual(full(Tpow), Tpow_true, 'AbsTol', nT*eps, 'RelTol', nT*eps);
+end
+testCase.assertTrue(isa(TM^0, 'ToepMat'));
+testCase.assertTrue(isa(TM^1, 'ToepMat'));
+testCase.assertTrue(isa(TM^2, 'TLMat'));
 
 
 end
