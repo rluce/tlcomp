@@ -754,3 +754,46 @@ nfact = 16 * cond(full(TL)) * norm(full(B));
 testCase.assertEqual(full(B/TL), full(B)/full(TL), ...
     'RelTol', nfact * eps, 'AbsTol', nfact*eps);
 end
+
+function test_norm_eye(testCase)
+n = 14;
+TL = tleye(14);
+testCase.assertEqual(norm(TL, 1), 1);
+testCase.assertEqual(norm(TL, inf), 1);
+testCase.assertEqual(norm(TL, 'inf'), 1);
+testCase.assertEqual(norm(TL, 'fro'), sqrt(n));
+end
+
+function test_norm_toeplitz(testCase)
+
+[c, r, T] = random_toeplitz(7,7);
+TL = TLMat(c,r);
+testCase.assertEqual(norm(TL, 1), norm(T, 1), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TL, 'inf'), norm(T, 'inf'), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TL, inf), norm(T, inf), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TL, 'fro'), norm(T, 'fro'), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+
+testCase.assertWarning(@() norm(TL), 'tlcomp:Unsupported');
+testCase.assertWarning(@() norm(TL, 2), 'tlcomp:Unsupported');
+testCase.assertError(@() norm(TL, 3), 'tlcomp:InconsistentInput');
+
+warning('OFF', 'tlcomp:Unsupported');
+testCase.assertEqual(norm(TL), norm(T), 'RelTol', 8*eps, 'AbsTol', 8*eps);
+testCase.assertEqual(norm(TL, 2), norm(T, 2), 'RelTol', 8*eps, 'AbsTol', 8*eps);
+warning('ON', 'tlcomp:Unsupported');
+end
+
+function test_norm_randomtl(testCase)
+TL = TLMat(randn(6,3), randn(6,3) + 1i * rand(6,3));
+T = full(TL);
+testCase.assertEqual(norm(TL, 1), norm(T, 1), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TL, 'inf'), norm(T, 'inf'), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TL, inf), norm(T, inf), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TL, 'fro'), norm(T, 'fro'), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+
+warning('OFF', 'tlcomp:Unsupported');
+testCase.assertEqual(norm(TL), norm(T));
+testCase.assertEqual(norm(TL, 2), norm(T, 2));
+warning('ON', 'tlcomp:Unsupported');
+end
+

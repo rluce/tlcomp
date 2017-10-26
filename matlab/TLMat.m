@@ -352,6 +352,46 @@ classdef TLMat
             result = mldivide(TL2', TL1')';
         end
         
+        
+        function val = norm(TM, p)
+            % v = norm(T, p) -- computes the matrix p-norm
+            %
+            % Supported values for p are 1, inf and 'fro'.
+            %
+            % Warning: if no value for p is given, or p equals to 2, the
+            % entailing computation is carried out with Matlab's unstructured
+            % matrices, which takes a cubic number of operations.  Consider
+            % using normest instead.
+            %
+            % See also: normest.m norm.m
+            
+            if nargin < 2
+                p = 2;
+            end
+            
+            if p == 2
+                warning('tlcomp:Unsupported', ...
+                    ['2-norm not supported, computation will be slow. ', ...
+                    'Consider using normest']);
+            end
+
+            switch p
+                case 1
+                    val = toeplknorm(TM.G, TM.B, p);
+                case 2
+                    val = norm(full(TM), 2);
+                case inf
+                    val = toeplknorm(TM.G, TM.B, p);
+                case 'inf'
+                    val = toeplknorm(TM.G, TM.B, inf);
+                case 'fro'
+                    val = toeplknorm(TM.G, TM.B, 'fro');
+                otherwise
+                    error('tlcomp:InconsistentInput', 'Unsupported matrix norm');
+            end
+        end
+
+        
         %%%%%%%% CAUTION DEBUG ONLY
         function d = det(TL)
             warning('tlcomp:CubicOperation', ...
@@ -359,13 +399,8 @@ classdef TLMat
             d = det(full(TL));
         end
         
-        
-        function val = norm(TL, p)
-            val = norm(full(TL), p);
-        end
-    
         function TL = inv(TL)
-            [m,n] = size(TL);
+            [~,n] = size(TL);
             TL = TL \ tleye(n);
         end
     end % of methods section
