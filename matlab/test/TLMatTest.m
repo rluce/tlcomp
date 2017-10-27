@@ -596,7 +596,7 @@ nTL = norm(full(TL));
 A = rand(3);
 nA = norm(A);
 
-nfact = 8 * nTL * nA;
+nfact = 16 * nTL * nA;
 
 testCase.assertEqual(class(TL * A), 'double');
 testCase.assertEqual(class(A * TL), 'double');
@@ -610,7 +610,7 @@ A = 1i * randn(12);
 nA = norm(A);
 nTL = norm(full(TL));
 
-nfact = 2 * nTL * nA;
+nfact = 4 * nTL * nA;
 
 testCase.assertEqual(class(TL * A), 'double');
 testCase.assertEqual(class(A * TL), 'double');
@@ -710,7 +710,7 @@ testCase.assertEqual(full(B/TL), full(B), 'AbsTol', 64*eps, 'RelTol', 64*eps);
 
 TL = TLMat(randn(7,2), randn(7,2));
 B = ToepMat(randn(7,1));
-nfact = 8 * cond(full(TL)) * norm(full(B));
+nfact = 16 * cond(full(TL)) * norm(full(B));
 testCase.assertEqual(full(B/TL), ...
     full(B)/full(TL), 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 end

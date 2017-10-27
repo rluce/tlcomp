@@ -112,7 +112,8 @@ classdef toeplksolveTest < matlab.unittest.TestCase
             end
             x = toeplksolve(G,B,b, ctrans);
             nfact = cond(pT) * norm(b);
-            testCase.assertEqual(x, x_true, 'RelTol', 4*nfact*eps);
+            testCase.assertEqual(x, x_true, ...
+                'AbsTol', 4*nfact*eps, 'RelTol', 4*nfact*eps);
         end
         
         function test_default_notranspose(testCase)
