@@ -69,7 +69,7 @@ while ~do_stop
     S_old = S;
     S = .5 * (mu(iter) * S + (T / S) / mu(iter));
     res_old = res;
-    res = norm(S*S - T, 'fro');
+    res = norm(S^2 - T, 'fro');
     
     % Determine whether we can stop the iteration
     if res <= eps_stop * norm_T
