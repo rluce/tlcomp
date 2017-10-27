@@ -716,7 +716,7 @@ TM1 = ToepMat(c1, r1);
 TM2 = ToepMat(c2, r2);
 TM = TM1 \ TM2;
 
-nfact = 2*cond(full(TM1)) * norm(full(TM2));
+nfact = 4*cond(full(TM1)) * norm(full(TM2));
 testCase.assertTrue(isa(TM, 'TLMat'));
 testCase.assertEqual(full(TM), T1 \T2, 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 

@@ -72,7 +72,9 @@ classdef toeplksquareTest < matlab.unittest.TestCase
             Ts_true = T * T;
             [Gs, Bs] = toeplksquare(G, B, alg);
             Ts = toeplkreconstruct(Gs, Bs);
-            testCase.assertEqual(Ts, Ts_true, 'RelTol', 64*n*eps, 'AbsTol', 64*n*eps);
+            nfact = 2*norm(Ts_true);
+            testCase.assertEqual(Ts, Ts_true, ...
+                'RelTol', nfact*eps, 'AbsTol', nfact*eps);
             
         end
     end
