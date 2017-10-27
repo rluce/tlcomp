@@ -391,6 +391,33 @@ classdef TLMat
             end
         end
 
+        function Ts = mpower(base, exponent)
+            if ~isa(base, 'TLMat')
+                error('tlcomp:NotImplemented', 'Not implemented, fixme.');
+            end
+            
+            switch class(exponent)
+                case 'double'
+                    if (exponent - floor(exponent) == 0) && (exponent >= 0)
+                        Ts = mpower_TL_integer(base, exponent);
+                    else
+                        error('tlcomp:NotImplemented', 'Not implemented, fixme.');
+                    end                
+                otherwise
+                    error('tlcomp:NotImplemented', 'Not implemented, fixme.');
+            end
+        end
+        
+        function Ts = mpower_TL_integer(TL, s)
+            if s==0
+                Ts = tleye(size(TL));
+            else
+                Ts = TL;
+                for k=2:s
+                    Ts = Ts * TL;
+                end
+            end
+        end
         
         %%%%%%%% CAUTION DEBUG ONLY
         function d = det(TL)

@@ -26,11 +26,14 @@ if nargin < 5 || isempty(alg)
     alg = 'fft';
 end
 
+% Some nasty corner cases
 if isempty([G1, B1, G2, B2])
-    Gp = [];
-    Bp = [];
-    return
+    % Covers all kind of zero matrices with displacemnt rank 0
+    Gp = zeros(size(G1,1),0);
+    Bp = zeros(size(B2,1),0);
+    return;
 end
+
 
 switch alg
     case 'full'

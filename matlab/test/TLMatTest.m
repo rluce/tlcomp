@@ -517,6 +517,11 @@ TL2 = TLMat([1,2,3], [1, -2, -1]);
 testCase.assertError( @() TL1 * TL2, 'tlcomp:InconsistentInput');
 testCase.assertError( @() TL2 * TL1, 'tlcomp:InconsistentInput');
 
+TL1 = TLMat(0); % 1-by-1 drank 0
+TL2 = TLMat(0);
+testCase.assertEqual(size(TL1 * TL2), [1,1]);
+testCase.assertEqual(full(TL1 * TL2), 0);
+
 TL1 = tleye(1);
 TL2 = TLMat(3i);
 testCase.assertEqual(class(TL1 * TL2), 'TLMat');
@@ -795,5 +800,38 @@ warning('OFF', 'tlcomp:Unsupported');
 testCase.assertEqual(norm(TL), norm(T));
 testCase.assertEqual(norm(TL, 2), norm(T, 2));
 warning('ON', 'tlcomp:Unsupported');
+end
+
+function test_mpower_monomial(testCase)
+TM = TLMat(0);
+testCase.assertEqual(full(TM^0), 1);
+testCase.assertTrue(isa(TM^0, 'TLMat'));
+for s = 1:3
+    testCase.assertEqual(full(TM^s), 0);
+    testCase.assertTrue(isa(TM^s, 'TLMat'));
+end
+
+TM = tleye(1);
+for s = 0:4
+    testCase.assertEqual(full(TM^s), 1.0);
+end
+
+TM = tleye(3);
+for s = 0:4
+    testCase.assertEqual(full(TM^s), eye(3), 'AbsTol', eps);
+    testCase.assertTrue(isa(TM^s, 'TLMat'));
+
+end
+
+TM = TLMat(1i*randn(16,3), randn(16,3));
+T = full(TM);
+for s = 0:4
+    Tpow_true = T^s;
+    Tpow = TM^s;
+    nT = norm(Tpow_true);
+    testCase.assertEqual(full(Tpow), Tpow_true, ...
+        'AbsTol', 4*nT*eps, 'RelTol', 4*nT*eps);
+end
+
 end
 
