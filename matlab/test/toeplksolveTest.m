@@ -77,8 +77,9 @@ classdef toeplksolveTest < matlab.unittest.TestCase
             testCase.assertEqual(x, b, 'AbsTol', 32*eps, 'RelTol', 16*eps);
 
             b = randn(n,1) + 1i * randn(n,1);
+            nb = norm(b);
             x = toeplksolve(G, B, b, ctrans);
-            testCase.assertEqual(x, b, 'AbsTol', 32*eps, 'RelTol', 16*eps);
+            testCase.assertEqual(x, b, 'AbsTol', 8*nb*eps, 'RelTol', 8*nb*eps);
 
         end
         
@@ -110,7 +111,8 @@ classdef toeplksolveTest < matlab.unittest.TestCase
                 x_true = pT' \ b;
             end
             x = toeplksolve(G,B,b, ctrans);
-            testCase.assertEqual(x, x_true, 'RelTol', 32*n*eps);
+            nfact = cond(pT) * norm(b);
+            testCase.assertEqual(x, x_true, 'RelTol', 4*nfact*eps);
         end
         
         function test_default_notranspose(testCase)
