@@ -8,7 +8,6 @@ classdef ToepMat
         function T = ToepMat(c, r)
             % T = ToepMat(c,r)
             %   T is Toeplitz matrix with prescribed first col/row
-            
             if nargin == 2
                 if min(size(c)) > 1 || min(size(r)) > 1
                     error('tlcomp:InconsistentInput', 'c, r must be vectors');
@@ -432,6 +431,34 @@ classdef ToepMat
                 return;
             end
             error('tlcomp:NotImplemented', 'Not implemented, fixme.');
+        end
+    
+        function Ts = mpower(base, exponent)
+            if ~isa(base, 'ToepMat')
+                error('tlcomp:NotImplemented', 'Not implemented, fixme.');
+            end
+            
+            switch class(exponent)
+                case 'double'
+                    if (exponent - floor(exponent) == 0) && (exponent >= 0)
+                        Ts = mpower_TM_integer(base, exponent);
+                    else
+                        error('tlcomp:NotImplemented', 'Not implemented, fixme.');
+                    end                
+                otherwise
+                    error('tlcomp:NotImplemented', 'Not implemented, fixme.');
+            end
+        end
+        
+        function Ts = mpower_TM_integer(TM, s)
+            if s==0
+                Ts = toepeye(size(TM));
+            elseif s==1
+                Ts = TM;
+            else
+                [Gpow, Bpow] = toeppowers(TM.c, TM.r, s);
+                Ts = TLMat(Gpow{end}, Bpow{end}, 'GB');
+            end
         end
     end
 end

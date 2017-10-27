@@ -495,7 +495,7 @@ testCase.assertEqual(drank(TL*TM), 4);
 TM = ToepMat(c,r);
 TL = TLMat(rand(12,4),rand(12,4));
 
-nfact = 4 * norm(full(TM)) * norm(full(TL));
+nfact = 8 * norm(full(TM)) * norm(full(TL));
 testCase.assertEqual(class(TM * TL), 'TLMat');
 testCase.assertEqual(full(TM * TL), T * full(TL), ...
     'AbsTol', nfact*eps, 'RelTol', nfact*eps);
@@ -683,7 +683,8 @@ x = rand(12,5);
 b = T*x;
 TM = ToepMat(c,r);
 testCase.assertTrue(isreal(TM\b));
-testCase.assertEqual(TM\b, x, 'AbsTol', 100*eps, 'RelTol', 100*eps);
+nfact = 8 * cond(full(TM)) * norm(b);
+testCase.assertEqual(TM\b, x, 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 
 TM = toepeye(8);
 testCase.assertError( @() TM \ 1.0, 'tlcomp:InconsistentInput');
@@ -715,7 +716,7 @@ TM1 = ToepMat(c1, r1);
 TM2 = ToepMat(c2, r2);
 TM = TM1 \ TM2;
 
-nfact = cond(full(TM1)) * norm(full(TM2));
+nfact = 2*cond(full(TM1)) * norm(full(TM2));
 testCase.assertTrue(isa(TM, 'TLMat'));
 testCase.assertEqual(full(TM), T1 \T2, 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 
@@ -812,7 +813,7 @@ end
 function test_mpower_monomial(testCase)
 % Note: We would need to work in ToepMat to detect whether a T^s is in fact
 % a Toeplitz matrix.  We take an easy design choice and guaratee ToepMat
-% for s=0,1 and resort to TLMat for all s > 2.
+% for s=0,1 and resort to TLMat for all s > 1.
 TM = ToepMat(0);
 testCase.assertEqual(full(TM^0), 1);
 testCase.assertTrue(isa(TM^0, 'ToepMat'));
@@ -840,7 +841,8 @@ for s = 0:4
     Tpow_true = T^s;
     Tpow = TM^s;
     nT = norm(Tpow_true);
-    testCase.assertEqual(full(Tpow), Tpow_true, 'AbsTol', nT*eps, 'RelTol', nT*eps);
+    testCase.assertEqual(full(Tpow), Tpow_true, ...
+        'AbsTol', 4*nT*eps, 'RelTol', 4*nT*eps);
 end
 testCase.assertTrue(isa(TM^0, 'ToepMat'));
 testCase.assertTrue(isa(TM^1, 'ToepMat'));
