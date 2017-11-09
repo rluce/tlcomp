@@ -81,6 +81,6 @@ testCase.assertEqual(size(Binv), [n,2]);
 
 Tinv = toeplkreconstruct(Ginv, Binv);
 resnorm = norm(Tinv * T - eye(n), 'fro') / norm(T, 'fro');
-testCase.assertLessThan(resnorm, 8*eps*cond(T));
+testCase.assertLessThan(resnorm, 16*eps*cond(T));
 
 end

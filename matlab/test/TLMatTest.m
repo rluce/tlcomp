@@ -835,3 +835,14 @@ end
 
 end
 
+function test_gennorm(testCase)
+TM = TLMat(0);
+testCase.assertEqual(TM.gennorm(), 0.0);
+
+TM = tleye(6);
+testCase.assertEqual(TM.gennorm(), 2.0);
+
+TM = TLMat(randn(7,3), randn(7,3));
+testCase.assertEqual(TM.gennorm(), norm(TM.G * TM.B'), 'RelTol', 4*eps);
+end
+

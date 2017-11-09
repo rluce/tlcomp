@@ -419,6 +419,12 @@ classdef TLMat
             end
         end
         
+        function val = gennorm(TL)
+            [~, RG] = qr(TL.G,0);
+            [~, RB] = qr(TL.B,0);
+            val = norm(RG*RB');
+        end
+        
         %%%%%%%% CAUTION DEBUG ONLY
         function d = det(TL)
             warning('tlcomp:CubicOperation', ...
