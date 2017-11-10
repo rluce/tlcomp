@@ -868,5 +868,30 @@ E = eye(4);
 E = E(:,end:-1:1);
 TM = TLMat(E);
 testCase.assertEqual(det(TM), +1, 'AbsTol', 8*eps);
+end
 
+function test_truncate_tol(testCase)
+G = orth(randn(8,4));
+B = orth(randn(8,4));
+s = [10, 1, 0.1, 0.01];
+
+T = TLMat(G, B*diag(s), 'GB');
+
+testCase.assertEqual(drank(T), 4);
+TT = T.truncate_tol(0);
+testCase.assertEqual(drank(TT), 4);
+TT = T.truncate_tol(1e-10);
+testCase.assertEqual(drank(TT), 4);
+TT = T.truncate_tol(1e-10);
+testCase.assertEqual(drank(TT), 4);
+TT = T.truncate_tol(1e-3 - 1e-4);
+testCase.assertEqual(drank(TT), 4);
+TT = T.truncate_tol(1e-3 + 1e-4);
+testCase.assertEqual(drank(TT), 3);
+TT = T.truncate_tol(1e-2 + 1e-3);
+testCase.assertEqual(drank(TT), 2);
+TT = T.truncate_tol(1e-1 + 1e-2);
+testCase.assertEqual(drank(TT), 1);
+TT = T.truncate_tol(1e0 + 1e-1);
+testCase.assertEqual(drank(TT), 0);
 end

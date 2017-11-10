@@ -81,9 +81,16 @@ rT = (TM - toepeye(16)) \ (TM + toepeye(16)); % Again a |TLMat|
 disp(norm(full(rT) - ( (full(TM) - eye(16)) \ (full(TM) + eye(16) ) )));
 
 %% Determinant is supported through GKO/LU factorization
-T = ToepMat([1,2,3,4]);
+TM = ToepMat([1,2,3,4]);
 disp(det(T))
 
+%% Construct A TLMat object from a generator
+G = orth(randn(8,4));
+B = orth(randn(8,4)) * diag([10,1,0.01, 1e-12]);
+TL1 = TLMat(G, B);  % drank is 4
+TL2 = TL1.truncate_tol(1e-8); % remove ranks relatively smaller than 1e-8
+fprintf('Trunctated from %d to %d, generator difference: %.2e\n', ...
+    drank(TL1), drank(TL2), gennorm(TL1 - TL2));
 
 
 

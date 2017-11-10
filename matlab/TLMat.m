@@ -429,6 +429,21 @@ classdef TLMat
             d = toeplkdet(TL.G, TL.B);
         end
 
+        function TL = truncate_tol(TL, tol)
+            % Truncate generator so that the smallest SV is no larger than
+            % tol * (largest SV).
+            [QG, RG] = qr(TL.G,0);
+            [QB, RB] = qr(TL.B,0);
+
+            [U, S, V] = svd(RG*RB');
+            s = diag(S);
+        
+            target_r = rank(S, tol * s(1));
+            Gout = QG * U(:,1:target_r);
+            Bout = QB * V(:,1:target_r) * diag(s(1:target_r));
+            TL = TLMat(Gout, Bout, 'GB');
+        end
+        
         %%%%%%%% CAUTION DEBUG ONLY
 
         function TL = inv(TL)
