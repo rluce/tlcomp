@@ -425,13 +425,12 @@ classdef TLMat
             val = norm(RG*RB');
         end
         
-        %%%%%%%% CAUTION DEBUG ONLY
         function d = det(TL)
-            warning('tlcomp:CubicOperation', ...
-                'det not implemented, using dense det');
-            d = det(full(TL));
+            d = 0;
         end
-        
+
+        %%%%%%%% CAUTION DEBUG ONLY
+
         function TL = inv(TL)
             [~,n] = size(TL);
             TL = TL \ tleye(n);

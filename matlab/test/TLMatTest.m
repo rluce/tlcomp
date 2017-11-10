@@ -846,3 +846,16 @@ TM = TLMat(randn(7,3), randn(7,3));
 testCase.assertEqual(TM.gennorm(), norm(TM.G * TM.B'), 'RelTol', 4*eps);
 end
 
+function test_det(testCase)
+
+TM = TLMat(zeros(4,2), zeros(4,2));
+testCase.assertEqual(det(TM), 0.0);
+
+TM = tleye(7);
+testCase.assertEqual(det(TM), 1.0);
+
+TM = TLMat(randn(5,3), randn(5,3));
+d = det(TM);
+d_true = det(full(TM));
+testCase.assertEqual(d, d_true);
+end

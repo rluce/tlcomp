@@ -460,5 +460,11 @@ classdef ToepMat
                 Ts = TLMat(Gpow{end}, Bpow{end}, 'GB');
             end
         end
+        
+        function val = det(TM)
+            [G, B] = toepgen(TM.c, TM.r);
+            TL = TLMat(G, B, 'GB');
+            val = det(TL);
+        end
     end
 end

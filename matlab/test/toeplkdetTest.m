@@ -9,7 +9,7 @@ testCase.assertEqual(d, 0.0);
 
 % 1x1 eye matrix
 d = toeplkdet(1,2);
-testcase.assertEqual(d, 1.0);
+testCase.assertEqual(d, 1.0);
 
 d = toeplkmult(1,pi);
 testCase.assertEqual(d, pi/2);

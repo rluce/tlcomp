@@ -852,3 +852,16 @@ testCase.assertTrue(isa(TM^2, 'TLMat'));
 
 
 end
+
+
+function test_det(testCase)
+
+T = ToepMat(zeros(5,1));
+testCase.assertEqual(det(T), 0.0);
+
+T = pi * toepeye(3);
+testCase.assertEqual(det(T), pi^3);
+
+T = ToepMat(rand(5,1), rand(5,1));
+testCase.assertEqual(det(T), det(full(T)));
+end
