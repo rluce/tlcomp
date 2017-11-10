@@ -82,7 +82,7 @@ disp(norm(full(rT) - ( (full(TM) - eye(16)) \ (full(TM) + eye(16) ) )));
 
 %% Determinant is supported through GKO/LU factorization
 TM = ToepMat([1,2,3,4]);
-disp(det(T))
+disp(det(TM))
 
 %% Construct A TLMat object from a generator
 G = orth(randn(8,4));
