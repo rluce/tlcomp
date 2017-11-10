@@ -11,7 +11,7 @@ testCase.assertEqual(d, 0.0);
 d = toeplkdet(1,2);
 testCase.assertEqual(d, 1.0);
 
-d = toeplkmult(1,pi);
+d = toeplkdet(1,pi);
 testCase.assertEqual(d, pi/2);
 end
 
@@ -23,21 +23,38 @@ end
 function test_identity(testCase)
 [G, B] = toeplkgen(eye(9));
 d = toeplkdet(G, B);
-testCase.assertEqual(d, 1.0);
+testCase.assertEqual(d, 1.0, 'AbsTol', 8*eps);
 end
 
 function test_random_real(testCase)
-A = randn(5);
-[G, B] = toeplkgen(A);
+
+[G, B] = toeplkgen(rand(5));
+A = toeplkreconstruct(G,B);
 d = toeplkdet(G,B);
 d_true = det(A);
-testCase.assertEqual(d, d_true);
+testCase.assertEqual(d, d_true, 'RelTol', 512*eps, 'AbsTol', 32*eps);
+
+
+rng(66);
+[G, B] = toeplkgen(rand(6));
+A = toeplkreconstruct(G,B);
+d = toeplkdet(G,B);
+d_true = det(A);
+testCase.assertEqual(d, d_true, 'RelTol', 512*eps);
+
 end
 
 function test_random_complex(testCase)
-A = randn(5) + 1i * rand(5);
-[G, B] = toeplkgen(A);
+[G, B] = toeplkgen(rand(5) + 1i * randn(5));
+A = toeplkreconstruct(G,B);
 d = toeplkdet(G,B);
 d_true = det(A);
-testCase.assertEqual(d, d_true);
+testCase.assertEqual(d, d_true, 'RelTol', 512*eps);
+
+[G, B] = toeplkgen(rand(6) + 1i * randn(6));
+A = toeplkreconstruct(G,B);
+d = toeplkdet(G,B);
+d_true = det(A);
+testCase.assertEqual(d, d_true, 'RelTol', 512*eps);
+
 end

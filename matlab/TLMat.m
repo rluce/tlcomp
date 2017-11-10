@@ -426,7 +426,7 @@ classdef TLMat
         end
         
         function d = det(TL)
-            d = 0;
+            d = toeplkdet(TL.G, TL.B);
         end
 
         %%%%%%%% CAUTION DEBUG ONLY

@@ -862,6 +862,9 @@ testCase.assertEqual(det(T), 0.0);
 T = pi * toepeye(3);
 testCase.assertEqual(det(T), pi^3);
 
-T = ToepMat(rand(5,1), rand(5,1));
-testCase.assertEqual(det(T), det(full(T)));
+c = randn(5,1);
+r = randn(5,1);
+r(1) = c(1);
+T = ToepMat(c, r);
+testCase.assertEqual(det(T), det(full(T)), 'RelTol', 256 * eps);
 end

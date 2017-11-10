@@ -661,7 +661,7 @@ testCase.assertEqual(full(TL1 \ TL2), eye(5), 'AbsTol', eps);
 TL1 = TLMat(randn(12,3), 1i * randn(12,3)) + tleye(12);
 TL2 = TLMat(1i * randn(12,2), randn(12,2));
 D = TL1 \ TL2;
-nfact = cond(full(TL1)) * norm(full(TL2));
+nfact = 4 * cond(full(TL1)) * norm(full(TL2));
 testCase.assertEqual(drank(D), 6);
 testCase.assertEqual(full(D), full(TL1) \ full(TL2), ...
     'AbsTol', nfact*eps, 'RelTol', nfact*eps);
@@ -715,7 +715,7 @@ testCase.assertEqual(full(B/TL), full(B), 'AbsTol', 64*eps, 'RelTol', 64*eps);
 
 TL = TLMat(randn(7,2), randn(7,2));
 B = ToepMat(randn(7,1));
-nfact = 16 * cond(full(TL)) * norm(full(B));
+nfact = 32 * cond(full(TL)) * norm(full(B));
 testCase.assertEqual(full(B/TL), ...
     full(B)/full(TL), 'AbsTol', nfact*eps, 'RelTol', nfact*eps);
 end
@@ -773,7 +773,7 @@ function test_norm_toeplitz(testCase)
 
 [c, r, T] = random_toeplitz(7,7);
 TL = TLMat(c,r);
-testCase.assertEqual(norm(TL, 1), norm(T, 1), 'RelTol', 4*eps, 'AbsTol', 4*eps);
+testCase.assertEqual(norm(TL, 1), norm(T, 1), 'RelTol', 8*eps, 'AbsTol', 8*eps);
 testCase.assertEqual(norm(TL, 'inf'), norm(T, 'inf'), 'RelTol', 4*eps, 'AbsTol', 4*eps);
 testCase.assertEqual(norm(TL, inf), norm(T, inf), 'RelTol', 4*eps, 'AbsTol', 4*eps);
 testCase.assertEqual(norm(TL, 'fro'), norm(T, 'fro'), 'RelTol', 4*eps, 'AbsTol', 4*eps);
@@ -830,7 +830,7 @@ for s = 0:4
     Tpow = TM^s;
     nT = norm(Tpow_true);
     testCase.assertEqual(full(Tpow), Tpow_true, ...
-        'AbsTol', 4*nT*eps, 'RelTol', 4*nT*eps);
+        'AbsTol', 8*nT*eps, 'RelTol', 8*nT*eps);
 end
 
 end
@@ -857,16 +857,16 @@ testCase.assertEqual(det(TM), 1.0);
 TM = TLMat(randn(5,3), randn(5,3));
 d = det(TM);
 d_true = det(full(TM));
-testCase.assertEqual(d, d_true);
+testCase.assertEqual(d, d_true, 'RelTol', 256 * eps);
 
 E = eye(3);
 E = E(:,end:-1:1);
 TM = TLMat(E);
-testCase.assertEqual(det(TM), -1);
+testCase.assertEqual(det(TM), -1, 'AbsTol', 8*eps);
 
 E = eye(4);
 E = E(:,end:-1:1);
 TM = TLMat(E);
-testCase.assertEqual(det(TM), +1);
+testCase.assertEqual(det(TM), +1, 'AbsTol', 8*eps);
 
 end
