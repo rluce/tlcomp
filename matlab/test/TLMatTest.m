@@ -858,4 +858,15 @@ TM = TLMat(randn(5,3), randn(5,3));
 d = det(TM);
 d_true = det(full(TM));
 testCase.assertEqual(d, d_true);
+
+E = eye(3);
+E = E(:,end:-1:1);
+TM = TLMat(E);
+testCase.assertEqual(det(TM), -1);
+
+E = eye(4);
+E = E(:,end:-1:1);
+TM = TLMat(E);
+testCase.assertEqual(det(TM), +1);
+
 end

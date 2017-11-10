@@ -89,6 +89,7 @@ nT2 = norm(T2);
 
 [Gsol, Bsol] = toeplksolvetoeplk(G1, B1, G2, B2);
 sol = toeplkreconstruct(Gsol, Bsol);
-testCase.assertEqual(sol, T1\T2, 'AbsTol', 8*cT1*nT2*eps, 'RelTol', 8*cT1*nT2*eps);
+epsmult = 16*cT1*nT2;
+testCase.assertEqual(sol, T1\T2, 'AbsTol', epsmult*eps, 'RelTol', epsmult*eps);
 
 end
