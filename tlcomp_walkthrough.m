@@ -80,6 +80,9 @@ disp(norm(full(rT) - ( (full(TM) - eye(16)) \ (full(TM) + eye(16) ) )));
 rT = (TM - toepeye(16)) \ (TM + toepeye(16)); % Again a |TLMat|
 disp(norm(full(rT) - ( (full(TM) - eye(16)) \ (full(TM) + eye(16) ) )));
 
+%% Determinant is supported through GKO/LU factorization
+T = ToepMat([1,2,3,4]);
+disp(det(T))
 
 
 
