@@ -466,5 +466,32 @@ classdef ToepMat
             TL = TLMat(G, B, 'GB');
             val = det(TL);
         end
+        
+        function TM = abs(TM)
+            TM.c = abs(TM.c);
+            TM.r = abs(TM.r);
+        end
+        
+        function TM = times(op1, op2)
+            if ~isa(op1, 'ToepMat')
+                tmp = op1;
+                op1 = op2;
+                op2 = tmp;
+            end
+            
+            
+            switch class(op2)
+                case 'ToepMat'
+                    TM = ToepMat(op1.c .* op2.c, op1.r .* op2.r);
+                case 'double'
+                    if isscalar(op2)
+                        TM = ToepMat(op1.c * op2, op1.r * op2);
+                    else
+                        TM = full(op1) .* op2;
+                    end
+                otherwise
+                    assert(false);
+            end
+        end
     end
 end

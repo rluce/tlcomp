@@ -450,5 +450,25 @@ classdef TLMat
             [~,n] = size(TL);
             TL = TL \ tleye(n);
         end
+        
+        function TL = rdivide(op1, op2)
+            if ~isa(op1, 'TLMat')
+                tmp = op1;
+                op1 = op2;
+                op2 = tmp;
+            end
+            
+            switch class(op2)
+                case 'double'
+                    if isscalar(op2)
+                        TL = TLMat(op1.G, op1.B/op2);
+                    else
+                        assert(false);
+                    end
+                otherwise
+                    assert(false);
+            end
+        end
+                     
     end % of methods section
 end
