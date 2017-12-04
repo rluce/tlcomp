@@ -1,4 +1,4 @@
-function [S, flag, res] = sqrtm_toeplitz(r, maxiter, eps_stop, do_scale)
+function [S, flag, res] = sqrtm_toeplitz(T, maxiter, eps_stop, do_scale)
 % S = sqrtm_toeplitz(r)
 % S = sqrtm_toeplitz(r, maxiter)
 % S = sqrtm_toeplitz(r, maxiter, eps_stop)
@@ -45,7 +45,6 @@ if nargin < 2 || isempty(maxiter)
     maxiter = 10;
 end
 
-T = ToepMat(r,r);
 norm_T = norm(T, 'fro');
 S = TLMat(T.c, T.r);
 
@@ -69,7 +68,7 @@ while ~do_stop
     S_old = S;
     S = .5 * (mu(iter) * S + (T / S) / mu(iter));
     res_old = res;
-    res = norm(S^2 - T, 'fro');
+    res = gennorm(S^2 - T);
     
     % Determine whether we can stop the iteration
     if res <= eps_stop * norm_T
