@@ -469,6 +469,24 @@ classdef TLMat
                     assert(false);
             end
         end
-                     
+
+        function Y = polyvalm(p,X)
+
+            np = length(p);
+            [m,n] = size(X);
+            if m ~= n
+                error(message('tlcomp:polyvalm:NonSquareMatrix'))
+            end
+
+            if np == 1    %Quick return if possible.
+                Y = p(1) * tleye(m);
+                return
+            end    
+
+            Y = TLMat(zeros(m,0), zeros(m,0), 'GB');
+            for i = 1:np
+                Y = X * Y + diag(p(i) * ones(m,1));
+            end
+        end
     end % of methods section
 end
