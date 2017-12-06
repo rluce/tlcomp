@@ -103,7 +103,7 @@ switch flag
         assert(false);
 end
 
-fprintf('Final relative residual |S^2 - T|_F / |T|_F = %8.2e\n', res/norm_T);
+fprintf('Final relative residual |S^2 - T|_G / |T|_F = %8.2e\n', res/norm_T);
 
 end
 
