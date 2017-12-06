@@ -488,5 +488,9 @@ classdef TLMat
                 Y = X * Y + diag(p(i) * ones(m,1));
             end
         end
+        
+        function n = length(TL)
+            n = max(size(TL));
+        end
     end % of methods section
 end
