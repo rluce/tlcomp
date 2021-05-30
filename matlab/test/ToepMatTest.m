@@ -704,7 +704,7 @@ TM = TM1 \ TM2;
 % We could do better and detect truely Toeplitz matrices, but for now we
 % always promote to TLMat
 testCase.assertTrue(isa(TM, 'TLMat'));
-testCase.assertEqual(full(TM), eye(9), 'AbsTol', eps, 'RelTol', eps);
+testCase.assertEqual(full(TM), eye(9), 'AbsTol', 2*eps, 'RelTol', 2*eps);
 
 % Cayley transform
 e2 = zeros(16,1);
