@@ -1,24 +1,25 @@
-%% tlzstein -- Toeplitz and Toeplitz-like matrices w.r.t. Z-Stein displacement
-%
-% This collection of functions and classes contains a number of tools to
-% carry out matrix computations with Toeplitz and Toeplitz-like matrices
-% with respect to the Stein displacement operator
-%
-%   D(T) := T - Z * T * Z'
-%
-% where Z is the _downshift_ matrix, viz. zeros(n) + diag(ones(n-1,1),-1).
-% Any matrix T such that D(T) has _low rank_ is said to be Toeplitz-like
-% (TL).
+TLComp -- Computing with Toeplitz-like matrices in Matlab
+======
 
-%% Setup path
-addpath('matlab')  % Code is sitting here
-addpath('drsolve') % Used for GKO
+Toeplitz matrices, and matrices arising from arithmetic operations
+among Toeplitz matrices enjoy a _low rank representation_ w.r.t. to
+so-called displacement operators [1].  This toolbox offers
+convenient operations with such strucutred matices while taking
+advantage of such a low rank representation.
 
+Installation
+---
 
-%% Basic operations
-%
-% Run these examples youself!
+1. TLComp relies on the "drsolve" [2] package for operations that involve
+solving systems of linear equations, please download and install it from http://bugs.unica.it/~gppe/software/drsolve/drsolve1.0.zip
 
+2. Add the 'matlab' folder below this directory to the matlab path,
+   viz. `addpath(fullfile(pwd, 'matlab'))`
+
+Examples
+---
+
+```
 %% Generate data for two toeplitz matrices
 [c1, r1] = random_toeplitz(8, 8);
 [c2, r2] = random_toeplitz(8, 8);
@@ -91,6 +92,33 @@ TL1 = TLMat(G, B);  % drank is 4
 TL2 = TL1.truncate_tol(1e-8); % remove ranks relatively smaller than 1e-8
 fprintf('Trunctated from %d to %d, generator difference: %.2e\n', ...
     drank(TL1), drank(TL2), gennorm(TL1 - TL2));
+```
+
+More background
+---
+
+The displacement operator we use in this toolbox is the Sylvester-type operator
+```
+   D(A) = Z_{1} A - A * Z_{-1}
+```
+where `Z_s` is the s-circulant matrix, i.e., for n=4
+```
+Z_s = [
+    0 0 0 s
+    1 0 0 0
+    0 1 0 0
+    0 0 1 0
+]
+```
 
 
 
+References
+----
+
+
+[1] Kailath, T., & Sayed, A. H. (Eds.). (1999). Fast reliable algorithms for matrices with structure. Society for Industrial and Applied Mathematics (SIAM), Philadelphia, PA. https://doi.org/10.1137/1.9781611971354
+
+[2] A. Aricò and G. Rodriguez.  A fast solver for linear systems with
+displacement structure.  Numer. Algorithms, 55(4):529-556, 2010.  DOI:
+https://doi.org/10.1007/s11075-010-9421-x
