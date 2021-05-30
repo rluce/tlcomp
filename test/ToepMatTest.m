@@ -402,7 +402,7 @@ testCase.assertEqual(full(TM2 * TM1), 2);
 [c, r, T] = random_toeplitz(8,8);
 TM1 = ToepMat(c,r);
 TM2 = toepeye(8);
-nfact = 8*norm(full(TM1)) * norm(full(TM2));
+nfact = 16*norm(full(TM1)) * norm(full(TM2));
 testCase.assertEqual(class(TM1 * TM2), 'TLMat');
 testCase.assertEqual(full(TM1 * TM2), T, ...
     'RelTol', nfact*eps, 'AbsTol', nfact*eps);
