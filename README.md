@@ -111,6 +111,7 @@ Z_s = [
 ]
 ```
 
+Many details on the scope and implementation of TLComp are subject of an upcoming publication [3].
 
 
 References
@@ -122,3 +123,5 @@ References
 [2] A. Aricò and G. Rodriguez.  A fast solver for linear systems with
 displacement structure.  Numer. Algorithms, 55(4):529-556, 2010.  DOI:
 https://doi.org/10.1007/s11075-010-9421-x
+
+[3] TLComp paper, in preparation
