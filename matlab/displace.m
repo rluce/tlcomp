@@ -5,7 +5,7 @@ function D = displace(A)
 %   A -- input matrix
 %
 % Output:
-%   D -- displacement of A, i.e., D = Z1 * A - A * Zm1.
+%   D -- displacement of A, i.e., D = Z1 * A - A * Zm1.  D is full.
 %
 % Complexity: O(n^2)
 
