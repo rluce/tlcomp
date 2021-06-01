@@ -1,5 +1,5 @@
 function E = tleye(n, nbis)
-% E = tleye(n)  --  Identity matrix in TL format
+% E = tleye(n)  --  Identity matrix as a TLMat object
 
 if nargin == 1
     if ~isscalar(n)

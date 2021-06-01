@@ -16,6 +16,7 @@ function y = toeplkmult(G, B, x, ctrans, alg)
 % Output:
 %   y      -- Dense vector(s) T*x (or T'*x)
 %
+
 % A concise description of the circulant based multiplication is
 %
 %   Bini CIMS paper TODO

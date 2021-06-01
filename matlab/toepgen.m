@@ -1,4 +1,4 @@
-function [G,B] = toepgen(c, r)
+function [G, B] = toepgen(c, r)
 % function [G, B] = toepgen(c, r)
 %
 % Return a generator of a Toeplitz matrix T.

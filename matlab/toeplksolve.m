@@ -1,5 +1,6 @@
 function sol = toeplksolve(G, B, rhs, ctrans)
 % sol = toeplksolve(G, B, rhs)
+% sol = toeplksolve(G, B, rhs, ctrans)
 %
 % Solve a Toeplitz-like system Ax = rhs of equations with dense RHS.
 %

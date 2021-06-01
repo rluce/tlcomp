@@ -1,12 +1,12 @@
-function T = toeplkreconstruct(G,B)
-% T = toeplktronstruct(G,B)
+function T = toeplkreconstruct(G, B)
+% T = toeplktronstruct(G, B)
 %  -- Reconstruct a Toeplitz-like matrix T from a generator (G,B).
 %
 % Input:
-%   G, B  -- Generator of T w.r.t. Z1/Zm1-Stein displacement
+%   G, B  -- Generator of T w.r.t. Z1/Zm1 Sylvester displacement
 %
 % Output:
-%   T     -- Reconstructed Toeplitz-like matrix
+%   T     -- Reconstructed, full Toeplitz-like matrix
 %
 % Complexity O(d*n^2), where d is the displacement rank of T.
 

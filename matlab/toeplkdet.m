@@ -70,7 +70,7 @@ for k=1:n
     s([k, pivotpos]) = s([pivotpos, k]);
 
     % Compute next col/row of L/U
-    u        = (G(k,:)*B(:,k:n))./ transpose(s(k)-t(k:n));
+    u = (G(k,:)*B(:,k:n))./ transpose(s(k)-t(k:n));
     l = (G(k+1:n,:)*(B(:,k)/u(1))) ./ (s(k+1:n)-t(k));
     diag_U(k) = u(1);
     
@@ -78,5 +78,6 @@ for k=1:n
     G(k+1:n,:) = G(k+1:n,:) - l * G(k,:);
     B(:,k+1:n) = B(:,k+1:n) - (B(:,k)/u(1,1)) * u(2:end);
 end
+
 d = permsign * prod(diag_U);
 end

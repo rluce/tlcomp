@@ -1,10 +1,12 @@
 function [G, B] = toeplkgen(A, r)
 % [G,B] = toeplkgen(A)
+% [G,B] = toeplkgen(A, r)
 %
 % Compute an approximate Z1/Zm1-generator for A.  If a rank r is supplied, the
 % generator is truncated to that rank.
 %
-% CAUTION: expensive comutation, debug use only!
+% CAUTION: expensive O(n^3) comutation.
+
 % TODO: We should do an ACA here instead of SVD, which would give us O(rn^2)
 % run time.
 

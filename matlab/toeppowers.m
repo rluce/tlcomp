@@ -1,5 +1,5 @@
 function [Gpowers, Bpowers] = toeppowers(c, r, s)
-% [Bpowers, Tpowers] = power_generators(c, r, s)
+% [Gpowers, Bpowers] = toeppowers(c, r, s)
 %
 % Compute generators for each monomial T^1, ..., T^s.
 
