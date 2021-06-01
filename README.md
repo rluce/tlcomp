@@ -4,8 +4,8 @@ TLComp -- Computing with Toeplitz-like matrices in Matlab
 Toeplitz matrices, and matrices arising from arithmetic operations
 among Toeplitz matrices enjoy a _low rank representation_ w.r.t. to
 so-called displacement operators [1].  This toolbox offers
-convenient operations with such strucutred matices while taking
-advantage of such a low rank representation.
+convenient and fast operations with such structured matices, taking
+advantage of their a low rank representation.
 
 Installation
 ---
