@@ -13,8 +13,10 @@ Installation
 1. TLComp relies on the "drsolve" [2] package for operations that involve
 solving systems of linear equations, please download and install it from http://bugs.unica.it/~gppe/software/drsolve/drsolve1.0.zip
 
-2. Add the 'matlab' folder below this directory to the matlab path,
-   viz. `addpath(fullfile(pwd, 'matlab'))`
+3. Download and unpack the [TLComp toolbox](https://github.com/rluce/tlcomp/releases/download/v0.1.0/tlcomp-v0.1.0.tar.gz)
+
+2. Within Matlab add the installation folder to the matlab path,
+   viz. `addpath(fullfile(pwd, 'tlcomp-v0.1.0'))`.
 
 Examples
 ---
