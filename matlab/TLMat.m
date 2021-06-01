@@ -83,13 +83,17 @@ classdef TLMat
                 end
                 return;
             end
-            
         end
         
         function d = drank(TL)
             d = size(TL.G, 2);
         end
-        
+
+        function disp(TL)
+            fprintf('  %dx%d TLMat, displacement rank %d\n', ...
+                size(TL, 1), size(TL, 2), drank(TL))
+        end
+
         function T = full(TL)
             T = toeplkreconstruct(TL.G, TL.B);
         end

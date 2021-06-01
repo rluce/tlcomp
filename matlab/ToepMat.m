@@ -71,7 +71,11 @@ classdef ToepMat
             end
             
         end
-        
+
+        function disp(T)
+            fprintf('  %dx%d ToepMat\n', size(T, 1), size(T, 2));
+        end
+
         function TF = full(T)
             if isempty(T.c)
                 TF = [];
